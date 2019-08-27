@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.55.6" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AUTO-EPC | WorkSpace</title>
+    <meta property="og:title" content="AUTO-EPC - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2019-02-20T16:46:44&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-02-20T16:46:44&#43;08:00">
+        
+    <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="AUTO-EPC">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="http://workerwork.github.io/posts/auto-epc/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="http://workerwork.github.io/">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go语言(golang)、移动互联网、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="http://workerwork.github.io/">首页</a>
+                    
+                    <a  href="http://workerwork.github.io/books/" title="新书">新书</a>
+                    
+                    <a  href="http://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="http://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">AUTO-EPC</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2019年2月20日
+                        </date>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<p><img src="http://192.168.9.105:7777/3.png" alt="" /></p>
+
+<h1 id="auto-epc">AUTO-EPC</h1>
+
+<h2 id="使用方法">使用方法</h2>
+
+<h3 id="1-安装本地yum源">1 安装本地yum源</h3>
+
+<p>在ssh终端任意路径下，使用root用户执行</p>
+
+<pre><code>wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh
+</code></pre>
+
+<h3 id="2-软件安装和升级">2 软件安装和升级</h3>
+
+<h4 id="2-1-一般版本安装和升级">2.1 一般版本安装和升级</h4>
+
+<p>如果是初始安装,执行</p>
+
+<pre><code>yum install [rpm包名]
+</code></pre>
+
+<p>如果是升级，执行</p>
+
+<pre><code>yum update [rpm包名]
+</code></pre>
+
+<h4 id="2-2-特定版本安装和升级">2.2 特定版本安装和升级</h4>
+
+<p>在本地文件共享服务器<a href="http://192.168.9.105:8888/files/EPC-VERSION/">http://192.168.9.105:8888/files/EPC-VERSION/</a> 中存有历史版本文件，取出升级即可</p>
+
+<h2 id="epc安装包含的rpm包">EPC安装包含的RPM包</h2>
+
+<ul>
+<li>baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm</li>
+<li>baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm</li>
+<li>baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm</li>
+<li>baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm</li>
+<li>baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm</li>
+<li>baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm</li>
+<li>baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm</li>
+<li>baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm</li>
+<li>baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm</li>
+</ul>
+
+<h2 id="epc各组件代码仓库">EPC各组件代码仓库</h2>
+
+<ul>
+<li>base库 <a href="http://192.168.9.105:60080/dongfeng/epc-base">http://192.168.9.105:60080/dongfeng/epc-base</a></li>
+<li>ui库 <a href="http://192.168.9.105:60080/dongfeng/epc-ui">http://192.168.9.105:60080/dongfeng/epc-ui</a></li>
+<li>onos库 <a href="http://192.168.9.105:60080/baicells/onos/src/softcn">http://192.168.9.105:60080/baicells/onos/src/softcn</a></li>
+<li>ovs-rest库 <a href="http://192.168.9.105:60080/baicells/ovs-rest">http://192.168.9.105:60080/baicells/ovs-rest</a></li>
+<li>ovsdb-config-agent库 <a href="http://192.168.9.105:60080/baicells/ovsdb-config-agent">http://192.168.9.105:60080/baicells/ovsdb-config-agent</a></li>
+<li>openapi库 <a href="http://192.168.9.105:60080/dongfeng/openapi">http://192.168.9.105:60080/dongfeng/openapi</a></li>
+<li>signaltrace库 <a href="http://192.168.9.105:60080/dongfeng/signaltrace">http://192.168.9.105:60080/dongfeng/signaltrace</a></li>
+<li>epc-c库 <a href="http://192.168.9.105:60080/dongfeng/epc-c">http://192.168.9.105:60080/dongfeng/epc-c</a></li>
+<li>ovs库 <a href="http://192.168.9.105:60080/dongfeng/ovs">http://192.168.9.105:60080/dongfeng/ovs</a></li>
+</ul>
+
+<h2 id="rpm包构造方法">RPM包构造方法</h2>
+
+<ol>
+<li>开发在git代码托管服务器<a href="http://192.168.9.105:60080">http://192.168.9.105:60080</a> 上提交更新代码</li>
+<li>由web钩子触发后台drone自动使用fpm进行rpm打包</li>
+<li>打包好的rpm包自动拷贝到文件共享服务器<a href="http://192.168.9.105:8888/files/EPC-VERSION/">http://192.168.9.105:8888/files/EPC-VERSION/</a> 并自动更新本地yum仓库</li>
+</ol>
+
+<h2 id="rpm打包版本">RPM打包版本</h2>
+
+<h3 id="版本说明">版本说明</h3>
+
+<p>以baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm为例</p>
+
+<ul>
+<li><code>baicells-epc-ui</code>是基础名称</li>
+<li><code>3.4.3</code>是version</li>
+<li><code>1</code>是release</li>
+<li><code>x86_64</code>是平台类型</li>
+<li><code>20190220</code>是打包日期</li>
+<li><code>8799690909</code>是git提交号</li>
+</ul>
+
+<h3 id="版本控制">版本控制</h3>
+
+<p>版本部分包含两部分 1.version 2.release
+version部分由代码库中VERSION读取，开发可以修改此文件进行版本修改
+release部分由打包程序自动控制，如果version不变更则递增+1，如果version变更则重新从1开始</p>
+
+<p><img src="http://192.168.9.105:7777/1.jpg" alt="" /></p>
+
+                        </div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/wcg-install/">Wcg Install</a></li>
+        
+        <li><a href="/posts/my-first-post/">My First Post</a></li>
+        
+        <li><a href="/about/"></a></li>
+        
+        <li><a href="/books/"></a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="http://workerwork.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
+    </li>
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
+    </li>
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://music.taihe.com/" title="千千静听">千千静听</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="git服务器">git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8001" title="本地蚂蚁笔记">本地蚂蚁笔记</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="http://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="http://workerwork.github.io/">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>

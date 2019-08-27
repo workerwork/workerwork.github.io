@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.55.6" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Wcg Install | WorkSpace</title>
+    <meta property="og:title" content="Wcg Install - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2019-01-21T16:46:44&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-01-21T16:46:44&#43;08:00">
+        
+    <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="Wcg Install">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="http://workerwork.github.io/posts/wcg-install/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="http://workerwork.github.io/">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go语言(golang)、移动互联网、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="http://workerwork.github.io/">首页</a>
+                    
+                    <a  href="http://workerwork.github.io/books/" title="新书">新书</a>
+                    
+                    <a  href="http://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="http://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">Wcg Install</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2019年1月21日
+                        </date>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h1 id="1-前言">1 前言</h1>
+
+<h2 id="1-1-术语">1.1 术语</h2>
+
+<table>
+<thead>
+<tr>
+<th>英文缩写</th>
+<th>英文全称</th>
+<th>中文全称</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>eGW</td>
+<td>enterprise gateway</td>
+<td>企业网关</td>
+</tr>
+
+<tr>
+<td>OMC</td>
+<td>operation and maintenance center</td>
+<td>操作管理中心</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="1-2-目的">1.2 目的</h2>
+
+<p>本文档用来指导安装部署业务网关</p>
+
+<h1 id="2-安装指导">2 安装指导</h1>
+
+<h2 id="2-1-安装系统">2.1 安装系统</h2>
+
+<p>系统版本要求：centos7.2</p>
+
+<p>安装步骤：
+1. 在服务器上插入U盘/光盘安装盘
+2. 服务器启动进入bios，设置从U盘/光盘启动
+3. 服务器进入安装引导界面，选择安装centos7.2
+4. 磁盘分区：
+ * boot 2G
+ * swap 16G
+ * 余下空间给&rdquo;/&rdquo;
+5. 选择gnome典型安装</p>
+
+<h2 id="2-2-更换内核">2.2 更换内核</h2>
+
+<ol>
+<li>进入内核包所在路径</li>
+<li>执行<code>yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm</code>替换为eGW专用内核</li>
+<li>如果是efi启动执行：<code>grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg</code></li>
+<li>执行<code>reboot</code>重启系统</li>
+<li>系统启动成功后，<code>uname -a</code>确认当前系统内核版本是否成功升级到514</li>
+</ol>
+
+<h2 id="2-3-设置网络">2.3 设置网络</h2>
+
+<ol>
+<li>配置静态ip地址</li>
+<li>设置DNS</li>
+<li>通过<code>ping www.baidu.com</code> 来确认网络是否正常</li>
+</ol>
+
+<h2 id="2-4-安装yum源">2.4 安装yum源</h2>
+
+<p>执行<code>yum install -y epel-release</code></p>
+
+<h2 id="2-5-升级openssh">2.5 升级openssh</h2>
+
+<p>执行<code>yum update -y openssh</code></p>
+
+<h2 id="2-6-安装业务网关">2.6 安装业务网关</h2>
+
+<ol>
+<li>把eGW安装包拷贝到待安装机器上</li>
+<li>执行<code>yum install ***.rpm</code></li>
+<li>执行<code>rpm -qa | grep WCG</code>查看网关是否安装成功</li>
+</ol>
+
+                        </div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/my-first-post/">My First Post</a></li>
+        
+        <li><a href="/books/"></a></li>
+        
+        <li><a href="/about/"></a></li>
+        
+        <li><a href="/archives/">归档</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="http://workerwork.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
+    </li>
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
+    </li>
+    
+    <li>
+        <a href="http://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://music.taihe.com/" title="千千静听">千千静听</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="git服务器">git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8001" title="本地蚂蚁笔记">本地蚂蚁笔记</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="http://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="http://workerwork.github.io/">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>
