@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>制作CentOS ISO | WorkSpace</title>
+    <meta property="og:title" content="制作CentOS ISO - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2019-08-28T16:37:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-08-28T16:37:51&#43;08:00">
+        
+    <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="制作CentOS ISO">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/centos-iso/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go语言(golang)、shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="新书">新书</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">制作CentOS ISO</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2019年8月28日
+                        </date>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-复制光盘文件">1. 复制光盘文件</h2>
+
+<h3 id="1-挂载iso镜像">1）挂载iso镜像</h3>
+
+<pre><code class="language-shell">#创建目录用于挂载光盘
+mkdir /root/centos7
+#挂载iso镜像
+mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7
+</code></pre>
+
+<h3 id="2-复制光盘文件到编辑目录进行编辑">2）复制光盘文件到编辑目录进行编辑</h3>
+
+<p>因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。</p>
+
+<pre><code class="language-shell">#首先创建编辑目录：
+mkdir /root/centos7_iso
+#复制光盘文件：
+cp -rf /root/centos7/* /root/centos7_iso/
+#diskinfo treeinfo文件需单独拷贝下：
+cp /root/centos7/.discinfo /root/centos7_iso/
+cp /root/centos7/.treeinfo /root/centos7_iso/
+</code></pre>
+
+<h2 id="2-编辑ks-cfg文件">2. 编辑ks.cfg文件</h2>
+
+<p>系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：</p>
+
+<pre><code class="language-shell">cd /root/centos7_iso/isolinux
+</code></pre>
+
+<pre><code>vim ks-init.cfg
+#platform=x86, AMD64, or Intel EM64T
+#version=DEVEL
+# Install OS instead of upgrade
+install
+# Keyboard layouts
+keyboard 'us'
+# Root password
+rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0
+# System language
+lang en_US
+# System authorization information
+auth  --useshadow  --passalgo=sha512
+# Use cdrom installation media
+cdrom
+# Use text mode install
+#text
+graphical
+# SELinux configuration
+selinux --disabled
+# Do not configure the X Window System
+skipx
+
+#firstboot --enable
+#ignoredisk --only-use=sda
+
+# Firewall configuration
+firewall --disabled
+# Network information
+network --bootproto=dhcp --device=eth0 --onboot=no
+network --hostname=localhost.localdomain
+# Reboot after installation
+reboot
+# System timezone
+timezone Asia/Shanghai
+# System bootloader configuration
+bootloader --append=&quot;-quiet&quot; --location=mbr
+# Clear the Master Boot Record
+zerombr
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+#part /boot --fstype=&quot;xfs&quot; --size=2048
+#part swap --fstype=&quot;swap&quot; --size=4096
+##part / --fstype=&quot;xfs&quot; --grow --size=1
+#part pv.01 --size=1 --grow
+#volgroup vg_root pv.01
+#logvol / --vgname=vg_root --size=1 --grow --name=lv_root
+#clearpart --initlabel --list=sda1
+#为了兼容mbr方式和EFI方式，同时创建了/boot和/boot/efi分区
+part /boot --fstype=&quot;xfs&quot; --ondisk=sda --size=1024
+part /boot/efi --fstype=&quot;xfs&quot; --ondisk=sda --size=1024
+part pv.363 --fstype=&quot;lvmpv&quot; --ondisk=sda --size=1 --grow
+volgroup df --pesize=4096 pv.363
+logvol swap --fstype=&quot;swap&quot; --size=4096 --name=swap --vgname=df
+logvol /home --fstype=&quot;xfs&quot; --size=512000 --name=home --vgname=df
+logvol / --fstype=&quot;xfs&quot; --size=1 --grow --name=root --vgname=df
+
+%packages
+@core --optional
+chrony
+kexec-tools
+@wcg-tools
+@wcg
+@segw
+%end
+
+%pre
+
+%end
+
+%post
+/home/wcg/initWCGOS.sh
+%end
+</code></pre>
+
+<pre><code>vim ks-recovery.cfg
+#platform=x86, AMD64, or Intel EM64T
+#version=DEVEL
+# Install OS instead of upgrade
+install
+# Keyboard layouts
+keyboard 'us'
+# Root password
+rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0
+# System language
+lang en_US
+# System authorization information
+auth  --useshadow  --passalgo=sha512
+# Use cdrom installation media
+cdrom
+# Use text mode install
+#text
+graphical
+# SELinux configuration
+selinux --disabled
+# Do not configure the X Window System
+skipx
+
+#firstboot --enable
+#ignoredisk --only-use=sda
+
+# Firewall configuration
+firewall --disabled
+# Network information
+network --bootproto=dhcp --device=eth0 --onboot=no
+network --hostname=localhost.localdomain
+# Reboot after installation
+reboot
+# System timezone
+timezone Asia/Shanghai
+# System bootloader configuration
+bootloader --append=&quot;-quiet&quot; --location=mbr --boot-drive=sda
+# Clear the Master Boot Record
+zerombr
+# Partition clearing information
+#clearpart --all --initlabel
+# Disk partitioning information
+#part /boot --fstype=&quot;xfs&quot; --size=2048
+#part swap --fstype=&quot;swap&quot; --size=4096
+##part / --fstype=&quot;xfs&quot; --grow --size=1
+#part pv.01 --size=1 --grow
+#volgroup vg_root pv.01
+#logvol / --vgname=vg_root --size=1 --grow --name=lv_root
+#clearpart --list=sda1
+part /boot --fstype=&quot;xfs&quot; --ondisk=sda --size=1024
+part /boot/efi --fstype=&quot;xfs&quot; --ondisk=sda --size=1024
+part pv.18 --fstype=&quot;lvmpv&quot; --noformat --onpart=sda2
+part pv.19 --fstype=&quot;lvmpv&quot; --ondisk=sda --size=1 --grow
+volgroup df --noformat --useexisting
+volgroup li --pesize=4096 pv.19
+logvol swap --fstype=&quot;swap&quot; --size=4086 --name=swap --vgname=li
+logvol / --fstype=&quot;xfs&quot; --size=1 --grow --name=root --vgname=df --fsoptions=&quot;/dev/mapper/df-home                   xfs     defaults        0 0&quot;
+
+%packages
+@core --optional
+chrony
+kexec-tools
+@wcg-tools
+@wcg
+@segw
+%end
+
+%pre
+
+%end
+
+%post
+/home/wcg/initWCGOS.sh
+%end
+</code></pre>
+
+<h2 id="3-配置mbr引导方式">3. 配置mbr引导方式</h2>
+
+<pre><code class="language-shell">#编辑isolinux目录下的isolinux.cfg文件，添加自己的内容，在isolinux.cfg文件中label linux下面添加自己的labe
+vim isolinux.cfg
+default vesamenu.c32
+timeout 600
+
+display boot.msg
+
+# Clear the screen when exiting the menu, instead of leaving the menu displayed.
+# For vesamenu, this means the graphical background is still displayed without
+# the menu itself for as long as the screen remains in graphics mode.
+menu clear
+menu background splash.png
+menu title CentOS Linux 7 for WCG
+menu vshift 8
+menu rows 18
+menu margin 8
+#menu hidden
+menu helpmsgrow 15
+menu tabmsgrow 13
+
+# Border Area
+menu color border * #00000000 #00000000 none
+
+# Selected item
+menu color sel 0 #ffffffff #00000000 none
+
+# Title bar
+menu color title 0 #ff7ba3d0 #00000000 none
+
+# Press [Tab] message
+menu color tabmsg 0 #ff3a6496 #00000000 none
+
+# Unselected menu item
+menu color unsel 0 #84b8ffff #00000000 none
+
+# Selected hotkey
+menu color hotsel 0 #84b8ffff #00000000 none
+
+# Unselected hotkey
+menu color hotkey 0 #ffffffff #00000000 none
+
+# Help text
+menu color help 0 #ffffffff #00000000 none
+
+# A scrollbar of some type? Not sure.
+menu color scrollbar 0 #ffffffff #ff355594 none
+
+# Timeout msg
+menu color timeout 0 #ffffffff #00000000 none
+menu color timeout_msg 0 #ffffffff #00000000 none
+
+# Command prompt text
+menu color cmdmark 0 #84b8ffff #00000000 none
+menu color cmdline 0 #ffffffff #00000000 none
+
+# Do not display the actual menu unless the user presses a key. All that is displayed is a timeout message.
+
+menu tabmsg Press Tab for full configuration options on menu items.
+
+menu separator # insert an empty line
+menu separator # insert an empty line
+
+label linux for ks-init
+  menu label Install CentOS7.3 for WCG with KS-init
+  menu default
+  kernel vmlinuz
+  #append initrd=initrd.img inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 quiet
+  #append initrd=initrd.img ks=cdrom:/isolinux/ks.cfg
+  #append initrd=initrd.img ks=hd:LABEL=WCGOS/isolinux/ks.cfg
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS inst.ks=hd:LABEL=WCGOS:/isolinux/ks-init.cfg
+
+label linux for ks-recovery
+  menu label Install CentOS7.3 for WCG with KS-recovery
+  kernel vmlinuz
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS inst.ks=hd:LABEL=WCGOS:/isolinux/ks-recovery.cfg
+
+label linux
+  menu label Install CentOS7.3 for WCG with ^GUI
+  kernel vmlinuz
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS quiet
+
+label check
+  menu label Test this ^media &amp; install CentOS7.3 for WCG
+#menu default
+  kernel vmlinuz
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS rd.live.check quiet
+#append initrd=initrd.img ks=cdrom:/isolinux/ks.cfg rd.live.check
+
+menu separator # insert an empty line
+
+# utilities submenu
+menu begin ^Troubleshooting
+  menu title Troubleshooting
+
+label vesa
+  menu indent count 5
+  menu label Install CentOS7.3 for WCG in ^basic graphics mode
+  text help
+  Try this option out if you're having trouble installing
+  CentOS Linux 7.
+  endtext
+  kernel vmlinuz
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS xdriver=vesa nomodeset quiet
+
+label rescue
+  menu indent count 5
+  menu label ^Rescue a CentOS Linux system
+  text help
+  If the system will not boot, this lets you access files
+  and edit config files to try to get it booting again.
+  endtext
+  kernel vmlinuz
+  append initrd=initrd.img inst.stage2=hd:LABEL=WCGOS rescue quiet
+
+label memtest
+  menu label Run a ^memory test
+  text help
+  If your system is having issues, a problem with your
+  system's memory may be the cause. Use this utility to
+  see if the memory is working correctly.
+  endtext
+  kernel memtest
+
+menu separator # insert an empty line
+
+label local
+  menu label Boot from ^local drive
+  localboot 0xffff
+
+menu separator # insert an empty line
+menu separator # insert an empty line
+
+label returntomain
+  menu label Return to ^main menu
+  menu exit
+
+menu end
+</code></pre>
+
+<p><strong>注意点：</strong>
+1）memu label 后面的内容是在光盘引导起来菜单的内容，^后面的字母是菜单的快捷键
+2）通过inst.ks关键字指明ks.cfg文件位置
+3）inst.stages2标识的是系统按照介质位置</p>
+
+<h2 id="4-配置efi引导方式">4. 配置EFI引导方式</h2>
+
+<pre><code class="language-shell">#进入光盘目录EFI/BOOT/，编辑grub.cfg文件，添加自己的菜单
+menuentry 'Install CentOS 7' --class fedora--class gnu-linux --class gnu --class os {
+       linuxefi /p_w_picpaths/pxeboot/vmlinuz inst.stage2=hd:LABEL=WCGOS quiet
+       initrdefi /p_w_picpaths/pxeboot/initrd.img
+}
+menuentry 'Install CentOS 7 custom dongfeng' --class fedora --class gnu-linux --class gnu --class os {
+       linuxefi /p_w_picpaths/pxeboot/vmlinuz inst.ks=cdrom:/isolinux/ks-init.cfg inst.stage2=hd:LABEL=WCGOS quiet
+       initrdefi /p_w_picpaths/pxeboot/initrd.img
+}
+</code></pre>
+
+<h2 id="5-定制rpm">5. 定制rpm</h2>
+
+<pre><code class="language-shell">vim comps.xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt;
+&lt;comps&gt;
+  &lt;group&gt;
+    &lt;id&gt;core&lt;/id&gt;
+    &lt;name&gt;Core&lt;/name&gt;
+    &lt;name xml:lang=&quot;en_GB&quot;&gt;Core&lt;/name&gt;
+    &lt;description&gt;Smallest possible installation.&lt;/description&gt;
+    &lt;default&gt;false&lt;/default&gt;
+    &lt;uservisible&gt;false&lt;/uservisible&gt;
+    &lt;packagelist&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;audit&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;basesystem&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;bash&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;biosdevname&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;btrfs-progs&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;coreutils&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;cronie&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;curl&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dhclient&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;e2fsprogs&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;filesystem&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;firewalld&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;glibc&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;hostname&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;initscripts&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iproute&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iprutils&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iptables&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iputils&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;irqbalance&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;kbd&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;kexec-tools&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;less&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;man-db&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;ncurses&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;openssh-clients&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;openssh-server&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;parted&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;passwd&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;plymouth&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;policycoreutils&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;procps-ng&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;rootfiles&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;rpm&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;rsyslog&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;selinux-policy-targeted&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;setup&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;shadow-utils&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;sudo&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;systemd&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;tar&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;tuned&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;util-linux&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;vim-minimal&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;xfsprogs&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;yum&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;aic94xx-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;alsa-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;bfa-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dracut-config-rescue&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;ivtv-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl100-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl1000-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl105-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl135-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl2000-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl2030-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl3160-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl3945-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl4965-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl5000-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl5150-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl6000-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl6000g2a-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl6000g2b-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl6050-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl7260-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;iwl7265-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;kernel-tools&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;libertas-sd8686-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;libertas-sd8787-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;libertas-usb8388-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;libsysfs&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;linux-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;microcode_ctl&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;NetworkManager&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;NetworkManager-team&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;NetworkManager-tui&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;NetworkManager-wifi&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;postfix&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;ql2100-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;ql2200-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;ql23xx-firmware&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;rdma&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dracut-config-generic&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dracut-fips&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dracut-fips-aesni&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;dracut-network&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;openssh-keycat&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;selinux-policy-mls&lt;/packagereq&gt;
+      &lt;packagereq type=&quot;mandatory&quot;&gt;tboot&lt;/packagereq&gt;
+    &lt;/packagelist&gt;
+  &lt;/group&gt;
+  &lt;group&gt;
+	&lt;id&gt;wcg-tools&lt;/id&gt;
+	&lt;name&gt;WCG-Tools&lt;/name&gt;
+	&lt;name xml:lang=&quot;en_GB&quot;&gt;WCG-Tools&lt;/name&gt;
+	&lt;description&gt;WCG Tools installation.&lt;/description&gt;
+	&lt;default&gt;false&lt;/default&gt;
+	&lt;uservisible&gt;false&lt;/uservisible&gt;
+	&lt;packagelist&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;curl&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;fcgi&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;gsoap&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;hiredis&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;keepalived&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;lksctp-tools&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;nginx&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;redis&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;spawn-fcgi&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;tftp&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;tftp-server&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;xinetd&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;vconfig&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;net-tools&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;tmux&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;lrzsz&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;tcpdump&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;htop&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;sysstat&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;epel-release&lt;/packagereq&gt;
+	&lt;/packagelist&gt;
+  &lt;/group&gt;
+  &lt;group&gt;
+    &lt;id&gt;wcg&lt;/id&gt;
+	&lt;name&gt;WCG&lt;/name&gt;
+	&lt;name xml:lang=&quot;en_GB&quot;&gt;WCG&lt;/name&gt;
+    &lt;description&gt;WCG installation.&lt;/description&gt;
+	&lt;default&gt;false&lt;/default&gt;
+	&lt;uservisible&gt;false&lt;/uservisible&gt;
+	&lt;packagelist&gt;
+        &lt;packagereq type=&quot;mandatory&quot;&gt;WCG&lt;/packagereq&gt;
+	&lt;/packagelist&gt;
+  &lt;/group&gt;
+  &lt;group&gt;
+	&lt;id&gt;segw&lt;/id&gt;
+	&lt;name&gt;SeGW&lt;/name&gt;
+	&lt;name xml:lang=&quot;en_GB&quot;&gt;SeGW&lt;/name&gt;
+	&lt;description&gt;SeGW installation.&lt;/description&gt;
+	&lt;default&gt;false&lt;/default&gt;
+	&lt;uservisible&gt;false&lt;/uservisible&gt;
+	&lt;packagelist&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;strongswan&lt;/packagereq&gt;
+	&lt;/packagelist&gt;
+  &lt;/group&gt;
+  &lt;environment&gt;
+    &lt;id&gt;miniwcg&lt;/id&gt;
+    &lt;name&gt;Minimal Install for WCG&lt;/name&gt;
+    &lt;description&gt;Basic functionality for WCG.&lt;/description&gt;
+    &lt;display_order&gt;5&lt;/display_order&gt;
+    &lt;grouplist&gt;
+      &lt;groupid&gt;core&lt;/groupid&gt;
+	&lt;/grouplist&gt;
+	&lt;grouplist&gt;
+	  &lt;groupid&gt;wcg-tools&lt;/groupid&gt;
+	&lt;/grouplist&gt;
+	&lt;grouplist&gt;
+	  &lt;groupid&gt;wcg&lt;/groupid&gt;
+	&lt;/grouplist&gt;
+	&lt;grouplist&gt;
+	  &lt;groupid&gt;segw&lt;/groupid&gt;
+	&lt;/grouplist&gt;
+  &lt;/environment&gt;
+&lt;/comps&gt;
+</code></pre>
+
+<pre><code class="language-shell">sed -ri '/xml:lang/{/en_GB|zh_CN/!d}' isolinux/comps.xml
+createrepo -v -g isolinux/comps.xml .
+</code></pre>
+
+<h2 id="5-生成iso镜像">5. 生成iso镜像</h2>
+
+<pre><code class="language-shell">mkisofs -R -J -T -v -no-emul-boot --boot-load-size 4 --boot-info-table -V &quot;WCGOS&quot; -b isolinux/isolinux.bin -c isolinux/boot.cat -o ../WCGOS.iso -eltorito-alt-boot -b p_w_picpaths/efiboot.img -no-emul-boot .
+isohybrid -e 2 WCGOS.iso
+implantisomd5 WCGOS.iso
+</code></pre>
+
+                        </div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
+        
+        <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
+        
+        <li><a href="/posts/kubernetes-deploy/">部署kubernetes</a></li>
+        
+        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
+        
+        <li><a href="/posts/wcg-install/">Wcg Install</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库">搭建本地yum仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkerSpace">使用hugo搭建WorkerSpace</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kubernetes-deploy/" title="部署kubernetes">部署kubernetes</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://music.taihe.com/" title="千千静听">千千静听</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="git服务器">git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8001" title="本地蚂蚁笔记">本地蚂蚁笔记</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>
