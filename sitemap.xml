@@ -18,6 +18,11 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/posts/kubernetes-deploy/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/posts/auto-epc/</loc>
     <lastmod>2019-02-20T16:46:44+08:00</lastmod>
   </url>
@@ -39,11 +44,6 @@
   
   <url>
     <loc>https://workerwork.github.io/books/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/posts/kubernetes-deploy/</loc>
     <priority>0</priority>
   </url>
   
