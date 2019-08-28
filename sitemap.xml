@@ -43,6 +43,11 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/posts/kubernetes-deploy/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/categories/</loc>
   </url>
   
