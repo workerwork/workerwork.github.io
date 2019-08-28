@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>My First Post | WorkSpace</title>
-    <meta property="og:title" content="My First Post - WorkSpace">
+    <title>使用hugo搭建WorkerSpace | WorkSpace</title>
+    <meta property="og:title" content="使用hugo搭建WorkerSpace - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2019-01-21T15:37:51&#43;08:00">
+    <meta property="article:published_time" content="2019-08-28T10:16:21&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2019-01-21T15:37:51&#43;08:00">
+    <meta property="article:modified_time" content="2019-08-28T10:16:21&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="My First Post">
+    <meta name="description" content="使用hugo搭建WorkerSpace">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/my-first-post/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/workspace/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,16 +74,134 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">My First Post</h1>
+                            <h1 class="post-title">使用hugo搭建WorkerSpace</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2019年1月21日
+                            2019年8月28日
                         </date>
                         
                         
                         <div class="post-content">
-                            <p>haha
-this is the first test for hugo!</p>
+                            
+
+<h1 id="1-什么是hugo">1. 什么是hugo</h1>
+
+<p>引用一下Hugo官网的描述</p>
+
+<blockquote>
+<p>The world’s fastest framework for building websites.</p>
+</blockquote>
+
+<p>Hugo是一个非常受欢迎的、开源的静态网站生成工具，和Hexo类似。 它速度快，扩展性强.</p>
+
+<p>更多的关于Hugo的介绍，请参考Hugo的官网 <a href="https://gohugo.io/">https://gohugo.io/</a> .</p>
+
+<h1 id="2-安装-hugo">2. 安装 hugo</h1>
+
+<p>从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。
+github链接：<a href="https://github.com/gohugoio/hugo">https://github.com/gohugoio/hugo</a></p>
+
+<pre><code class="language-shell">#加入环境变量和执行权限
+cp hugo /usr/bin/hugo
+chmod +x /usr/bin/hugo
+</code></pre>
+
+<h1 id="3-使用hugo创建站点">3. 使用hugo创建站点</h1>
+
+<pre><code>hugo new site workerwork.github.io-site
+</code></pre>
+
+<p>github链接：<a href="https://github.com/workerwork/workerwork.github.io-site">https://github.com/workerwork/workerwork.github.io-site</a></p>
+
+<h1 id="4-给站点添加主题">4. 给站点添加主题</h1>
+
+<pre><code class="language-shell">cd workerwork.github.io-site
+git init
+git submodule add https://github.com/rujews/maupassant-hugo themes/maupassant
+
+# Edit your config.toml configuration file
+# and add the maupassant theme.
+echo 'theme = &quot;maupassant&quot;' &gt;&gt; config.toml
+</code></pre>
+
+<h1 id="5-配置config-toml">5. 配置config.toml</h1>
+
+<pre><code class="language-shell">baseURL = &quot;https://workerwork.github.io&quot;
+languageCode = &quot;zh-CN&quot;
+title = &quot;WorkSpace&quot;
+theme = &quot;maupassant&quot;
+
+[author]
+  name = &quot;dongfeng&quot;
+
+[params]
+  author = &quot;dongfeng&quot;
+  subtitle = &quot;专注于C、Python、Go语言(golang)、shell、项目管理、软件架构&quot;
+  keywords = &quot;golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序&quot;
+  description = &quot;专注于IT互联网，包括但不限于Go语言(golang)、C、Python、项目管理、抖音分析、软件架构等&quot;
+
+[menu]
+  [[menu.main]]
+    identifier = &quot;books&quot;
+    name = &quot;新书&quot;
+    url = &quot;/books/&quot;
+    weight = 2
+  [[menu.main]]
+    identifier = &quot;archives&quot;
+    name = &quot;归档&quot;
+    url = &quot;/archives/&quot;
+    weight = 3
+  [[menu.main]]
+    identifier = &quot;about&quot;
+    name = &quot;关于&quot;
+    url = &quot;/about/&quot;
+    weight = 4
+
+[[params.links]]
+  title = &quot;bing搜索&quot;
+  name = &quot;bing搜索&quot;
+  url = &quot;https://cn.bing.com/&quot;
+[[params.links]]
+  title = &quot;baidu搜索&quot;
+  name = &quot;baidu搜索&quot;
+  url = &quot;http://www.baidu.com/&quot;
+[[params.links]]
+  title = &quot;千千静听&quot;
+  name = &quot;千千静听&quot;
+  url = &quot;http://music.taihe.com/&quot;
+[[params.links]]
+  title = &quot;git服务器&quot;
+  name = &quot;git服务器&quot;
+  url = &quot;http://192.168.9.105:60080&quot;
+[[params.links]]
+  title = &quot;jenkins服务器&quot;
+  name = &quot;jenkins服务器&quot;
+  url = &quot;http://192.168.9.105:8080&quot;
+[[params.links]]
+  title = &quot;测试jenkins服务器&quot;
+  name = &quot;测试jenkins服务器&quot;
+  url = &quot;http://192.168.2.115:8080&quot;
+[[params.links]]
+  title = &quot;本地网盘&quot;
+  name = &quot;本地网盘&quot;
+  url = &quot;http://192.168.9.105:8888&quot;
+[[params.links]]
+  title = &quot;drone服务器&quot;
+  name = &quot;drone服务器&quot;
+  url = &quot;http://192.168.9.105:8000&quot;
+[[params.links]]
+  title = &quot;本地蚂蚁笔记&quot;
+  name = &quot;本地蚂蚁笔记&quot;
+  url = &quot;http://192.168.9.105:8001&quot;
+</code></pre>
+
+<h1 id="6-合成静态页面">6. 合成静态页面</h1>
+
+<pre><code class="language-shell">#运行hugo
+hugo
+</code></pre>
+
+<p>然后把public路径下的文件push到github上的workerwork.github.io</p>
 
                         </div>
 
@@ -93,11 +211,15 @@ this is the first test for hugo!</p>
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/books/"></a></li>
+        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
+        
+        <li><a href="/posts/wcg-install/">Wcg Install</a></li>
+        
+        <li><a href="/posts/my-first-post/">My First Post</a></li>
         
         <li><a href="/about/"></a></li>
         
-        <li><a href="/archives/">归档</a></li>
+        <li><a href="/books/"></a></li>
         
     </ul>
 </div>

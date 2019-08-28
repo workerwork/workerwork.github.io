@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.55.6" />
+    <meta name="generator" content="Hugo 0.57.2" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,13 +12,13 @@
     <meta property="og:type" content="website">
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
     <meta name="description" content="专注于IT互联网，包括但不限于Go语言(golang)、C、Python、项目管理、抖音分析、软件架构等">
-    <meta property="og:url" content="http://workerwork.github.io/">
+    <meta property="og:url" content="https://workerwork.github.io/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="http://workerwork.github.io/index.xml" title="WorkSpace" />
+    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -36,7 +36,7 @@
             <div class="site-name ">
                 
                     <h1>
-                        <a id="logo" href="http://workerwork.github.io/">
+                        <a id="logo" href="https://workerwork.github.io">
                             WorkSpace
                         </a>
                     </h1>
@@ -45,13 +45,13 @@
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
-                    <a class="current" href="http://workerwork.github.io/">首页</a>
+                    <a class="current" href="https://workerwork.github.io">首页</a>
                     
-                    <a  href="http://workerwork.github.io/books/" title="新书">新书</a>
+                    <a  href="https://workerwork.github.io/books/" title="新书">新书</a>
                     
-                    <a  href="http://workerwork.github.io/archives/" title="归档">归档</a>
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
                     
-                    <a  href="http://workerwork.github.io/about/" title="关于">关于</a>
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
                     
                 </nav>
             </div>
@@ -70,7 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="http://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC" >AUTO-EPC</a>
+                                    <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkerSpace" >使用hugo搭建WorkerSpace</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月28日
+                            </date>
+                            
+                            <div class="post-content">
+                                1. 什么是hugo 引用一下Hugo官网的描述
+ The world’s fastest framework for building websites.
+ Hugo是一个非常受欢迎的、开源的静态网站生成工具，和Hexo类似。 它速度快，扩展性强.
+更多的关于Hugo的介绍，请参考Hugo的官网 https://gohugo.io/ .
+2. 安装 hugo 从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。 github链接：https://github.com/gohugoio/hugo
+#加入环境变量和执行权限 cp hugo /usr/bin/hugo chmod +x /usr/bin/hugo  3. 使用hugo创建站点 hugo new site workerwork.github.io-site  github链接：https://github.com/workerwork/workerwork.github.io-site
+4. 给站点添加主题 cd workerwork.github.io-site git init git submodule add https://github.com/rujews/maupassant-hugo themes/maupassant # Edit your config.toml configuration file # and add the maupassant theme. echo 'theme = &quot;maupassant&quot;' &gt;&gt; config.toml  5.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/workspace/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC" >AUTO-EPC</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
@@ -84,13 +106,13 @@ yum install [rpm包名]  如果是升级，执行
 yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
 EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.168.9.105:60080/baicells/ovs-rest ovsdb-config-agent库 http://192.168.9.105:60080/baicells/ovsdb-config-agent openapi库 http://192.168.9.105:60080/dongfeng/openapi signaltrace库 http://192.168.9.105:60080/dongfeng/signaltrace epc-c库 http://192.168.9.105:60080/dongfeng/epc-c ovs库 http://192.168.9.105:60080/dongfeng/ovs  RPM包构造方法  开发在git代码托管服务器http://192.168.9.105:60080 上提交更新代码 由web钩子触发后台drone自动使用fpm进行rpm打包 打包好的rpm包自动拷贝到文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 并自动更新本地yum仓库  RPM打包版本 版本说明 以baicells-epc-ui-3.……
                             </div>
-                            <p class="readmore"><a href="http://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
                         </article>
                     
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="http://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
+                                    <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
@@ -103,13 +125,13 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
 2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
                             </div>
-                            <p class="readmore"><a href="http://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
                         </article>
                     
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="http://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
+                                    <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
@@ -119,7 +141,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
                             <div class="post-content">
                                 haha this is the first test for hugo!……
                             </div>
-                            <p class="readmore"><a href="http://workerwork.github.io/posts/my-first-post/">阅读全文</a></p>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/my-first-post/">阅读全文</a></p>
                         </article>
                     
 
@@ -136,7 +158,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
       
       <input type="text" name="q" maxlength="20" placeholder="Search">
-      <input type="hidden" name="sitesearch" value="http://workerwork.github.io/">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
       <button type="submit" class="submit icon-search"></button>
 </form>
     </section>
@@ -146,15 +168,19 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
-        <a href="http://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
+        <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkerSpace">使用hugo搭建WorkerSpace</a>
     </li>
     
     <li>
-        <a href="http://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
+        <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
     </li>
     
     <li>
-        <a href="http://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
+        <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
     </li>
     
 </ul>
@@ -224,7 +250,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <section class="widget">
         <h3 class="widget-title">其它</h3>
         <ul class="widget-list">
-            <li><a href="http://workerwork.github.io/index.xml">文章 RSS</a></li>
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
         </ul>
     </section>
 </div>
@@ -233,7 +259,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 </div>
 <footer id="footer">
     <div class="container">
-        &copy; 2018 <a href="http://workerwork.github.io/">WorkSpace By dongfeng</a>.
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
         Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
         <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
         
