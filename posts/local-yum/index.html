@@ -7,16 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title> | WorkSpace</title>
-    <meta property="og:title" content=" - WorkSpace">
+    <title>搭建本地yum仓库 | WorkSpace</title>
+    <meta property="og:title" content="搭建本地yum仓库 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2019-08-28T15:00:21&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-08-28T15:00:21&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="">
+    <meta name="description" content="搭建本地yum仓库">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/about/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/local-yum/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -53,7 +57,7 @@
                     
                     <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
                     
-                    <a class="current" href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
                     
                 </nav>
             </div>
@@ -70,15 +74,75 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title"></h1>
+                            <h1 class="post-title">搭建本地yum仓库</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            1年1月1日
+                            2019年8月28日
                         </date>
                         
                         
                         <div class="post-content">
-                            <p>test</p>
+                            
+
+<h1 id="1-安装工具">1. 安装工具</h1>
+
+<pre><code class="language-shell"> yum install -y createrepo
+</code></pre>
+
+<h1 id="2-编辑-comps-xml">2. 编辑 comps.xml</h1>
+
+<pre><code class="language-shell">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt;
+&lt;comps&gt;
+  &lt;group&gt;
+	&lt;id&gt;epc&lt;/id&gt;
+	&lt;name&gt;epc&lt;/name&gt;
+	&lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt;
+	&lt;description&gt;epc installation.&lt;/description&gt;
+	&lt;default&gt;false&lt;/default&gt;
+	&lt;uservisible&gt;false&lt;/uservisible&gt;
+	&lt;packagelist&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt;
+		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt;
+	&lt;/packagelist&gt;
+  &lt;/group&gt;
+&lt;/comps&gt;
+
+</code></pre>
+
+<h1 id="3-创建仓库">3. 创建仓库</h1>
+
+<pre><code class="language-shell">createrepo -g comps.xml .
+</code></pre>
+
+<h1 id="4-拷贝rpm包到仓库">4. 拷贝rpm包到仓库</h1>
+
+<pre><code class="language-shell">mkdir rpms
+cp *.rpm rpms/
+</code></pre>
+
+<h1 id="5-在客户端添加本地yum源">5. 在客户端添加本地yum源</h1>
+
+<pre><code class="language-shell">cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF
+[local]
+name=local for centos7
+baseurl=file://192.168.9.105/root/df/yum
+enable=1
+gpgcheck=0
+priority=1
+EOF
+</code></pre>
+
+<h1 id="6-客户端更新元数据">6. 客户端更新元数据</h1>
+
+<pre><code class="language-shell">yum clean all
+yum makecache
+</code></pre>
 
                         </div>
 
@@ -88,8 +152,6 @@
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
-        
         <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
         
         <li><a href="/posts/kubernetes-deploy/">部署kubernetes</a></li>
@@ -97,6 +159,8 @@
         <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
         
         <li><a href="/posts/wcg-install/">Wcg Install</a></li>
+        
+        <li><a href="/posts/my-first-post/">My First Post</a></li>
         
     </ul>
 </div>
