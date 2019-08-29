@@ -6,10 +6,20 @@
     <description>Recent content in Posts on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 28 Aug 2019 16:37:51 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 Aug 2019 09:37:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>使用gogs搭建git服务器</title>
+      <link>https://workerwork.github.io/posts/gogs/</link>
+      <pubDate>Thu, 29 Aug 2019 09:37:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/gogs/</guid>
+      <description> 1. gogs介绍 gogs官网：https://gogs.io/ 项目源码：https://github.com/gogs/gogs
+2. docker安装gogs 1 ）下载gogs的docker镜像 docker pull gogs/gogs  2 ）创建gogs存储目录 mkdir -p /var/gogs  3 ）使用gogs镜像创建容器 docker run -d --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs  4 ）使用 ip:10080执行图像界面安装 </description>
+    </item>
     
     <item>
       <title>制作CentOS ISO</title>

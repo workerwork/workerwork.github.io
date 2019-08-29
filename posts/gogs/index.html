@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>My First Post | WorkSpace</title>
-    <meta property="og:title" content="My First Post - WorkSpace">
+    <title>使用gogs搭建git服务器 | WorkSpace</title>
+    <meta property="og:title" content="使用gogs搭建git服务器 - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2019-01-21T15:37:51&#43;08:00">
+    <meta property="article:published_time" content="2019-08-29T09:37:51&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2019-01-21T15:37:51&#43;08:00">
+    <meta property="article:modified_time" content="2019-08-29T09:37:51&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="My First Post">
+    <meta name="description" content="使用gogs搭建git服务器">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/my-first-post/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/gogs/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,16 +74,41 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">My First Post</h1>
+                            <h1 class="post-title">使用gogs搭建git服务器</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2019年1月21日
+                            2019年8月29日
                         </date>
                         
                         
                         <div class="post-content">
-                            <p>haha
-this is the first test for hugo!</p>
+                            
+
+<h2 id="1-gogs介绍">1. gogs介绍</h2>
+
+<p>gogs官网：<a href="https://gogs.io/">https://gogs.io/</a>
+项目源码：<a href="https://github.com/gogs/gogs">https://github.com/gogs/gogs</a></p>
+
+<p><img src="https://static.oschina.net/uploads/space/2017/0226/101836_of53_852826.png" alt="" /></p>
+
+<h2 id="2-docker安装gogs">2. docker安装gogs</h2>
+
+<h3 id="1-下载gogs的docker镜像">1 ）下载gogs的docker镜像</h3>
+
+<pre><code class="language-shell">docker pull gogs/gogs
+</code></pre>
+
+<h3 id="2-创建gogs存储目录">2 ）创建gogs存储目录</h3>
+
+<pre><code class="language-shell">mkdir -p /var/gogs
+</code></pre>
+
+<h3 id="3-使用gogs镜像创建容器">3 ）使用gogs镜像创建容器</h3>
+
+<pre><code class="language-shell">docker run -d --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs
+</code></pre>
+
+<h3 id="4-使用-ip-10080执行图像界面安装">4 ）使用 ip:10080执行图像界面安装</h3>
 
                         </div>
 
@@ -93,11 +118,15 @@ this is the first test for hugo!</p>
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/about/"></a></li>
+        <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
         
-        <li><a href="/books/"></a></li>
+        <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
         
-        <li><a href="/archives/">归档</a></li>
+        <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
+        
+        <li><a href="/posts/kubernetes-deploy/">部署kubernetes</a></li>
+        
+        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
         
     </ul>
 </div>
