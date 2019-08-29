@@ -33,7 +33,32 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/categories/</loc>
+    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/git/</loc>
+    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/gogs/</loc>
+    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/posts/gogs/</loc>
+    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/</loc>
     <lastmod>2019-08-29T09:37:51+08:00</lastmod>
   </url>
   
@@ -58,13 +83,43 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/tags/auto/</loc>
+    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/posts/auto-epc/</loc>
+    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/ci/cd/</loc>
+    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/devops/</loc>
+    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/epc/</loc>
     <lastmod>2019-02-20T16:46:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/wcg-install/</loc>
     <lastmod>2019-01-21T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/hugo/</loc>
+    <lastmod>2019-01-21T15:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/hugo/</loc>
+    <lastmod>2019-01-21T15:37:51+08:00</lastmod>
   </url>
   
   <url>
@@ -80,14 +135,6 @@
   <url>
     <loc>https://workerwork.github.io/books/</loc>
     <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
   </url>
   
   <url>

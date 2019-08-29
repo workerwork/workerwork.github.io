@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hugo on WorkSpace</title>
+    <link>https://workerwork.github.io/categories/hugo/</link>
+    <description>Recent content in hugo on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 21 Jan 2019 15:37:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/categories/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>My First Post</title>
+      <link>https://workerwork.github.io/posts/my-first-post/</link>
+      <pubDate>Mon, 21 Jan 2019 15:37:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/my-first-post/</guid>
+      <description>this is the first test for hugo!</description>
+    </item>
+    
+  </channel>
+</rss>
