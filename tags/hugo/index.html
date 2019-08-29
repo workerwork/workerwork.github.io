@@ -80,6 +80,35 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/workspace/">使用hugo搭建WorkSpace</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/hugo">hugo</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 什么是hugo 引用一下Hugo官网的描述
+ The world’s fastest framework for building websites.
+ Hugo是一个非常受欢迎的、开源的静态网站生成工具，和Hexo类似。 它速度快，扩展性强.
+更多的关于Hugo的介绍，请参考Hugo的官网 https://gohugo.io/ .
+2. 安装 hugo 从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。 github链接：https://github.com/gohugoio/hugo
+#加入环境变量和执行权限 cp hugo /usr/bin/hugo chmod +x /usr/bin/hugo  3. 使用hugo创建站点 hugo new site workerwork.github.io-site  github链接：https://github.com/workerwork/workerwork.github.io-site
+4. 给站点添加主题 cd workerwork.github.io-site git init git submodule add https://github.com/rujews/maupassant-hugo themes/maupassant # Edit your config.toml configuration file # and add the maupassant theme. echo 'theme = &quot;maupassant&quot;' &gt;&gt; config.toml  5.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/workspace/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/my-first-post/">My First Post</a>
                                 </h1>
                             </header>
@@ -152,7 +181,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkerSpace">使用hugo搭建WorkerSpace</a>
+        <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkSpace">使用hugo搭建WorkSpace</a>
     </li>
     
     <li>
@@ -177,7 +206,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/hugo/">hugo(1)</a>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
     </li>
     
     <li>
@@ -202,6 +231,8 @@
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
     
 </div>
     </section>

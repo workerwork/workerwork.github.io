@@ -85,7 +85,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </item>
     
     <item>
-      <title>使用hugo搭建WorkerSpace</title>
+      <title>使用hugo搭建WorkSpace</title>
       <link>https://workerwork.github.io/posts/workspace/</link>
       <pubDate>Wed, 28 Aug 2019 10:16:21 +0800</pubDate>
       
