@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>搭建本地yum仓库 | WorkSpace</title>
-    <meta property="og:title" content="搭建本地yum仓库 - WorkSpace">
+    <title>EPC的CI/CD | WorkSpace</title>
+    <meta property="og:title" content="EPC的CI/CD - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2019-08-28T15:00:21&#43;08:00">
+    <meta property="article:published_time" content="2019-08-29T14:17:51&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2019-08-28T15:00:21&#43;08:00">
+    <meta property="article:modified_time" content="2019-08-29T14:17:51&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="搭建本地yum仓库">
+    <meta name="description" content="EPC的CI/CD">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/local-yum/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/epc-cicd/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,74 +74,144 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">搭建本地yum仓库</h1>
+                            <h1 class="post-title">EPC的CI/CD</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2019年8月28日
+                            2019年8月29日
                         </date>
                         
                         
                         <div class="post-content">
                             
 
-<h1 id="1-安装工具">1. 安装工具</h1>
+<h2 id="1-流程介绍">1. 流程介绍</h2>
 
-<pre><code class="language-shell"> yum install -y createrepo
+<p>开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库</p>
+
+<h2 id="2-drone-yml">2. .drone.yml</h2>
+
+<pre><code class="language-shell">workspace:
+    base: /root/gogs
+    path: epc-c
+
+pipeline:
+  build:
+    image: centos7.5:dev
+    environment:
+      - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no
+      - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no
+      - TEST_SERVER=root@192.168.9.105
+      - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION    
+    commands:
+      - git_rev=$(git rev-parse HEAD| cut -c1-10)
+      - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git
+      - cd pack-epc-c
+      - ./pack-epc-c.sh
+      - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot;
+      - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}')
+      - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm
+      - eval $(ssh-agent -s) 
+      - ssh-add /root/.ssh/id_rsa
+      - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot;
+      - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff
+      - cd /root/df/caddy/yum.repo
+      - rm -rf rpms/baicells-epc-c-*.rpm
+      - cp -rf ../filebrowser/files/EPC-VERSION/&quot;$rpm_newname&quot; rpms/
+      - createrepo --update .
+      - exit
+      - eeooff
 </code></pre>
 
-<h1 id="2-编辑-comps-xml">2. 编辑 comps.xml</h1>
+<h2 id="3-打包脚本">3. 打包脚本</h2>
 
-<pre><code class="language-shell">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt;
-&lt;comps&gt;
-  &lt;group&gt;
-	&lt;id&gt;epc&lt;/id&gt;
-	&lt;name&gt;epc&lt;/name&gt;
-	&lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt;
-	&lt;description&gt;epc installation.&lt;/description&gt;
-	&lt;default&gt;false&lt;/default&gt;
-	&lt;uservisible&gt;false&lt;/uservisible&gt;
-	&lt;packagelist&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt;
-		&lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt;
-	&lt;/packagelist&gt;
-  &lt;/group&gt;
-&lt;/comps&gt;
+<pre><code class="language-shell">#!/bin/bash
 
-</code></pre>
+#安装依赖
+rpm -qa | grep epel-release &amp;&gt;/dev/null
+[[ $? == 1 ]] &amp;&amp; yum install -y epel-release
+rpm -qa | grep ^expect &amp;&gt;/dev/null
+[[ $? == 1 ]] &amp;&amp; yum install -y expect
+if [[ ! $(which fpm) ]];then
+	yum -y install ruby rubygems ruby-devel
+	#gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+	#gem sources -l
+	gem install fpm
+fi
 
-<h1 id="3-创建仓库">3. 创建仓库</h1>
+#设定分支
+git branch --set-upstream-to=origin/master master
+#git拉取最新配置
+git pull
+#git拉取子模块
+git submodule init
+git submodule update --remote
 
-<pre><code class="language-shell">createrepo -g comps.xml .
-</code></pre>
+#if [ -z $1 ]; then
+#    echo &quot;Usage: $0 1.1.1&quot;
+#    exit 0
+#fi
 
-<h1 id="4-拷贝rpm包到仓库">4. 拷贝rpm包到仓库</h1>
+VERSION_INPUT=$(echo $1 | egrep &quot;^[1-9][0-9]*\.[0-9]+\.[0-9]+$&quot;)
+VERSION_BASE=$(cat epc-c/VERSION)
+VERSION=${VERSION_INPUT:-&quot;$VERSION_BASE&quot;}
+VERSION_TMP=$(cat VERSION)
+RELEASE=$(cat RELEASE)
+if [[ $VERSION == $VERSION_TMP ]];then
+	let RELEASE++
+	echo $RELEASE &gt; RELEASE
+else
+	let RELEASE=1
+	echo $VERSION &gt; VERSION
+	echo $RELEASE &gt; RELEASE
+fi
 
-<pre><code class="language-shell">mkdir rpms
-cp *.rpm rpms/
-</code></pre>
+git add VERSION RELEASE
+git commit -m &quot;mod version,release&quot;
+expect -c &quot;set timeout 5;
+           spawn git push origin master;
+           expect \&quot;Username\&quot; {send \&quot;dongfeng\r\&quot;};
+           expect \&quot;Password\&quot; {send \&quot;baicells\r\&quot;};
+           send \&quot;quit\n\&quot;;
+expect eof&quot;
 
-<h1 id="5-在客户端添加本地yum源">5. 在客户端添加本地yum源</h1>
+if [ -z ${VERSION} ]; then
+	echo &quot;Version $1 is incorrect&quot;
+	echo &quot;Syntax: ^[1-9][0-9]*\.[0-9]+\.[0-9]+$&quot;
+	exit 0
+fi
 
-<pre><code class="language-shell">cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF
-[local]
-name=local for centos7
-baseurl=file://192.168.9.105/root/df/yum
-enable=1
-gpgcheck=0
-priority=1
-EOF
-</code></pre>
+rm -rf *.rpm &amp;&gt;/dev/null
 
-<h1 id="6-客户端更新元数据">6. 客户端更新元数据</h1>
+BASE_DIR=$(cd &quot;$(dirname &quot;$0&quot;)&quot;; pwd); cd ${BASE_DIR}
+#VERSION=${1:-&quot;1.0.0&quot;}
 
-<pre><code class="language-shell">yum clean all
-yum makecache
+fpm -f -s dir -t rpm -n &quot;baicells-epc-c&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -C &quot;epc-c&quot; -p . \
+	--rpm-rpmbuild-define &quot;_build_id_links none&quot; \
+	epc.service=/usr/lib/systemd/system/ \
+	HssFailover=/usr/local/epc/ \
+	conf=/usr/local/epc/ \
+	watchdog=/usr/local/epc/ \
+	cg_app=/usr/local/epc/ \
+	config.txt=/usr/local/epc/ \
+	epc_watchdog.sh=/usr/local/epc/ \
+	hss_app=/usr/local/epc/ \
+	mme_app_1=/usr/local/epc/ \
+	mme_app_2=/usr/local/epc/ \
+	nwconfig.sh=/usr/local/epc/ \
+	pcrf_app=/usr/local/epc/ \
+	pgw_app_1=/usr/local/epc/ \
+	pgw_app_2=/usr/local/epc/ \
+	pgw_app_3=/usr/local/epc/ \
+	pgw_app_4=/usr/local/epc/ \
+	register=/usr/local/epc/ \
+	sgw_gtpc_app=/usr/local/epc/ \
+	sgw_gtpu_app=/usr/local/epc/ \
+	startAll.sh=/usr/local/epc/ \
+	startEPC.sh=/usr/local/epc/ \
+	start_tomcat.sh=/usr/local/epc/ \
+	stopEPC.sh=/usr/local/epc/ \
+	stop_tomcat.sh=/usr/local/epc/ \
+	tomcat_watchdog.sh=usr/local/epc/
 </code></pre>
 
                         </div>
@@ -152,15 +222,15 @@ yum makecache
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
+        <li><a href="/posts/caddy/">使用caddy搭建文件服务器</a></li>
         
-        <li><a href="/posts/kubernetes-deploy/">部署kubernetes</a></li>
+        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
         
-        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
+        <li><a href="/posts/jenkins/">搭建jenkins服务器</a></li>
         
-        <li><a href="/posts/wcg-install/">Wcg Install</a></li>
+        <li><a href="/posts/gogs/">使用gogs搭建git服务器</a></li>
         
-        <li><a href="/posts/my-first-post/">My First Post</a></li>
+        <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
         
     </ul>
 </div>
