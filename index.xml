@@ -6,10 +6,21 @@
     <description>Recent content on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 29 Aug 2019 10:08:51 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 Aug 2019 11:22:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>使用docker-compose搭建drone服务器</title>
+      <link>https://workerwork.github.io/posts/drone/</link>
+      <pubDate>Thu, 29 Aug 2019 11:22:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/drone/</guid>
+      <description>1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
+drone文档：https://docs.drone.io/
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &amp;gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: &#39;2&#39; services: #gogs: #image: gogs/gogs:latest #ports: # - &amp;quot;10022:22&amp;quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.</description>
+    </item>
     
     <item>
       <title>搭建jenkins服务器</title>

@@ -7,16 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title> | WorkSpace</title>
-    <meta property="og:title" content=" - WorkSpace">
+    <title>使用docker-compose搭建drone服务器 | WorkSpace</title>
+    <meta property="og:title" content="使用docker-compose搭建drone服务器 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2019-08-29T11:22:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-08-29T11:22:51&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="">
+    <meta name="description" content="使用docker-compose搭建drone服务器">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/about/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/drone/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -53,7 +57,7 @@
                     
                     <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
                     
-                    <a class="current" href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
                     
                 </nav>
             </div>
@@ -70,15 +74,108 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title"></h1>
+                            <h1 class="post-title">使用docker-compose搭建drone服务器</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            1年1月1日
+                            2019年8月29日
                         </date>
                         
                         
                         <div class="post-content">
-                            <p>test</p>
+                            
+
+<h2 id="1-docker-compose介绍">1. docker-compose介绍</h2>
+
+<p>docker-compose文档：<a href="https://docs.docker.com/compose/">https://docs.docker.com/compose/</a></p>
+
+<p>drone文档：<a href="https://docs.drone.io/">https://docs.drone.io/</a></p>
+
+<h2 id="2-安装docker-compose">2. 安装docker-compose</h2>
+
+<pre><code class="language-shell">yum -y install epel-release
+yum -y install python-pip
+pip install --upgrade pip
+pip install docker-compose
+#安装补全工具
+yum install bash-completion
+curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose
+</code></pre>
+
+<h2 id="3-建立工作路径">3. 建立工作路径</h2>
+
+<pre><code class="language-shell">mkdir docker-workspace
+cd docker-workspace
+</code></pre>
+
+<h2 id="4-创建docker-compose-yaml">4. 创建docker-compose.yaml</h2>
+
+<pre><code class="language-shell">version: '2'
+
+services:
+  #gogs:
+    #image: gogs/gogs:latest
+    #ports:
+    #  - &quot;10022:22&quot;
+    #  - 3000:3000
+    #volumes:
+    #  - /vagrant/gogs-data:/data
+    #restart: always
+  #mysql:
+    #image: mysql:latest
+    #ports:
+    #  - 3306:3306
+    #volumes:
+    #  - /vagrant/mysql-data:/var/lib/mysql
+    #restart: always
+    #environment:
+    #  - MYSQL_ROOT_PASSWORD=baicells
+    #  - MYSQL_DATABASE=gogs
+  drone-server:
+    image: drone/drone:latest
+    ports:
+      - 8000:8000
+      - 9000:9000
+    volumes:
+      - /var/lib/drone:/var/lib/drone
+    restart: always
+    environment:
+      # 开启注册，此配置允许任何人自注册和登录系统
+      - DRONE_OPEN=true
+      #直接配置172.17.32.212:9000 会报错
+      - DRONE_HOST=http://192.168.9.105:9000
+      # 设置管理员用户
+      - DRONE_ADMIN=dongfeng
+      # 开启Gogs驱动
+      - DRONE_GOGS=true
+      # Gogs服务器地址
+      - DRONE_GOGS_URL=http://192.168.9.105:60080
+      # 此SECRET为任意值
+      - DRONE_SECRET=YeNmPSFyl090RMy4
+  drone-agent:
+    image: drone/agent:latest
+    command: agent
+    restart: always
+    depends_on: 
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Drone Server 地址，无需加http://
+      - DRONE_SERVER=192.168.9.105:9000
+      # 与Drone Server一致即可
+      - DRONE_SECRET=YeNmPSFyl090RMy4
+
+</code></pre>
+
+<h2 id="5-启动应用">5. 启动应用</h2>
+
+<pre><code class="language-shell">docker-compose up -d
+</code></pre>
+
+<h2 id="6-访问">6. 访问</h2>
+
+<pre><code class="language-shell">http://192.168.9.105:8000
+</code></pre>
 
                         </div>
 
@@ -88,8 +185,6 @@
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
-        
         <li><a href="/posts/jenkins/">搭建jenkins服务器</a></li>
         
         <li><a href="/posts/gogs/">使用gogs搭建git服务器</a></li>
@@ -97,6 +192,8 @@
         <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
         
         <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
+        
+        <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
         
     </ul>
 </div>
