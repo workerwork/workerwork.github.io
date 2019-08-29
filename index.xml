@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>使用docker-compose搭建drone服务器</title>
+      <title>使用caddy搭建文件服务器</title>
       <link>https://workerwork.github.io/posts/caddy/</link>
       <pubDate>Thu, 29 Aug 2019 11:56:51 +0800</pubDate>
       
