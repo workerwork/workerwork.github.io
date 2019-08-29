@@ -7,16 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>归档 | WorkSpace</title>
-    <meta property="og:title" content="归档 - WorkSpace">
+    <title>搭建jenkins服务器 | WorkSpace</title>
+    <meta property="og:title" content="搭建jenkins服务器 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2019-08-29T10:08:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-08-29T10:08:51&#43;08:00">
         
     <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="shell资深工程师 ，C,Go和python打杂师">
+    <meta name="description" content="搭建jenkins服务器">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/archives/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/jenkins/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -32,7 +36,6 @@
     
     
 </head>
-
 
 <body>
 <header id="header" class="clearfix">
@@ -52,7 +55,7 @@
                     
                     <a  href="https://workerwork.github.io/books/" title="新书">新书</a>
                     
-                    <a class="current" href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
                     
                     <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
                     
@@ -68,62 +71,84 @@
         <div class="col-group">
 
             <div class="col-8" id="main">
-                <div class="post-archive">
-                    
-                    <h2>2019</h2>
-                    <ul class="listing">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">搭建jenkins服务器</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2019年8月29日
+                        </date>
                         
-                        <li>
-                            <span class="date">2019/08/29</span>
-                            <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器">搭建jenkins服务器</a>
-                        </li>
                         
-                        <li>
-                            <span class="date">2019/08/29</span>
-                            <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/08/28</span>
-                            <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/08/28</span>
-                            <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库">搭建本地yum仓库</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/08/28</span>
-                            <a href="https://workerwork.github.io/posts/kubernetes-deploy/" title="部署kubernetes">部署kubernetes</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/08/28</span>
-                            <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkerSpace">使用hugo搭建WorkerSpace</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/02/20</span>
-                            <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC">AUTO-EPC</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/01/21</span>
-                            <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install">Wcg Install</a>
-                        </li>
-                        
-                        <li>
-                            <span class="date">2019/01/21</span>
-                            <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post">My First Post</a>
-                        </li>
-                        
-                    </ul>
-                    
+                        <div class="post-content">
+                            
 
+<h2 id="1-jenkins介绍">1. jenkins介绍</h2>
+
+<p>jenkins官网：<a href="https://jenkins.io/zh/">https://jenkins.io/zh/</a></p>
+
+<p>项目源码：<a href="https://github.com/jenkinsci/jenkins">https://github.com/jenkinsci/jenkins</a></p>
+
+<h2 id="2-docker安装jenkins">2. docker安装jenkins</h2>
+
+<h3 id="1-下载jenkins的docker镜像">1 ）下载jenkins的docker镜像</h3>
+
+<pre><code class="language-shell">docker pull jenkins
+</code></pre>
+
+<h3 id="2-创建jenkins存储目录">2 ）创建jenkins存储目录</h3>
+
+<pre><code class="language-shell">mkdir /home/var/jenkins
+</code></pre>
+
+<h3 id="3-cd进入-home-var-目录-设置jenkins文件夹的归属用户uid为1000">3 ）cd进入/home/var/目录，设置jenkins文件夹的归属用户UID为1000</h3>
+
+<pre><code class="language-shell">chown -R 1000:1000 jenkins/
+</code></pre>
+
+<h3 id="4-使用jenkins镜像创建容器">4 ）使用jenkins镜像创建容器</h3>
+
+<pre><code class="language-shell">docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true  -v /home/var/jenkins:/var/jenkins_home jenkins
+</code></pre>
+
+<h3 id="5-使用-ip-8080执行图像界面安装">5 ）使用 ip:8080执行图像界面安装</h3>
+
+                        </div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/gogs/">使用gogs搭建git服务器</a></li>
+        
+        <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
+        
+        <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
+        
+        <li><a href="/posts/workspace/">使用hugo搭建WorkerSpace</a></li>
+        
+        <li><a href="/posts/kubernetes-deploy/">部署kubernetes</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            没有标签
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
                 </div>
             </div>
-
             <div id="secondary">
     <section class="widget">
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
@@ -276,7 +301,6 @@
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
-
 
 
 

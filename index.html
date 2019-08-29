@@ -70,6 +70,24 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器" >搭建jenkins服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-content">
+                                 1. jenkins介绍 jenkins官网：https://jenkins.io/zh/
+项目源码：https://github.com/jenkinsci/jenkins
+2. docker安装jenkins 1 ）下载jenkins的docker镜像 docker pull jenkins  2 ）创建jenkins存储目录 mkdir /home/var/jenkins  3 ）cd进入/home/var/目录，设置jenkins文件夹的归属用户UID为1000 chown -R 1000:1000 jenkins/  4 ）使用jenkins镜像创建容器 docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /home/var/jenkins:/var/jenkins_home jenkins  5 ）使用 ip:8080执行图像界面安装 ……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/jenkins/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器" >使用gogs搭建git服务器</a>
                                 </h1>
                             </header>
@@ -257,6 +275,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器">搭建jenkins服务器</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
