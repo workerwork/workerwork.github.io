@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CentOS7安全加固 | WorkSpace</title>
+    <meta property="og:title" content="CentOS7安全加固 - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2019-08-30T11:01:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2019-08-30T11:01:51&#43;08:00">
+        
+    <meta name="Keywords" content="golang,go语言,go语言笔记,dongfeng,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="CentOS7安全加固">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/security/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go语言(golang)、shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="新书">新书</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">CentOS7安全加固</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2019年8月30日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-账号和口令">1. 账号和口令</h2>
+
+<h3 id="1-禁用或删除无用账号">1 ）禁用或删除无用账号</h3>
+
+<p>减少系统无用账号，降低安全风险</p>
+
+<pre><code class="language-shell">#删除不必要的账号
+userdel &lt;用户名&gt; 
+#锁定不必要的账号
+passwd -l &lt;用户名&gt; 
+#解锁必要的账号
+passwd -u &lt;用户名&gt; 
+</code></pre>
+
+<h3 id="2-检查特殊账号">2 ）检查特殊账号</h3>
+
+<p>检查是否存在空口令和root权限的账号</p>
+
+<pre><code class="language-shell">#查看空口令账号
+awk -F: '($2==&quot;&quot;)' /etc/shadow 
+#为空口令账号设定密码
+passwd &lt;用户名&gt; 
+#查看UID为零的账号，确认只有root账号
+awk -F: '($3==0)' /etc/passwd 
+</code></pre>
+
+<h3 id="3-添加口令策略">3 ）添加口令策略</h3>
+
+<p>加强口令的复杂度，降低被猜解的可能性</p>
+
+<pre><code class="language-shell"> vi /etc/login.defs 修改配置文件
+ PASS_MAX_DAYS 90 #新建用户的密码最长使用天数
+ PASS_MIN_DAYS 0 #新建用户的密码最短使用天数
+ PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数
+ 
+ #或者使用chage命令修改用户设置
+ #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户
+ chage -m 0 -M 30 -E 2000-01-01 -W 7 &lt;用户名&gt;
+ 
+ #设置连续输错三次密码，账号锁定五分钟
+ vi /etc/pam.d/common-auth 修改配置文件，添加 
+ auth required pam_tally.so onerr=fail deny=3 unlock_time=300
+</code></pre>
+
+<h3 id="4-限制用户su">4 ）限制用户su</h3>
+
+<p>限制能su到root的用户</p>
+
+<pre><code class="language-shell"> vi /etc/pam.d/su修改配置文件，在配置文件中添加行
+ 例如，只允许test组用户su到root，则添加 
+ auth required pam_wheel.so group=test
+</code></pre>
+
+<h3 id="5-设置登录超时">5 ）设置登录超时</h3>
+
+<p>设置系统登录后，连接超时时间，增强安全性</p>
+
+<pre><code class="language-shell">vi /etc/profile 修改配置文件，将以 TMOUT= 开头的行注释，设置为TMOUT=180，即超时时间为三分钟
+</code></pre>
+
+<h2 id="2-服务">2. 服务</h2>
+
+<h3 id="1-关闭不必要的服务">1 ）关闭不必要的服务</h3>
+
+<p>关闭不必要的服务（如普通服务和xinetd服务），降低风险</p>
+
+<pre><code class="language-shell">使用命令systemctl disable &lt;服务名&gt;设置服务在开机时不自动启动
+</code></pre>
+
+<h3 id="2-ssh服务安全">2 ）SSH服务安全</h3>
+
+<p>对SSH服务进行安全加固，防止暴力破解成功</p>
+
+<pre><code class="language-shell">vim /etc/ssh/sshd_config 编辑配置文件
+创建普通权限账号并配置密码,防止无法远程登录
+#限制root用户远程登录
+设置 PermitRootLogin 值为 no
+#修改默认登录端口
+设置 Port 值为 50683
+#修改SSH使用的协议版本
+设置 Protocol 版本为 2
+#修改允许密码错误次数（默认6次）
+设置 MaxAuthTries 值为 3
+systemctl restart sshd
+
+#如有必要设置不允许密码登录
+PubkeyAuthentication yes   //可以使用公钥登录
+PasswordAuthentication no  //不允许使用密码登录
+</code></pre>
+
+<h2 id="3-文件系统">3. 文件系统</h2>
+
+<h3 id="1-设置umask值">1 ）设置umask值</h3>
+
+<p>设置默认的umask值，增强安全性</p>
+
+<pre><code class="language-shell">vi /etc/profile 修改配置文件，添加行 umask 027
+即新创建的文件属主拥有读写执行权限，同组用户拥有读和执行权限，其他用户无权限
+</code></pre>
+
+<h2 id="4-日志系统">4. 日志系统</h2>
+
+<h3 id="1-syslogd日志">1 ）syslogd日志</h3>
+
+<p>启用日志功能，并配置日志记录</p>
+
+<pre><code class="language-shell">Linux系统默认启用以下类型日志：
+系统日志（默认）/var/log/messages
+cron日志（默认）/var/log/cron
+安全日志（默认）/var/log/secure
+#具体参考rsyslog配置
+</code></pre>
+
+<h3 id="2-记录所有用户的登录和操作日志">2 ）记录所有用户的登录和操作日志</h3>
+
+<p>通过脚本代码实现记录所有用户的登录操作日志，防止出现安全事件后无据可查</p>
+
+<pre><code class="language-shell"> vim /etc/bashrc打开配置文件，输入
+export PROMPT_COMMAND='{ date &quot;+%Y-%m-%d %T ##### $(who am i |awk &quot;{print \$1\&quot; \&quot;\$2\&quot; \&quot;\$5}&quot;) #### $(pwd) #### $(history 1 | { read x cmd; echo &quot;$cmd&quot;; })&quot;; } &gt;&gt; /var/log/history.log'
+source /etc/bashrc  加载配置生效
+</code></pre>
+
+<p>同时，建议您使用OSS服务收集存储日志</p>
+
+<p>安全相关项目：<a href="https://github.com/workerwork/security-deploy">https://github.com/workerwork/security-deploy</a>
+epc加固脚本：</p>
+
+<pre><code class="language-shell">#!/bin/bash -
+###################################################################################################################################################
+#security.sh
+#author:dongfeng
+#date:2019-03-27
+###################################################################################################################################################
+function test_input() {
+	while :
+	do
+		read -p &quot;$1:&quot; tmp
+		if [ &quot;$tmp&quot; -gt 0 ] 2&gt;/dev/null;then
+			eval $2=$tmp
+			break
+		else
+			echo -e &quot;\033[31minvalid input!\033[0m&quot;
+			continue
+		fi
+	done
+}
+
+function set_passwd() {
+	[[ ! -f /etc/login.defs.bak ]] &amp;&amp; cp -rf /etc/login.defs /etc/login.defs.bak
+	[[ ! -f /etc/pam.d/system-auth.bak ]] &amp;&amp; cp -rf /etc/pam.d/system-auth /etc/pam.d/system-auth.bak
+	[[ ! -f /etc/pam.d/sshd.bak ]] &amp;&amp; cp -rf /etc/pam.d/sshd /etc/pam.d/sshd.bak
+	test_input &quot;Maximum number of days a password may be used[90]&quot; A
+	test_input &quot;Minimum number of days allowed between password changes[10]&quot; B
+	test_input &quot;Minimum acceptable password length[8]&quot; C
+	test_input &quot;Number of days warning given before a password expires[7]&quot; D
+	sed -i '/^PASS_MAX_DAYS/c\PASS_MAX_DAYS   '$A'' /etc/login.defs
+	sed -i '/^PASS_MIN_DAYS/c\PASS_MIN_DAYS   '$B'' /etc/login.defs
+	sed -i '/^PASS_MIN_LEN/c\PASS_MIN_LEN     '$C'' /etc/login.defs
+	sed -i '/^PASS_WARN_AGE/c\PASS_WARN_AGE   '$D'' /etc/login.defs
+ 	echo -e &quot;\033[32mThe password has been strengthened.\nThe new password must not be the same as the old one,\nand the new password must contain both numerals, lowercase letters and capital letters!\033[0m&quot;
+	sed -i '/pam_pwquality.so/c\password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3 authtok_type=  difok=1 minlen=8 ucredit=-1 lcredit=-1 dcredit=-1' /etc/pam.d/system-auth 
+	echo -e &quot;\033[32mThe password has been strengthened. If the wrong password is entered more than three times, the account is locked!!\033[0m&quot;
+	n=`cat /etc/pam.d/sshd | grep &quot;auth required pam_tally2.so &quot;|wc -l`
+	if [ $n -eq 0 ];then
+		sed -i '/%PAM-1.0/a\auth required pam_tally2.so deny=3 unlock_time=150 even_deny_root root_unlock_time=300' /etc/pam.d/sshd
+	fi
+}
+
+function unset_passwd() {
+	[[ -f /etc/login.defs.bak ]] &amp;&amp; cp -rf /etc/login.defs.bak /etc/login.defs
+	[[ -f /etc/pam.d/system-auth.bak ]] &amp;&amp; cp -rf /etc/pam.d/system-auth.bak /etc/pam.d/system-auth
+	[[ -f /etc/pam.d/sshd.bak ]] &amp;&amp; cp -rf /etc/pam.d/sshd.bak /etc/pam.d/sshd
+}
+
+function set_rootlogin() {
+	[[ ! -f /etc/ssh/sshd_config.bak ]] &amp;&amp; cp -rf /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+	sed -i '/PermitRootLogin/c\PermitRootLogin no'  /etc/ssh/sshd_config
+	systemctl restart sshd.service
+	echo -e &quot;\033[32mDisabled root remote login!!\033[0m&quot;
+}
+
+function unset_rootlogin() {
+	[[ -f /etc/ssh/sshd_config.bak ]] &amp;&amp; cp -rf /etc/ssh/sshd_config.bak /etc/ssh/sshd_config
+	systemctl restart sshd.service
+}
+
+function set_history_timeout() {
+	[[ ! -f /etc/profile.bak ]] &amp;&amp; cp -rf /etc/profile /etc/profile.bak
+	[[ ! -f /etc/bashrc.bak ]] &amp;&amp; cp -rf /etc/bashrc /etc/bashrc.bak
+	test_input &quot;Set timeout for system login[300]&quot; F
+	sed -i '/^HISTSIZE/a\TMOUT='$F'' /etc/profile
+	test_input &quot;Set history number[1000]&quot; E
+	sed -i '/^HISTSIZE/c\HISTSIZE='$E'' /etc/profile
+	source /etc/profile
+	cat /etc/passwd | grep &quot;^epc:&quot; || echo -e &quot;\033[32mADD user\033[31mepc \033[32mdefault passwd\033[31mEPC@baicells\033[0m&quot;
+	useradd epc &amp;&amp; echo epc:EPC@baicells | chpasswd &amp;&amp; usermod -g epc -G wheel,epc epc
+	local file_cfg='/etc/bashrc'
+	local prompt_command_format='{ date &quot;+%Y-%m-%d %T ##### $(who am i |awk &quot;{print \$1\&quot; \&quot;\$2\&quot; \&quot;\$5}&quot;) #### $(pwd) #### $(history 1 | { read x cmd; echo &quot;$cmd&quot;; })&quot;; } &gt;&gt; /home/epc/history.log'
+	source $file_cfg
+	[[ ! -d /home/epc ]] &amp;&amp; mkdir -p /home/epc
+	[[ ! -f /home/epc/history.log ]] &amp;&amp; touch /home/epc/history.log
+	chown epc:epc /home/epc/history.log
+	chmod 666 /home/epc/history.log
+	sed -i &quot;/.*\(export PROMPT_COMMAND=\).*/d&quot; $file_cfg
+	echo &quot;export PROMPT_COMMAND='$prompt_command_format'&quot; &gt;&gt; $file_cfg
+	echo -e &quot;\033[32mHistory has been recorded:/home/epc/history.log\033[0m&quot;
+}
+
+function unset_history_timeout() {
+	[[ -f /etc/profile.bak ]] &amp;&amp; cp -rf /etc/profile.bak /etc/profile
+	[[ -f /etc/bashrc.bak ]] &amp;&amp; cp -rf /etc/bashrc.bak /etc/bashrc
+	source /etc/profile
+	source /etc/bashrc
+}
+
+function set_su() {
+	[[ ! -f /etc/pam.d/su.bak ]] &amp;&amp; cp -rf /etc/pam.d/su /etc/pam.d/su.bak
+	[[ ! -f /etc/login.defs.bak ]] &amp;&amp; cp -rf /etc/login.defs /etc/login.defs.bak
+	sed -i '/pam_wheel.so use_uid/c\auth            required        pam_wheel.so use_uid ' /etc/pam.d/su
+	n=`cat /etc/login.defs | grep SU_WHEEL_ONLY | wc -l`
+	if [ $n -eq 0 ];then
+		echo SU_WHEEL_ONLY yes &gt;&gt; /etc/login.defs
+	fi
+	echo -e &quot;\033[32mOnly allow users of the wheel group to switch to root using the Su command!!\033[0m&quot;
+}
+
+function unset_su() {
+	[[ -f /etc/pam.d/su.bak ]] &amp;&amp; cp -rf /etc/pam.d/su.bak /etc/pam.d/su
+	[[ -f /etc/login.defs.bak ]] &amp;&amp; cp -rf /etc/login.defs.bak /etc/login.defs
+}
+
+function check_user() {
+	echo &quot;Accounts in the system will be checked....&quot;
+	echo &quot;Users with login privileges in the system:&quot;
+	awk -F: '($7==&quot;/bin/bash&quot;){print $1}' /etc/passwd
+	echo &quot;********************************************&quot;
+	echo -e &quot;Users with UID=0 in the system:\033[34m$(awk -F: '($3==&quot;0&quot;){print $1}' /etc/passwd)\033[0m&quot;
+	echo &quot;********************************************&quot;
+	N=`awk -F: '($2==&quot;&quot;){print $1}' /etc/shadow|wc -l`
+	echo -e &quot;Users with empty password in the system:\033[34m$N\033[0m&quot;
+	if [ $N -eq 0 ];then
+		echo -e &quot;\033[32mNo empty password user in the system!!\033[0m&quot;
+ 		echo &quot;********************************************&quot;
+	else
+ 		i=1
+ 		while [ $N -gt 0 ]
+ 		do
+    		None=`awk -F: '($2==&quot;&quot;){print $1}' /etc/shadow|awk 'NR=='$i'{print}'`
+    		echo &quot;------------------------&quot;
+    		echo $None
+    		echo -e &quot;\033[31mPassword must be setted for users!!\033[0m&quot;
+    		passwd $None
+    		let N--
+ 		done
+ 		M=`awk -F: '($2==&quot;&quot;){print $1}' /etc/shadow|wc -l`
+ 		if [ $M -eq 0 ];then
+  			echo -e &quot;\033[32mNo user with empty password in the system!\033[0m&quot;
+ 		else
+			echo -e&quot;\033[31mUsers with empty password in the system:$M\033[0m&quot;
+ 		fi
+	fi
+}
+
+function lock_file() {
+	echo &quot;Important files in the system will be locked, after which delete user or group will not be allowed.&quot;
+	read -p &quot;Warning: This script will not allow to add or delete user or group after running!! Determine the input Y and cancel the input N;Y/N:&quot; i
+	case $i in
+	[Y,y])
+		chattr +i /etc/passwd
+		chattr +i /etc/shadow
+		chattr +i /etc/group
+		chattr +i /etc/gshadow
+		echo &quot;Lock success!&quot;;;
+	[N,n])
+		chattr -i /etc/passwd
+		chattr -i /etc/shadow
+		chattr -i /etc/group
+		chattr -i /etc/gshadow
+		echo &quot;Unlock success!&quot;;;
+	*)
+		echo &quot;Plsease input Y/y or N/n:&quot;
+	esac
+}
+
+function unlock_file() {
+	chattr -i /etc/passwd
+	chattr -i /etc/shadow
+	chattr -i /etc/group
+	chattr -i /etc/gshadow
+}
+
+function set_sshd() {
+	[[ ! -f /etc/ssh/sshd_config.bak ]] &amp;&amp; cp -rf /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+	sed -i '/Port 22/c\Port 50683' /etc/ssh/sshd_config
+	systemctl restart sshd.service
+	echo -e &quot;\033[32mSSH port changed:22-&gt;50683\033[0m&quot;
+} 
+
+function unset_sshd() {
+	[[ -f /etc/ssh/sshd_config.bak ]] &amp;&amp; cp -rf /etc/ssh/sshd_config.bak /etc/ssh/sshd_config
+	systemctl restart sshd.service
+}
+
+function clear_iptables() {
+	iptables -F          
+	iptables -F -t nat  
+	iptables -X         
+	iptables -X -t nat	
+	iptables -Z         
+	iptables -Z -t nat  
+}
+
+function default_policy_iptables() {
+	iptables -P INPUT ACCEPT      
+	iptables -P OUTPUT ACCEPT     
+	iptables -P FORWARD ACCEPT    
+}
+
+function test_interface() {
+	local interface=$(ifconfig | awk -F: '/mtu/{print $1}' | sort -u)
+	echo &quot;All interfaces in the system:&quot;
+	echo $interface
+	while :
+	do
+		read -p &quot;Please input the interface name which use the iptables:&quot; interface_tmp
+		local flag=(&quot;true&quot;)
+		for interface_i in $interface_tmp
+		do
+			local flag_i=false
+			for interface_j in $interface
+			do
+				if [[ $interface_i == $interface_j ]];then
+					flag_i=true
+					break
+				fi
+			done
+			flag+=(&quot;$flag_i&quot;)
+		done
+		for f in ${flag[@]}
+		do
+			if [[ $f != &quot;true&quot; ]];then
+				continue 2
+			fi
+		done
+		interface_name=$interface_tmp
+		return 0
+	done
+}
+
+
+function check_ipaddr() {
+	while :
+	do
+		local f1=true
+		local f2=true
+		read -p &quot;Please input the IP which use the redis service:&quot; ip_tmp
+		for ip in $ip_tmp
+		do
+			echo $ip | grep &quot;^[0-9]\{1,3\}\.\([0-9]\{1,3\}\.\)\{2\}[0-9]\{1,3\}$&quot; &gt; /dev/null;
+			if [ $? -ne 0 ];then
+				echo -e &quot;\033[31mIP addresses must be 1-3 digits\033[0m&quot;
+				f1=false	
+				break
+			fi
+			ipaddr=$ip
+			a=`echo $ipaddr|awk -F . '{print $1}'` 
+			b=`echo $ipaddr|awk -F . '{print $2}'`
+			c=`echo $ipaddr|awk -F . '{print $3}'`
+			d=`echo $ipaddr|awk -F . '{print $4}'`
+			for num in $a $b $c $d
+			do
+				if [ $num -gt 255 ] || [ $num -lt 0 ];then
+					echo -e &quot;\033[31mIn $ipaddr ,the field $num is error!\033[0m&quot; 
+					f2=false
+					break
+				fi
+			done
+		done
+		if [[ $f1 == &quot;true&quot; ]] &amp;&amp; [[ $f2 == &quot;true&quot; ]];then
+			redis_ip=$ip_tmp
+			return 0
+		fi
+	done
+}
+
+function add_firewalld_iptables() {
+	test_interface
+	check_ipaddr
+	for interface_one in $interface_name
+	do	
+		iptables -A INPUT -p tcp --dport 50683 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p tcp --dport 6633 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p tcp --dport 6640 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p tcp --dport 80 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p tcp --dport 8080 -i ${interface_one} -j ACCEPT
+		#iptables -A INPUT -p tcp --dport 3306 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2123 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2124 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2125 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2100 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2101 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2102 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2103 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2104 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p sctp --dport 36412 -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p udp --dport 2152 -i ${interface_one} -j ACCEPT
+		for ip in $redis_ip
+		do
+			iptables -A INPUT -s $ip -p tcp --dport 6379 -i ${interface_one} -j ACCEPT
+		done
+		iptables -A INPUT -m state --state RELATED,ESTABLISHED -i ${interface_one} -j ACCEPT
+		iptables -A INPUT -p icmp -i ${interface_one} -j ACCEPT
+		[[ $interface_one ]] &amp;&amp; iptables -A INPUT -p all -i ${interface_one} -j DROP
+		echo -e &quot;\033[32mThe public network interface \033[34m$interface_one\033[32m bind iptables now!\033[0m&quot;
+	done
+}
+
+function install_iptables_services() {
+	yum install -y epel-release &amp;&gt;/dev/null
+	yum install -y iptables-services &amp;&gt;/dev/null
+	systemctl enable iptables &amp;&gt;/dev/null
+	systemctl start iptables &amp;&gt;/dev/null
+	echo -e &quot;\033[32miptables-services enabled!\033[0m&quot;
+}
+
+function set_iptables() {
+	clear_iptables
+	default_policy_iptables
+	add_firewalld_iptables
+	service iptables save
+}
+
+function unset_iptables() {
+	clear_iptables
+	service iptables save
+}
+
+function main() {
+	set_passwd
+	set_rootlogin
+	set_history_timeout
+	set_su
+	check_user
+	#lock_file
+	set_sshd
+	install_iptables_services
+	set_iptables
+}
+
+function unset_main() {
+	unset_passwd
+	unset_rootlogin
+	unset_history_timeout
+	unset_su
+	#unlock_file
+	unset_sshd
+	unset_iptables
+}
+
+case &quot;$1&quot; in
+&quot;&quot;)
+	main
+	exit;;
+&quot;-d&quot;)
+	unset_main
+	exit;;
+&quot;-h&quot;)
+	echo &quot;**************************&quot;
+	echo &quot;$0       install&quot;
+	echo &quot;$0 -d    uninstall&quot;
+	echo &quot;$0 -h    help&quot;
+	echo &quot;**************************&quot;
+esac
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/epc-cicd/">EPC的CI/CD</a></li>
+        
+        <li><a href="/posts/caddy/">使用caddy搭建文件服务器</a></li>
+        
+        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
+        
+        <li><a href="/posts/jenkins/">搭建jenkins服务器</a></li>
+        
+        <li><a href="/posts/gogs/">使用gogs搭建git服务器</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/security">security</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/centos">centos</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/security/" title="CentOS7安全加固">CentOS7安全加固</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD">EPC的CI/CD</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器">使用caddy搭建文件服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/drone/" title="使用docker-compose搭建drone服务器">使用docker-compose搭建drone服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器">搭建jenkins服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库">搭建本地yum仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkSpace">使用hugo搭建WorkSpace</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kubernetes-deploy/" title="部署kubernetes">部署kubernetes</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(3)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(1)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://music.taihe.com/" title="千千静听">千千静听</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.mdeditor.com/" title="Markdown在线编辑器">MdEditor</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="git服务器">git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8001" title="本地蚂蚁笔记">本地蚂蚁笔记</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>

@@ -4,7 +4,47 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/centos/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/security/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/linux/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/security/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2019-08-30T11:01:51+08:00</lastmod>
   </url>
   
   <url>
@@ -33,22 +73,7 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</loc>
-    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2019-08-29T14:17:51+08:00</lastmod>
   </url>
   
@@ -123,11 +148,6 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/linux/</loc>
-    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/centos-iso/</loc>
     <lastmod>2019-08-28T16:37:51+08:00</lastmod>
   </url>
@@ -153,12 +173,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/hugo/</loc>
+    <loc>https://workerwork.github.io/categories/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/hugo/</loc>
+    <loc>https://workerwork.github.io/tags/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
