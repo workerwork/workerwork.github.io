@@ -3,7 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://workerwork.github.io/categories/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/ci/cd/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/devops/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/epc/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/posts/epc-cicd/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/fpm/</loc>
     <lastmod>2019-08-29T14:17:51+08:00</lastmod>
   </url>
   
@@ -13,8 +38,28 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/</loc>
     <lastmod>2019-08-29T14:17:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/caddy/</loc>
+    <lastmod>2019-08-29T11:56:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/servers/</loc>
+    <lastmod>2019-08-29T11:56:51+08:00</lastmod>
   </url>
   
   <url>
@@ -23,18 +68,33 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/tags/docker-compose/</loc>
+    <lastmod>2019-08-29T11:22:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/drone/</loc>
+    <lastmod>2019-08-29T11:22:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/posts/drone/</loc>
     <lastmod>2019-08-29T11:22:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/jenkins/</loc>
+    <loc>https://workerwork.github.io/tags/docker/</loc>
     <lastmod>2019-08-29T10:08:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+    <loc>https://workerwork.github.io/tags/jenkins/</loc>
+    <lastmod>2019-08-29T10:08:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/jenkins/</loc>
+    <lastmod>2019-08-29T10:08:51+08:00</lastmod>
   </url>
   
   <url>
@@ -48,23 +108,43 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/gogs/</loc>
     <lastmod>2019-08-29T09:37:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/</loc>
-    <lastmod>2019-08-29T09:37:51+08:00</lastmod>
+    <loc>https://workerwork.github.io/tags/iso/</loc>
+    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/linux/</loc>
+    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/linux/</loc>
+    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/centos-iso/</loc>
     <lastmod>2019-08-28T16:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/</loc>
+    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/rpm/</loc>
+    <lastmod>2019-08-28T15:00:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/yum/</loc>
+    <lastmod>2019-08-28T15:00:21+08:00</lastmod>
   </url>
   
   <url>
@@ -83,12 +163,37 @@
   </url>
   
   <url>
+    <loc>https://workerwork.github.io/tags/k8s/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/kube/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/kubernetes/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/site/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/tags/workspace/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/workspace/</loc>
+    <lastmod>2019-08-28T10:16:21+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
@@ -108,22 +213,17 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/ci/cd/</loc>
-    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/categories/devops/</loc>
-    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/epc/</loc>
-    <lastmod>2019-02-20T16:46:44+08:00</lastmod>
+    <loc>https://workerwork.github.io/tags/wcg/</loc>
+    <lastmod>2019-01-21T16:46:44+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/wcg-install/</loc>
+    <lastmod>2019-01-21T16:46:44+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/</loc>
     <lastmod>2019-01-21T16:46:44+08:00</lastmod>
   </url>
   

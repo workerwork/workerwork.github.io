@@ -77,6 +77,13 @@
                                 2019年8月29日
                             </date>
                             
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
+                            
                             <div class="post-content">
                                 1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
 2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}') - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot; - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff - cd /root/df/caddy/yum.……
@@ -93,6 +100,13 @@
                             <date class="post-meta meta-date">
                                 2019年8月29日
                             </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                            </div>
                             
                             <div class="post-content">
                                 1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
@@ -112,6 +126,15 @@
                                 2019年8月29日
                             </date>
                             
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                            </div>
+                            
                             <div class="post-content">
                                 1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
 drone文档：https://docs.drone.io/
@@ -129,6 +152,15 @@ drone文档：https://docs.drone.io/
                             <date class="post-meta meta-date">
                                 2019年8月29日
                             </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
                             
                             <div class="post-content">
                                  1. jenkins介绍 jenkins官网：https://jenkins.io/zh/
@@ -151,7 +183,9 @@ drone文档：https://docs.drone.io/
                             <div class="post-meta">
                                 <span>|</span>
                                 
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2">服务器部署</a></span>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
                                 
                             </div>
                             
@@ -172,6 +206,13 @@ drone文档：https://docs.drone.io/
                                 2019年8月28日
                             </date>
                             
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
                             <div class="post-content">
                                 1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
 #首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
@@ -189,6 +230,13 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                             <date class="post-meta meta-date">
                                 2019年8月28日
                             </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
                             
                             <div class="post-content">
                                 1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml .  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5. 在客户端添加本地yum源 cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF [local] name=local for centos7 baseurl=file://192.……
@@ -210,6 +258,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                                 <span>|</span>
                                 
                                 <span class="meta-category"><a href="https://workerwork.github.io/categories/hugo">hugo</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/site">site</a></span>
                                 
                             </div>
                             
@@ -234,6 +284,13 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                             <date class="post-meta meta-date">
                                 2019年8月28日
                             </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96">虚拟化</a></span>
+                                
+                            </div>
                             
                             <div class="post-content">
                                 kubernetes Kubernetes官方提供三种部署方式： minikube minikube可以实现一种轻量级的Kubernetes集群，通过在本地计算机上创建虚拟机并部署只包含单个节点的简单集群。Minikube适用于Linux，MacOS和Windows系统。Minikube CLI提供集群管理的基本操作，包括 start、stop、status和delete
@@ -365,7 +422,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(1)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(5)</a>
     </li>
     
     <li>
@@ -373,7 +430,23 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/">服务器部署(1)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(1)</a>
     </li>
     
 </ul>
@@ -385,9 +458,19 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
     
     <a href="https://workerwork.github.io/tags/git/">git</a>
     
@@ -395,7 +478,29 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
     
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
     <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
     
 </div>
     </section>

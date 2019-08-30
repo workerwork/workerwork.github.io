@@ -6,17 +6,35 @@
     <description>Recent content in Categories on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 29 Aug 2019 09:37:51 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 Aug 2019 14:17:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>服务器部署</title>
-      <link>https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/</link>
-      <pubDate>Thu, 29 Aug 2019 09:37:51 +0800</pubDate>
+      <title>devops</title>
+      <link>https://workerwork.github.io/categories/devops/</link>
+      <pubDate>Thu, 29 Aug 2019 14:17:51 +0800</pubDate>
       
-      <guid>https://workerwork.github.io/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2/</guid>
+      <guid>https://workerwork.github.io/categories/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>servers</title>
+      <link>https://workerwork.github.io/categories/servers/</link>
+      <pubDate>Thu, 29 Aug 2019 11:56:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/servers/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://workerwork.github.io/categories/linux/</link>
+      <pubDate>Wed, 28 Aug 2019 16:37:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/linux/</guid>
       <description></description>
     </item>
     
@@ -30,11 +48,29 @@
     </item>
     
     <item>
-      <title>DEVOPS</title>
-      <link>https://workerwork.github.io/categories/devops/</link>
-      <pubDate>Wed, 20 Feb 2019 16:46:44 +0800</pubDate>
+      <title>site</title>
+      <link>https://workerwork.github.io/categories/site/</link>
+      <pubDate>Wed, 28 Aug 2019 10:16:21 +0800</pubDate>
       
-      <guid>https://workerwork.github.io/categories/devops/</guid>
+      <guid>https://workerwork.github.io/categories/site/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>虚拟化</title>
+      <link>https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
+      <pubDate>Wed, 28 Aug 2019 10:16:21 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>产品doc</title>
+      <link>https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/</link>
+      <pubDate>Mon, 21 Jan 2019 16:46:44 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/</guid>
       <description></description>
     </item>
     

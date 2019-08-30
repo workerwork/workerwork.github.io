@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>启动盘 on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/</link>
+    <description>Recent content in 启动盘 on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 28 Aug 2019 16:37:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>制作CentOS ISO</title>
+      <link>https://workerwork.github.io/posts/centos-iso/</link>
+      <pubDate>Wed, 28 Aug 2019 16:37:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/centos-iso/</guid>
+      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
+#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
+cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard &#39;us&#39; # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.</description>
+    </item>
+    
+  </channel>
+</rss>

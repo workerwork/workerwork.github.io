@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>caddy on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/caddy/</link>
+    <description>Recent content in caddy on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 29 Aug 2019 11:56:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/caddy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用caddy搭建文件服务器</title>
+      <link>https://workerwork.github.io/posts/caddy/</link>
+      <pubDate>Thu, 29 Aug 2019 11:56:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/caddy/</guid>
+      <description>1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
+2. 下载caddy 从官网下载caddy，下载时选择需要的插件
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.log errors errors.log } 192.168.9.105:80 { proxy / http://192.168.103.147:80 } 192.168.9.105:5566 { gzip root test }  5. 运行caddy caddy &amp;amp;  6.</description>
+    </item>
+    
+  </channel>
+</rss>

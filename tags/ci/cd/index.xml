@@ -6,10 +6,42 @@
     <description>Recent content in CI/CD on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 20 Feb 2019 16:46:44 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 Aug 2019 14:17:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/ci/cd/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>EPC的CI/CD</title>
+      <link>https://workerwork.github.io/posts/epc-cicd/</link>
+      <pubDate>Thu, 29 Aug 2019 14:17:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/epc-cicd/</guid>
+      <description>1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&amp;quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&amp;quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm &#39;{print $1}&#39;) - rpm_newname=&amp;quot;$rpm_rename&amp;quot;_&amp;quot;$(date &#39;+%Y%m%d&#39;)&amp;quot;_&amp;quot;$git_rev&amp;quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &amp;quot;$TEST_SERVER&amp;quot;:&amp;quot;$RUN_PATH&amp;quot;/&amp;quot;$rpm_newname&amp;quot; - ssh &amp;quot;$TEST_SERVER&amp;quot; &amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;lt;&amp;lt; eeooff - cd /root/df/caddy/yum.</description>
+    </item>
+    
+    <item>
+      <title>使用docker-compose搭建drone服务器</title>
+      <link>https://workerwork.github.io/posts/drone/</link>
+      <pubDate>Thu, 29 Aug 2019 11:22:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/drone/</guid>
+      <description>1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
+drone文档：https://docs.drone.io/
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &amp;gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: &#39;2&#39; services: #gogs: #image: gogs/gogs:latest #ports: # - &amp;quot;10022:22&amp;quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.</description>
+    </item>
+    
+    <item>
+      <title>搭建jenkins服务器</title>
+      <link>https://workerwork.github.io/posts/jenkins/</link>
+      <pubDate>Thu, 29 Aug 2019 10:08:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/jenkins/</guid>
+      <description> 1. jenkins介绍 jenkins官网：https://jenkins.io/zh/
+项目源码：https://github.com/jenkinsci/jenkins
+2. docker安装jenkins 1 ）下载jenkins的docker镜像 docker pull jenkins  2 ）创建jenkins存储目录 mkdir /home/var/jenkins  3 ）cd进入/home/var/目录，设置jenkins文件夹的归属用户UID为1000 chown -R 1000:1000 jenkins/  4 ）使用jenkins镜像创建容器 docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /home/var/jenkins:/var/jenkins_home jenkins  5 ）使用 ip:8080执行图像界面安装 </description>
+    </item>
     
     <item>
       <title>AUTO-EPC</title>
