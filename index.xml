@@ -6,10 +6,19 @@
     <description>Recent content on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 30 Aug 2019 11:01:51 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 30 Aug 2019 14:03:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CentOS7系统优化</title>
+      <link>https://workerwork.github.io/posts/centos-good/</link>
+      <pubDate>Fri, 30 Aug 2019 14:03:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/centos-good/</guid>
+      <description>1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# cat /etc/resolv.conf #查看修改后的DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# systemctl restart network #重启网卡，生效  2.</description>
+    </item>
     
     <item>
       <title>CentOS7安全加固</title>
