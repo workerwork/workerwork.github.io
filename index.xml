@@ -6,10 +6,21 @@
     <description>Recent content on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 30 Aug 2019 14:03:51 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 30 Aug 2019 14:50:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>关于我</title>
+      <link>https://workerwork.github.io/about/</link>
+      <pubDate>Fri, 30 Aug 2019 14:50:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/about/</guid>
+      <description>宇宙蜉蝣，银河系和平使者，地球超人，中国好男人，北漂浪人，死宅
+github地址：https://github.com/workerwork
+简书地址：https://www.jianshu.com/u/e1b9a125f88b</description>
+    </item>
     
     <item>
       <title>CentOS7系统优化</title>
@@ -165,15 +176,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
       
       <guid>https://workerwork.github.io/posts/my-first-post/</guid>
       <description>this is the first test for hugo!</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://workerwork.github.io/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://workerwork.github.io/about/</guid>
-      <description>test</description>
     </item>
     
     <item>
