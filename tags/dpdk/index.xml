@@ -17,7 +17,7 @@
       <pubDate>Fri, 01 Nov 2019 16:11:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/vpp/</guid>
-      <description>基于VPP+DPDK开源框架开发UPF DPDK DPDK是什么 DPDK全称为Date plane development kit，是一个用来进行包数据处理加速的软件库。
+      <description>DPDK DPDK是什么 DPDK全称为Date plane development kit，是一个用来进行包数据处理加速的软件库。
 为什么DPDK 传统 Linux 内核网络数据流程：
 硬件中断---&amp;gt;取包分发至内核线程---&amp;gt;软件中断---&amp;gt;内核线程在协议栈中处理包---&amp;gt;处理完毕通知用户层 用户层收包--&amp;gt;网络层---&amp;gt;逻辑层---&amp;gt;业务层  基于传统 OS 内核的数据处理的弊端：
  中断处理。当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。
@@ -28,7 +28,8 @@
   如何改进：
  控制层和数据层分离。将数据包处理、内存管理、处理器调度等任务转移到用户空间去完成，而内核仅仅负责部分控制指令的处理。这样就不存在上述所说的系统中断、上下文切换、系统调用、系统调度等等问题。
  使用多核编程技术代替多线程技术，并设置 CPU 的亲和性，将线程和 CPU 核进行一比一绑定，减少彼此之间调度切换。
- 针对 NUMA 系统，尽量使 CPU 核使用所在 NUMA 节点的内存，避免跨内存访问。</description>
+ 针对 NUMA 系统，尽量使 CPU 核使用所在 NUMA 节点的内存，避免跨内存访问。
+ 使用大页内存代替普通的内存，减少 cache-miss。</description>
     </item>
     
   </channel>
