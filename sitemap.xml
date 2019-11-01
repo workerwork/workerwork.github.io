@@ -3,18 +3,53 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://workerwork.github.io/categories/5g/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/dpdk/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/upf/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/vpp/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://workerwork.github.io/</loc>
-    <lastmod>2019-08-30T14:50:51+08:00</lastmod>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/vpp/</loc>
+    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/about/</loc>
     <lastmod>2019-08-30T14:50:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2019-08-30T14:03:51+08:00</lastmod>
   </url>
   
   <url>
@@ -29,16 +64,6 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/linux/</loc>
-    <lastmod>2019-08-30T14:03:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2019-08-30T14:03:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
     <lastmod>2019-08-30T14:03:51+08:00</lastmod>
   </url>
   
