@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO" >制作CentOS ISO</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
+#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
+cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard 'us' # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/centos-iso/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库" >搭建本地yum仓库</a>
                                 </h1>
                             </header>
@@ -268,6 +293,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu使用docker-compose搭建gitlab服务器">ubuntu使用docker-compose搭建gitlab服务器</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp/" title="基于VPP&#43;DPDK开源框架开发UPF">基于VPP&#43;DPDK开源框架开发UPF</a>
     </li>
     
@@ -303,10 +332,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库">搭建本地yum仓库</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -321,7 +346,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(5)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(6)</a>
     </li>
     
     <li>
@@ -333,7 +358,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/servers/">servers(4)</a>
+        <a href="https://workerwork.github.io/categories/servers/">servers(5)</a>
     </li>
     
     <li>
@@ -381,6 +406,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <a href="https://workerwork.github.io/tags/git/">git</a>
     
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -402,6 +429,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
     

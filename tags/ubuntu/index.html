@@ -7,22 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>jenkins | WorkSpace</title>
-    <meta property="og:title" content="jenkins - WorkSpace">
+    <title>ubuntu | WorkSpace</title>
+    <meta property="og:title" content="ubuntu - WorkSpace">
     <meta property="og:type" content="article">
         
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="jenkins">
+    <meta name="description" content="ubuntu">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/tags/jenkins/">
+    <meta property="og:url" content="https://workerwork.github.io/tags/ubuntu/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/jenkins/index.xml" title="WorkSpace" />
+    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/ubuntu/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -71,7 +71,7 @@
                     
                     <h3 class="archive-title">
                         包含标签
-                        <span class="keyword">jenkins</span>
+                        <span class="keyword">ubuntu</span>
                         的文章
                     </h3>
                     
@@ -80,27 +80,25 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/jenkins/">搭建jenkins服务器</a>
+                                    <a href="https://workerwork.github.io/posts/gitlab/">ubuntu使用docker-compose搭建gitlab服务器</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
-                                2019年8月29日
+                                2020年3月21日
                             </date>
                             
                             <div class="post-meta meta-category">
                                 |
                                 
-                                    <a href="https://workerwork.github.io/categories/servers">servers</a>
-                                
                                     <a href="https://workerwork.github.io/categories/devops">devops</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/servers">servers</a>
                                 
                             </div>
                             
                             <div class="post-content">
-                                 1. jenkins介绍 jenkins官网：https://jenkins.io/zh/
-项目源码：https://github.com/jenkinsci/jenkins
-2. docker安装jenkins 1 ）下载jenkins的docker镜像 docker pull jenkins  2 ）创建jenkins存储目录 mkdir /home/var/jenkins  3 ）cd进入/home/var/目录，设置jenkins文件夹的归属用户UID为1000 chown -R 1000:1000 jenkins/  4 ）使用jenkins镜像创建容器 docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /home/var/jenkins:/var/jenkins_home jenkins  5 ）使用 ip:8080执行图像界面安装 ……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/jenkins/">阅读全文</a></p>
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/daemon.json，添加 { &quot;registry-mirrors&quot;: [&quot;https://9w1hl6qt.mirror.aliyuncs.com&quot;] }  2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #或者二进制安装 curl -L https://github.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                             </div>
                         </article>
                     

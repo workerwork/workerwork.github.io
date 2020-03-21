@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gitlab/">ubuntu使用docker-compose搭建gitlab服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年3月21日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/devops">devops</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/servers">servers</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/daemon.json，添加 { &quot;registry-mirrors&quot;: [&quot;https://9w1hl6qt.mirror.aliyuncs.com&quot;] }  2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #或者二进制安装 curl -L https://github.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/epc-cicd/">EPC的CI/CD</a>
                                 </h1>
                             </header>
@@ -206,6 +231,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu使用docker-compose搭建gitlab服务器">ubuntu使用docker-compose搭建gitlab服务器</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp/" title="基于VPP&#43;DPDK开源框架开发UPF">基于VPP&#43;DPDK开源框架开发UPF</a>
     </li>
     
@@ -241,10 +270,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库">搭建本地yum仓库</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -259,7 +284,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(5)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(6)</a>
     </li>
     
     <li>
@@ -271,7 +296,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/servers/">servers(4)</a>
+        <a href="https://workerwork.github.io/categories/servers/">servers(5)</a>
     </li>
     
     <li>
@@ -319,6 +344,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <a href="https://workerwork.github.io/tags/git/">git</a>
     
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -340,6 +367,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
     

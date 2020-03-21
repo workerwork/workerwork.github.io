@@ -6,10 +6,46 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 01 Nov 2019 16:11:51 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 21 Mar 2020 12:27:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CI/CD</title>
+      <link>https://workerwork.github.io/tags/ci/cd/</link>
+      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/ci/cd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker-compose</title>
+      <link>https://workerwork.github.io/tags/docker-compose/</link>
+      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/docker-compose/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gitlab</title>
+      <link>https://workerwork.github.io/tags/gitlab/</link>
+      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/gitlab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ubuntu</title>
+      <link>https://workerwork.github.io/tags/ubuntu/</link>
+      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/ubuntu/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>dpdk</title>
@@ -66,15 +102,6 @@
     </item>
     
     <item>
-      <title>CI/CD</title>
-      <link>https://workerwork.github.io/tags/ci/cd/</link>
-      <pubDate>Thu, 29 Aug 2019 14:17:51 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/ci/cd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>epc</title>
       <link>https://workerwork.github.io/tags/epc/</link>
       <pubDate>Thu, 29 Aug 2019 14:17:51 +0800</pubDate>
@@ -107,15 +134,6 @@
       <pubDate>Thu, 29 Aug 2019 11:56:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/caddy/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>docker-compose</title>
-      <link>https://workerwork.github.io/tags/docker-compose/</link>
-      <pubDate>Thu, 29 Aug 2019 11:22:51 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/docker-compose/</guid>
       <description></description>
     </item>
     
