@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/debootstrap/">创建ubuntu基础镜像</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年3月23日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/devops">devops</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/servers">servers</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m lykops echo &quot;root:baicells&quot; | chpasswd echo &quot;dongfeng:baicells&quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &gt;&gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;&amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/gitlab/">ubuntu搭建gitlab服务器</a>
                                 </h1>
                             </header>
@@ -257,6 +282,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器">ubuntu搭建gitlab服务器</a>
     </li>
     
@@ -292,10 +321,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -310,7 +335,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(6)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(7)</a>
     </li>
     
     <li>
@@ -322,7 +347,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/servers/">servers(5)</a>
+        <a href="https://workerwork.github.io/categories/servers/">servers(6)</a>
     </li>
     
     <li>
@@ -355,6 +380,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
     
     <a href="https://workerwork.github.io/tags/docker/">docker</a>
     

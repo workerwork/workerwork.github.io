@@ -6,7 +6,7 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 21 Mar 2020 12:27:51 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 22:09:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,36 @@
     <item>
       <title>CI/CD</title>
       <link>https://workerwork.github.io/tags/ci/cd/</link>
-      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
+      <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/ci/cd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debootstrap</title>
+      <link>https://workerwork.github.io/tags/debootstrap/</link>
+      <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/debootstrap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://workerwork.github.io/tags/docker/</link>
+      <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ubuntu</title>
+      <link>https://workerwork.github.io/tags/ubuntu/</link>
+      <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/ubuntu/</guid>
       <description></description>
     </item>
     
@@ -35,15 +62,6 @@
       <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/gitlab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ubuntu</title>
-      <link>https://workerwork.github.io/tags/ubuntu/</link>
-      <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/ubuntu/</guid>
       <description></description>
     </item>
     
@@ -143,15 +161,6 @@
       <pubDate>Thu, 29 Aug 2019 11:22:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/drone/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>docker</title>
-      <link>https://workerwork.github.io/tags/docker/</link>
-      <pubDate>Thu, 29 Aug 2019 10:08:51 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/docker/</guid>
       <description></description>
     </item>
     

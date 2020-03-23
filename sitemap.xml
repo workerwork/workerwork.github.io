@@ -4,17 +4,57 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/ci/cd/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/debootstrap/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/categories/devops/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/docker/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/servers/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/ubuntu/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/debootstrap/</loc>
+    <lastmod>2020-03-23T22:09:51+08:00</lastmod>
   </url>
   
   <url>
@@ -28,32 +68,7 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/categories/servers/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/ubuntu/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/gitlab/</loc>
-    <lastmod>2020-03-21T12:27:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2020-03-21T12:27:51+08:00</lastmod>
   </url>
   
@@ -163,11 +178,6 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/docker/</loc>
-    <lastmod>2019-08-29T10:08:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/tags/jenkins/</loc>
     <lastmod>2019-08-29T10:08:51+08:00</lastmod>
   </url>
@@ -228,12 +238,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/hugo/</loc>
+    <loc>https://workerwork.github.io/tags/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/hugo/</loc>
+    <loc>https://workerwork.github.io/categories/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   

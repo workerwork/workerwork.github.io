@@ -6,10 +6,19 @@
     <description>Recent content in devops on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 21 Mar 2020 12:27:51 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2020 22:09:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/devops/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>创建ubuntu基础镜像</title>
+      <link>https://workerwork.github.io/posts/debootstrap/</link>
+      <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/debootstrap/</guid>
+      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m lykops echo &amp;quot;root:baicells&amp;quot; | chpasswd echo &amp;quot;dongfeng:baicells&amp;quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &amp;gt;&amp;gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;amp;&amp;amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &amp;gt; root/.</description>
+    </item>
     
     <item>
       <title>ubuntu搭建gitlab服务器</title>

@@ -7,22 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>fpm | WorkSpace</title>
-    <meta property="og:title" content="fpm - WorkSpace">
+    <title>创建ubuntu基础镜像 | WorkSpace</title>
+    <meta property="og:title" content="创建ubuntu基础镜像 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2020-03-23T22:09:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-03-23T22:09:51&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="fpm">
+    <meta name="description" content="创建ubuntu基础镜像">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/tags/fpm/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/debootstrap/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
+        <link rel="stylesheet" href="/css/prism.css">
+    
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/fpm/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -31,7 +36,6 @@
     
     
 </head>
-
 
 <body>
 <header id="header" class="clearfix">
@@ -68,48 +72,151 @@
 
             <div class="col-8" id="main">
                 <div class="res-cons">
-                    
-                    <h3 class="archive-title">
-                        包含标签
-                        <span class="keyword">fpm</span>
-                        的文章
-                    </h3>
-                    
-
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/epc-cicd/">EPC的CI/CD</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月29日
-                            </date>
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">创建ubuntu基础镜像</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年3月23日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
                             
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/devops">devops</a>
-                                
-                            </div>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
                             
-                            <div class="post-content">
-                                1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}') - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot; - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff - cd /root/df/caddy/yum.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
 
-                    
+<h2 id="1-安装debootstrap">1. 安装debootstrap</h2>
+
+<pre><code class="language-shell">ubuntu操作系统：apt install debootstrap
+centos操作系统：yum install debootstrap
+
+</code></pre>
+
+<h2 id="2-构建基础ubuntu的rootfs">2. 构建基础Ubuntu的rootfs</h2>
+
+<pre><code class="language-shell">mkdir /mnt/rootfs
+debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu
+说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录
+
+</code></pre>
+
+<h2 id="3-配置rootfs">3. 配置rootfs</h2>
+
+<pre><code class="language-shell">#切换根
+chroot .
+
+#安装依赖包
+apt-get -y update
+apt-get -y upgrade
+apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client
+
+#创建用户
+useradd -m lykops
+echo &quot;root:baicells&quot; | chpasswd
+echo &quot;dongfeng:baicells&quot; | chpasswd
+
+#配置sshd
+mkdir /run/sshd
+mkdir /var/run/sshd
+
+sshd -D
+echo UseDNS no &gt;&gt; /etc/ssh/sshd_config 
+
+#其他配置
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+dpkg-reconfigure locales
+rm -Rf /tmp/* &amp;&amp; apt clean
+
+#清理系统
+rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.viminfo
+echo &gt; root/.bash_history
+echo &gt; root/.viminfo
+
+#切换根
+exit
+
+</code></pre>
+
+<h2 id="4-导入docker">4. 导入docker</h2>
+
+<pre><code class="language-shell">tar --numeric-owner -czvf ../Ubuntu1804-baseimages-20200323.tar.gz *
+docker import Ubuntu1804-baseimages-20200323.tar.gz ubuntu:18.04
+
+</code></pre>
+
+<h2 id="5-docker环境下启动ssh命令">5. docker环境下启动ssh命令</h2>
+
+<pre><code class="language-shell">/usr/sbin/sshd -D
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/gitlab/">ubuntu搭建gitlab服务器</a></li>
+        
+        <li><a href="/posts/jenkins/">搭建jenkins服务器</a></li>
+        
+        <li><a href="/posts/epc-cicd/">EPC的CI/CD</a></li>
+        
+        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
+        
+        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
+        
+    </ul>
+</div>
 
 
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/docker">docker</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/debootstrap">debootstrap</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/ubuntu">ubuntu</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/ci/cd">CI/CD</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
                 </div>
             </div>
-
             <div id="secondary">
     <section class="widget">
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
@@ -392,9 +499,24 @@
 </footer>
 
 
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
-
 
 
 

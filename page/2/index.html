@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器" >使用gogs搭建git服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                 1. gogs介绍 gogs官网：https://gogs.io/ 项目源码：https://github.com/gogs/gogs
+2. docker安装gogs 1 ）下载gogs的docker镜像 docker pull gogs/gogs  2 ）创建gogs存储目录 mkdir -p /var/gogs  3 ）使用gogs镜像创建容器 docker run -d --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs  4 ）使用 ip:10080执行图像界面安装 ……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/gogs/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO" >制作CentOS ISO</a>
                                 </h1>
                             </header>
@@ -293,6 +319,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器">ubuntu搭建gitlab服务器</a>
     </li>
     
@@ -328,10 +358,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO">制作CentOS ISO</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -346,7 +372,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(6)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(7)</a>
     </li>
     
     <li>
@@ -358,7 +384,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/servers/">servers(5)</a>
+        <a href="https://workerwork.github.io/categories/servers/">servers(6)</a>
     </li>
     
     <li>
@@ -391,6 +417,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
     
     <a href="https://workerwork.github.io/tags/docker/">docker</a>
     
