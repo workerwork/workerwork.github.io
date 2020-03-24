@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dockerfile on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/dockerfile/</link>
+    <description>Recent content in dockerfile on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 24 Mar 2020 15:48:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/dockerfile/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>创建ubuntu docker镜像</title>
+      <link>https://workerwork.github.io/posts/ubuntu-docker/</link>
+      <pubDate>Tue, 24 Mar 2020 15:48:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/ubuntu-docker/</guid>
+      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.com&amp;gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i &#39;s/# deb/deb/g&#39; /etc/apt/sources.list RUN apt-get update -yqq \ &amp;amp;&amp;amp; apt-get install -yq apt-utils \ &amp;amp;&amp;amp; apt-get install -yq curl \ &amp;amp;&amp;amp; apt-get install -yq git \ &amp;amp;&amp;amp; apt-get install -yq unzip zip tar \ &amp;amp;&amp;amp; apt-get install -yq ca-certificates \ &amp;amp;&amp;amp; apt-get install -yq bash-completion \ &amp;amp;&amp;amp; apt-get install -yq iproute2 iputils-ping \ &amp;amp;&amp;amp; apt-get install -yq systemd systemd-sysv \ &amp;amp;&amp;amp; apt-get clean \ &amp;amp;&amp;amp; apt-get autoclean \ &amp;amp;&amp;amp; apt-get autoremove \ &amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.</description>
+    </item>
+    
+  </channel>
+</rss>

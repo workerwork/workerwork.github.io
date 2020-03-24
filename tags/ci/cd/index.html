@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/ubuntu-docker/">创建ubuntu docker镜像</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年3月24日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/devops">devops</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/servers">servers</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list RUN apt-get update -yqq \ &amp;&amp; apt-get install -yq apt-utils \ &amp;&amp; apt-get install -yq curl \ &amp;&amp; apt-get install -yq git \ &amp;&amp; apt-get install -yq unzip zip tar \ &amp;&amp; apt-get install -yq ca-certificates \ &amp;&amp; apt-get install -yq bash-completion \ &amp;&amp; apt-get install -yq iproute2 iputils-ping \ &amp;&amp; apt-get install -yq systemd systemd-sysv \ &amp;&amp; apt-get clean \ &amp;&amp; apt-get autoclean \ &amp;&amp; apt-get autoremove \ &amp;&amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/debootstrap/">创建ubuntu基础镜像</a>
                                 </h1>
                             </header>
@@ -256,6 +281,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像">创建ubuntu docker镜像</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
     </li>
     
@@ -291,10 +320,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器">搭建jenkins服务器</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器">使用gogs搭建git服务器</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -309,7 +334,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/devops/">devops(7)</a>
+        <a href="https://workerwork.github.io/categories/devops/">devops(8)</a>
     </li>
     
     <li>
@@ -321,7 +346,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/servers/">servers(6)</a>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
     </li>
     
     <li>
@@ -360,6 +385,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/docker/">docker</a>
     
     <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
     
     <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
     
