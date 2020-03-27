@@ -192,6 +192,70 @@ services:
 <pre><code class="language-shell">http://dongfeng.gitlab.top:9999
 </code></pre>
 
+<h2 id="7-gitlab-ci">7. gitlab-ci</h2>
+
+<pre><code class="language-shell">before_script:
+  - echo &quot;----job begin----&quot;
+
+after_script:
+  - echo &quot;----job over----&quot;
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  key: ${CI_BUILD_STAGE}
+  untracked: true
+  paths:
+  #- .
+
+variables:
+  #GIT_STRATEGY: fetch
+  GIT_DEPTH: &quot;1&quot;
+
+#template
+.job_template: &amp;job_definiation
+  stage: build
+  tags:
+    - 5gc-c-builder
+  only:
+    - master
+
+docker-deploy:
+  &lt;&lt;: *job_definiation
+  script:
+    - docker run -i
+      --rm
+      --user root
+      --name=$USER
+      --workdir=&quot;/root/baicells-5gc-c&quot;
+      -v $(pwd):/root/baicells-5gc-c
+      compiler:1.0
+  #environment:
+     #name: production
+     #url: http://workerwork.github.io
+
+bins-distribute:
+  &lt;&lt;: *job_definiation
+  script:
+    - author=$(git show -q | awk '/Author/{print $2}')
+    - commit=$(git show -q | awk '/commit/{print $2}' | cut -c 1-8)
+    - date=$(date +%Y%m%d)
+    - mkdir /home/$author || true
+    - cp -rf amf/bin/x86_64-ubuntu/amf /home/$author/amf-$commit-$date
+    - cp -rf smf/bin/x86_64-ubuntu/smf /home/$author/smf-$commit-$date
+  #when: manual
+
+</code></pre>
+
+<h2 id="8-略过gitlab-ci">8. 略过gitlab-ci</h2>
+
+<pre><code class="language-shell">git push -o ci.skip
+
+</code></pre>
+
                         </div>
 						<br>
 						<br>
