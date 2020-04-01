@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Build 5GC-C | WorkSpace</title>
+    <meta property="og:title" content="Build 5GC-C - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-04-01T15:57:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-04-01T15:57:51&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="Build 5GC-C">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/5gc-c-build/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">Build 5GC-C</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年4月1日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-安装打包工具">1. 安装打包工具</h2>
+
+<pre><code class="language-shell">apt-get install -y ruby rubygems ruby-dev
+#gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+#gem sources -l
+gem install fpm
+
+</code></pre>
+
+<h2 id="2-构建目录结构">2. 构建目录结构</h2>
+
+<pre><code class="language-shell">oot@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree
+.
+├── build.sh
+├── README.md
+└── source
+    ├── 5gc-c.service
+    ├── amf
+    │   └── amf1
+    │       ├── bin
+    │       │   └── amf
+    │       ├── config
+    │       │   ├── amf.conf
+    │       │   └── asn.log.properties
+    │       ├── context
+    │       │   └── SystemVersionDB
+    │       ├── data
+    │       │   └── statistics
+    │       ├── licensefile -&gt; ../../licensefile
+    │       ├── log
+    │       ├── startup.sh
+    │       └── xml
+    │           ├── amfInfo.xml
+    │           ├── ausf.xml
+    │           ├── guami.xml
+    │           ├── nrf.xml
+    │           ├── pcf-am-policy-data.xml
+    │           ├── pcf-ue.xml
+    │           ├── udm-am-subscription-data.xml
+    │           ├── udm-smf-selection.xml
+    │           └── udm-ue.xml
+    ├── ausf
+    │   └── ausf1
+    │       ├── bin
+    │       │   └── ausf
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── ausf.conf
+    │       ├── context
+    │       │   └── SystemVersionDB
+    │       ├── data
+    │       │   └── statistics
+    │       ├── licensefile -&gt; ../../licensefile
+    │       ├── log
+    │       └── xml
+    │           ├── ausf-example.xml
+    │           ├── guami-example.xml
+    │           ├── nrf-example.xml
+    │           ├── pcf-am-policy-data-example.xml
+    │           ├── pcf-ue-example.xml
+    │           ├── udm-am-subscription-data-example.xml
+    │           ├── udm-smf-seleciont-example.xml
+    │           └── udm-ue-example.xml
+    ├── init.sh
+    ├── lib
+    │   ├── grpc
+    │   │   ├── libaddress_sorting.a
+    │   │   ├── libgpr.a
+    │   │   ├── libgrpc.a
+    │   │   ├── libgrpc++.a
+    │   │   ├── libgrpc_cronet.a
+    │   │   ├── libgrpc++_cronet.a
+    │   │   ├── libgrpc++_error_details.a
+    │   │   ├── libgrpcpp_channelz.a
+    │   │   ├── libgrpc++_reflection.a
+    │   │   ├── libgrpc_unsecure.a
+    │   │   ├── libgrpc++_unsecure.a
+    │   │   ├── libprotobuf.a
+    │   │   ├── libprotobuf-lite.a
+    │   │   └── libprotoc.a
+    │   ├── libboost_filesystem.a
+    │   ├── libboost_system.a
+    │   ├── libboost_thread.a
+    │   ├── libcdr.a
+    │   ├── libcrypto.a
+    │   ├── libcrypto.so
+    │   ├── libcrypto.so.1.0.0
+    │   ├── libcrypto.so.1.1
+    │   ├── libcurl.a
+    │   ├── libev.a
+    │   ├── libev.so
+    │   ├── libev.so.3
+    │   ├── libev.so.3.0.0
+    │   ├── libhiredis.a
+    │   ├── liblog4cplus.a
+    │   ├── liblog4cplus.so
+    │   ├── liblog4cplus.so.2
+    │   ├── liblog4cplus.so.2.0.0
+    │   ├── libngapR15.a
+    │   ├── libnghttp2.a
+    │   ├── libssl.a
+    │   ├── libssl.so
+    │   ├── libssl.so.1.0.0
+    │   ├── libssl.so.1.1
+    │   ├── libusrsctp.a
+    │   ├── libusrsctp.so
+    │   ├── libusrsctp.so.1
+    │   ├── libusrsctp.so.1.0.0
+    │   ├── libxerces-c.a
+    │   └── opensaf46
+    │       ├── libopensaf_core.a
+    │       ├── libopensaf_core.so
+    │       ├── libopensaf_core.so.0
+    │       ├── libopensaf_core.so.0.2.0
+    │       ├── librda.a
+    │       ├── librda.so
+    │       ├── librda.so.0
+    │       ├── librda.so.0.0.0
+    │       ├── libSaAmf.a
+    │       ├── libSaAmf.so
+    │       ├── libSaAmf.so.0
+    │       ├── libSaAmf.so.0.2.1
+    │       ├── libSaCkpt.a
+    │       ├── libSaCkpt.so
+    │       ├── libSaCkpt.so.1
+    │       ├── libSaCkpt.so.1.0.2
+    │       ├── libSaClm.a
+    │       ├── libSaClm.so
+    │       ├── libSaClm.so.0
+    │       ├── libSaClm.so.0.0.0
+    │       ├── libSaEvt.a
+    │       ├── libSaEvt.so
+    │       ├── libSaEvt.so.1
+    │       ├── libSaEvt.so.1.0.3
+    │       ├── libSaImmOi.a
+    │       ├── libSaImmOi.so
+    │       ├── libSaImmOi.so.0
+    │       ├── libSaImmOi.so.0.3.0
+    │       ├── libSaImmOm.a
+    │       ├── libSaImmOm.so
+    │       ├── libSaImmOm.so.0
+    │       ├── libSaImmOm.so.0.4.0
+    │       ├── libSaLck.a
+    │       ├── libSaLck.so
+    │       ├── libSaLck.so.0
+    │       ├── libSaLck.so.0.0.0
+    │       ├── libSaLog.a
+    │       ├── libSaLog.so
+    │       ├── libSaLog.so.1
+    │       ├── libSaLog.so.1.0.2
+    │       ├── libSaMsg.a
+    │       ├── libSaMsg.so
+    │       ├── libSaMsg.so.1
+    │       ├── libSaMsg.so.1.0.2
+    │       ├── libSaNtf.a
+    │       ├── libSaNtf.so
+    │       ├── libSaNtf.so.0
+    │       ├── libSaNtf.so.0.1.2
+    │       ├── libSaSmf.a
+    │       ├── libSaSmf.so
+    │       ├── libSaSmf.so.0
+    │       ├── libSaSmf.so.0.0.0
+    │       ├── libsmfsv_common.a
+    │       ├── libsmfsv_common.so
+    │       ├── libsmfsv_common.so.0
+    │       └── libsmfsv_common.so.0.0.0
+    ├── licensefile
+    │   └── collect
+    ├── network.conf
+    ├── smf
+    │   └── smf1
+    │       ├── bin
+    │       │   └── smf
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── smf.conf
+    │       ├── context
+    │       │   └── SystemVersionDB
+    │       ├── data
+    │       │   ├── replay
+    │       │   │   └── backup
+    │       │   └── statistics
+    │       ├── licensefile -&gt; ../../licensefile
+    │       ├── log
+    │       ├── startup.sh
+    │       └── xml
+    │           ├── dnn.xml
+    │           ├── pfd.xml
+    │           ├── sm-policy-data.xml
+    │           ├── udm.xml
+    │           └── upf.xml
+    └── udm
+        └── udm1
+            ├── bin
+            │   └── udm
+            ├── config
+            │   ├── asn.log.properties
+            │   └── udm.conf
+            ├── context
+            │   ├── SystemVersionDB
+            │   └── UeSecContext
+            ├── data
+            │   └── statistics
+            ├── licensefile -&gt; ../../licensefile
+            ├── log
+            └── xml
+                ├── guami.xml
+                ├── pcf-am-policy-data.xml
+                ├── pcf-ue.xml
+                ├── udm-am-subscription-data.xml
+                ├── udm-session-management-subscription-data.xml
+                ├── udm-smf-selection.xml
+                ├── udm-snssai.xml
+                ├── udm-ue-100k.xml
+                └── udm-ue.xml
+
+52 directories, 150 files
+
+
+</code></pre>
+
+<h2 id="3">3.</h2>
+
+<pre><code class="language-shell">workspace:
+    base: /root/gogs
+    path: epc-c
+
+pipeline:
+  build:
+    image: centos7.5:dev
+    environment:
+      - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no
+      - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no
+      - TEST_SERVER=root@192.168.9.105
+      - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION    
+    commands:
+      - git_rev=$(git rev-parse HEAD| cut -c1-10)
+      - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git
+      - cd pack-epc-c
+      - ./pack-epc-c.sh
+      - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot;
+      - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}')
+      - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm
+      - eval $(ssh-agent -s) 
+      - ssh-add /root/.ssh/id_rsa
+      - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot;
+      - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff
+      - cd /root/df/caddy/yum.repo
+      - rm -rf rpms/baicells-epc-c-*.rpm
+      - cp -rf ../filebrowser/files/EPC-VERSION/&quot;$rpm_newname&quot; rpms/
+      - createrepo --update .
+      - exit
+      - eeooff
+</code></pre>
+
+<h2 id="3-关键文件">3. 关键文件</h2>
+
+<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/init.sh 
+#!/bin/bash -
+
+INSTALL_PATH=/home/baicells/5gc-c
+
+function init_net() {
+    if [[ -f network.conf ]];then
+        while read line
+        do
+            if [[ &quot;${line:0:1}&quot; != &quot;#&quot; ]]; then
+                [[ -z &quot;$line&quot; ]] &amp;&amp; continue
+                $line 2&gt;&amp;1&gt;/dev/null
+            fi
+        done &lt; network.conf
+    fi
+}
+
+function init_system() {
+    ulimit -c unlimited
+    export LD_LIBRARY_PATH=${INSTALL_PATH}/lib
+}
+
+function start_module() {
+    for module in amf smf ausf udm;do
+        cd $INSTALL_PATH/$module/${module}1
+        bin/$module -s -c config/$module.conf -l config/asn.log.properties &amp;
+    done
+}
+
+function init() {
+    init_system
+    init_net
+    start_module
+};init
+
+
+</code></pre>
+
+<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/5gc-c.service 
+[Unit]
+Description=BAICELLS-5GC-C
+Requires=network.target multi-user.target 
+After=network.target multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/home/baicells/5gc-c/init.sh
+#ExecStop=
+
+[Install]
+WantedBy=multi-user.target
+
+
+</code></pre>
+
+<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/network.conf 
+#sudo ip link add name vpp1out type veth peer name vpp1host
+  
+#sudo ip link set dev vpp1out up
+
+#sudo ip link set dev vpp1host up
+
+#sudo ip addr add 192.168.0.1/24 dev vpp1host
+
+
+</code></pre>
+
+<h2 id="4-构建脚本">4. 构建脚本</h2>
+
+<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat build.sh 
+#!/bin/bash -
+
+install_path=/home/baicells/5gc-c
+
+function usage() {
+    cat &lt;&lt; EOF
+
+----------------------------------------------------
+Baicells 5gc-c Builder.
+
+The script can build Baicells 5gc-c related software.
+
+Warning: you should use root to build. 
+
+Usage: ./build.sh [options] [args]
+
+Options:
+  -h --help      Show this help
+  -r --release   set the release of the deb
+  -v --version   set the version of the deb
+  -c --control   build 5gc-c deb
+  -l --lib       build 5gc-c-lib deb
+
+---------
+Examples:
+--
+
+Print help message.
+# ./build.sh -h
+
+--
+
+Build.
+
+Build specified version of 5gc-c deb:
+# ./build.sh -c -v 2.0.0
+
+Build specified release of 5gc-c deb:
+# ./build.sh -c -r 2
+
+Build specified version and release of 5gc-c deb:
+# ./build.sh -c -v 2.0.0 -r 2
+
+Build specified version of 5gc-c-lib deb:
+# ./build.sh -l -v 2.0.0
+
+Build specified release of 5gc-c-lib deb:
+# ./build.sh -l -r 2
+
+Build specified version and release of 5gc-c-lib deb:
+# ./build.sh -l -v 2.0.0 -r 2
+
+Build specified version and release of 5gc-c and 5gc-c-lib deb:
+# ./build.sh -cl -v 2.0.0 -r 2
+
+note: if version or release not be specified,they will be &quot;1.0.0&quot; or &quot;1&quot; by default.
+--
+
+
+EOF
+exit 0
+}
+
+
+
+function install_deps() {
+    if [[ ! $(which fpm) ]];then
+        apt-get install -y ruby rubygems ruby-dev
+        #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+        #gem sources -l
+        gem install fpm
+    fi
+}
+
+
+function build_5gc_c() {
+    VERSION=$1
+    RELEASE=$2
+    sed -i &quot;s#\(INSTALL_PATH=\).*#\1$install_path#&quot; &quot;source&quot;/init.sh
+    sed -i &quot;s#\(ExecStart=\).*#\1$install_path/init.sh#&quot; &quot;source&quot;/5gc-c.service
+    fpm -f -s dir -t deb -C &quot;source&quot; -n &quot;baicells-5gc-c&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -p . \
+	    --verbose \
+	    --description &quot;BAICELLS-5GC-C&quot; \
+	    --maintainer &quot;dongfeng@baicells.com&quot; \
+	    --vendor &quot;baicells&quot; \
+	    --deb-no-default-config-files \
+	    --config-files $install_path/amf/amf1/config/ \
+	    --config-files $install_path/amf/amf1/xml \
+	    --config-files $install_path/smf/smf1/config \
+	    --config-files $install_path/smf/smf1/xml \
+	    --config-files $install_path/ausf/ausf1/config \
+	    --config-files $install_path/ausf/ausf1/xml \
+	    --config-files $install_path/udm/udm1/config \
+	    --config-files $install_path/udm/udm1/xml \
+	    amf=$install_path/ \
+	    smf=$install_path/ \
+	    ausf=$install_path/ \
+	    udm=$install_path/ \
+	    licensefile=$install_path/ \
+	    init.sh=$install_path/ \
+	    network.conf=$install_path/ \
+	    5gc-c.service=/lib/systemd/system/
+}
+
+function build_5gc_c_lib() {
+    VERSION=$1
+    RELEASE=$2
+    fpm -f -s dir -t deb -n &quot;baicells-5gc-c-lib&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -C &quot;source&quot; -p . \
+	    --verbose \
+	    --description &quot;BAICELLS-5GC-C-LIB&quot; \
+	    --maintainer &quot;dongfeng@baicells.com&quot; \
+	    --vendor &quot;baicells&quot; \
+	    --deb-no-default-config-files \
+	    lib=$install_path/	
+}
+
+
+ARGS=`getopt -o hr:v:cl --long help,release:,version:,control,lib, -- &quot;$@&quot;`
+if [ $? != 0 ] ; then echo &quot;Terminating...&quot; &gt;&amp;2 ; exit 1 ; fi
+eval set -- &quot;$ARGS&quot;
+while true;do
+    case &quot;$1&quot; in
+        -r|--release)
+            release=$2
+            shift 2
+            ;;
+        -v|--version)
+            version=$2
+            shift 2
+            ;;
+        -c|--control)
+	    b1=build_5gc_c
+            shift
+            ;;
+        -l|--lib)
+            b2=build_5gc_c_lib
+            shift
+            ;;
+        -h|--help)
+            usage
+            shift
+            ;;
+        --)
+            usage
+            shift
+            ;;
+        *)
+            echo &quot;unknown:{$1}&quot;
+            exit 1
+            ;;
+    esac
+done
+
+version=${version:-&quot;1.0.0&quot;}
+release=${release:-&quot;1&quot;}
+
+for fn in $b1 $b2;do
+    if [[ -n $fn ]];then
+        $fn $version $release
+    fi
+done
+
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/epc-cicd/">EPC的CI/CD</a></li>
+        
+        <li><a href="/posts/ubuntu-docker/">创建ubuntu docker镜像</a></li>
+        
+        <li><a href="/posts/debootstrap/">创建ubuntu基础镜像</a></li>
+        
+        <li><a href="/posts/gitlab/">ubuntu搭建gitlab服务器</a></li>
+        
+        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/5gc">5gc</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/ci/cd">CI/CD</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/fpm">fpm</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85">deb打包</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像">创建ubuntu docker镜像</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器">ubuntu搭建gitlab服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp/" title="基于VPP&#43;DPDK开源框架开发UPF">基于VPP&#43;DPDK开源框架开发UPF</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/centos-good/" title="CentOS7系统优化">CentOS7系统优化</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/security/" title="CentOS7安全加固">CentOS7安全加固</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD">EPC的CI/CD</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器">使用caddy搭建文件服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/drone/" title="使用docker-compose搭建drone服务器">使用docker-compose搭建drone服务器</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(1)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.google.com/" title="google搜索">google搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://music.taihe.com/" title="千千静听">千千静听</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.mdeditor.com/" title="Markdown在线编辑器">MdEditor</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust教程">rust教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>
