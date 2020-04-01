@@ -312,40 +312,6 @@ gem install fpm
 
 </code></pre>
 
-<h2 id="3">3.</h2>
-
-<pre><code class="language-shell">workspace:
-    base: /root/gogs
-    path: epc-c
-
-pipeline:
-  build:
-    image: centos7.5:dev
-    environment:
-      - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no
-      - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no
-      - TEST_SERVER=root@192.168.9.105
-      - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION    
-    commands:
-      - git_rev=$(git rev-parse HEAD| cut -c1-10)
-      - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git
-      - cd pack-epc-c
-      - ./pack-epc-c.sh
-      - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot;
-      - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}')
-      - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm
-      - eval $(ssh-agent -s) 
-      - ssh-add /root/.ssh/id_rsa
-      - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot;
-      - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff
-      - cd /root/df/caddy/yum.repo
-      - rm -rf rpms/baicells-epc-c-*.rpm
-      - cp -rf ../filebrowser/files/EPC-VERSION/&quot;$rpm_newname&quot; rpms/
-      - createrepo --update .
-      - exit
-      - eeooff
-</code></pre>
-
 <h2 id="3-关键文件">3. 关键文件</h2>
 
 <pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/init.sh 
