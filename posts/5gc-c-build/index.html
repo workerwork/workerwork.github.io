@@ -506,51 +506,132 @@ function build_5gc_c_lib() {
 }
 
 
-ARGS=`getopt -o hr:v:cl --long help,release:,version:,control,lib, -- &quot;$@&quot;`
-if [ $? != 0 ] ; then echo &quot;Terminating...&quot; &gt;&amp;2 ; exit 1 ; fi
-eval set -- &quot;$ARGS&quot;
-while true;do
-    case &quot;$1&quot; in
-        -r|--release)
-            release=$2
-            shift 2
-            ;;
-        -v|--version)
-            version=$2
-            shift 2
-            ;;
-        -c|--control)
-	    b1=build_5gc_c
-            shift
-            ;;
-        -l|--lib)
-            b2=build_5gc_c_lib
-            shift
-            ;;
-        -h|--help)
-            usage
-            shift
-            ;;
-        --)
-            shift
-            break
-            ;;
-        *)
-            echo &quot;unknown:{$1}&quot;
-            exit 1
-            ;;
-    esac
-done
 
-version=${version:-&quot;1.0.0&quot;}
-release=${release:-&quot;1&quot;}
+OPTION=$(whiptail --title &quot;5GC Builder&quot; --nocancel --menu &quot;Choose your option&quot; 15 60 4 \
+&quot;1&quot; &quot;Build 5gc-c&quot; \
+&quot;2&quot; &quot;Build 5gc-c lib&quot; \
+&quot;3&quot; &quot;Build 5gc-c and lib&quot; \
+&quot;4&quot; &quot;EXIT&quot;  3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
 
-for fn in $b1 $b2;do
-    if [[ -n $fn ]];then
-        $fn $version $release
-    fi
-done
+case $OPTION in
+    1)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+	{
+	    build_5gc_c $version $release &amp;&gt;/dev/null &amp;
+	    for i in {1..100};do
+                sleep 0.1
+                echo $i
+            done
+	} |  whiptail --gauge &quot;Building \&quot;baicells-5gc-c_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+		&amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+		--msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60 
+        ;;
+    2)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c lib version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c lib release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+        {
+	    build_5gc_c_lib $version $release &amp;&gt;/dev/null &amp;
+            for i in {1..100};do
+                sleep 0.1
+                echo $i
+            done
+        } |  whiptail --gauge &quot;Building \&quot;baicells-5gc-c-lib_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+                &amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+                --msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60
+        ;;
+    3)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c and lib version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c and lib release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+        {
+	    build_5gc_c $version $release &amp;&gt;/dev/null &amp;
+	    build_5gc_c_lib $version $release &amp;&gt;/dev/null &amp;
+            for i in {1..100};do
+                sleep 0.15
+                echo $i
+            done
+    } |  whiptail --gauge &quot;Building \&quot;baicells-5gc-c(-lib)_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+                &amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+                --msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60
+        ;;
+    4)
+	exit 0
+        ;;
+	
+esac
 
+
+
+
+
+#ARGS=`getopt -o hr:v:cl --long help,release:,version:,control,lib, -- &quot;$@&quot;`
+#if [ $? != 0 ] ; then echo &quot;Terminating...&quot; &gt;&amp;2 ; exit 1 ; fi
+#eval set -- &quot;$ARGS&quot;
+#while true;do
+#    case &quot;$1&quot; in
+#        -r|--release)
+#            release=$2
+#            shift 2
+#            ;;
+#        -v|--version)
+#            version=$2
+#            shift 2
+#            ;;
+#        -c|--control)
+#	    b1=build_5gc_c
+#            shift
+#            ;;
+#        -l|--lib)
+#            b2=build_5gc_c_lib
+#            shift
+#            ;;
+#        -h|--help)
+#            usage
+#            shift
+#            ;;
+#        --)
+#            shift
+#            break
+#            ;;
+#        *)
+#            echo &quot;unknown:{$1}&quot;
+#            exit 1
+#            ;;
+#    esac
+#done
+#
+#version=${version:-&quot;1.0.0&quot;}
+#release=${release:-&quot;1&quot;}
+#
+#for fn in $b1 $b2;do
+#    if [[ -n $fn ]];then
+#        $fn $version $release
+#    fi
+#done
 
 </code></pre>
 
