@@ -35,7 +35,7 @@
       <pubDate>Tue, 24 Mar 2020 10:02:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/books/</guid>
-      <description> docker kubernetes openstack openshift starlingx SDN NFV VPP OVS ONOS cord DPDK vagrant kvm vmware virtualbox docker-compose ansible debootstrap febootstrap devops CI/CD python c golang rust shell gotty vtysh git gogs gitlab gitbook redis nginx tomcat caddy keepalived mysql ipsec hugo html css js chrome plugin vpncity nordvpn ghelper swagger shc tmux 看板娘 tor pyinstaller ripgrep fpm 蜜罐 蜜网 testlink 本地yum仓库 本地docker仓库 本地网盘 本地dns jenkins drone rancher 免流 remmina远程 notebook 锐速bbr TIG(telegraf influxdb grafana) 暗网 渗透测试 社工钓鱼 busybox rpm打包 guake 内网穿透 code-server helm 简书 yaml toml markdown gRPC REST KV数据库 cgo RISC-v ARM X86 KubeSpray ceph PXE批量安装系统 磁盘阵列 doxygen git review epoll UDEV UIO VFIO ltrace rpmreaper minicom shell dialog ovirt 云桌面 </description>
+      <description> docker kubernetes openstack openshift starlingx SDN NFV VPP OVS ONOS cord DPDK vagrant kvm vmware virtualbox docker-compose ansible debootstrap febootstrap devops CI/CD python c golang rust shell gotty vtysh git gogs gitlab gitbook redis nginx tomcat caddy keepalived mysql ipsec hugo html css js chrome plugin vpncity nordvpn ghelper swagger shc tmux 看板娘 tor pyinstaller ripgrep fpm 蜜罐 蜜网 testlink 本地yum仓库 本地docker仓库 本地网盘 本地dns jenkins drone rancher 免流 remmina远程 notebook 锐速bbr TIG(telegraf influxdb grafana) 暗网 渗透测试 社工钓鱼 busybox rpm打包 guake 内网穿透 code-server helm 简书 yaml toml markdown gRPC REST KV数据库 cgo RISC-v ARM X86 KubeSpray ceph PXE批量安装系统 磁盘阵列 doxygen git review epoll UDEV UIO VFIO ltrace rpmreaper minicom shell dialog ovirt 云桌面 kolla-ansible 部署openstack </description>
     </item>
     
     <item>
