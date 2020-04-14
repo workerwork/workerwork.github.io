@@ -4,22 +4,42 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/categories/kernel/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/kernel/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/linux/</loc>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/self-kernel/</loc>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2020-04-14T16:20:00+08:00</lastmod>
   </url>
   
   <url>
@@ -33,22 +53,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/tags/wcg/</loc>
     <lastmod>2020-04-14T09:40:51+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/wcg-kernel/</loc>
-    <lastmod>2020-04-14T09:40:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2020-04-14T09:40:51+08:00</lastmod>
   </url>
   
@@ -259,11 +269,6 @@
   
   <url>
     <loc>https://workerwork.github.io/tags/iso/</loc>
-    <lastmod>2019-08-28T16:37:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/linux/</loc>
     <lastmod>2019-08-28T16:37:51+08:00</lastmod>
   </url>
   

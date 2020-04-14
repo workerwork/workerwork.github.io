@@ -6,10 +6,20 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 28 Aug 2019 16:37:51 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2020 16:20:00 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>linux内核定制</title>
+      <link>https://workerwork.github.io/posts/self-kernel/</link>
+      <pubDate>Tue, 14 Apr 2020 16:20:00 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/self-kernel/</guid>
+      <description>1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
+2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.config文件，这个文件也可以从/boot路径下拷贝 #Y是该选项能够构建到内核内部 #M是构建模块  4. 构建内核 # make clean //这一步最好执行一下 # make -j2  5. 打包成rpm # make rpm  6. 安装并引导内核 # make modules_install //安装模块 # make install //安装内核 #这时，系统会自动在你的启动菜单中加入启动新内核的菜单,如 [root@localhost linux-2.6.27.62]# cat /boot/grub/menu.lst default=1 timeout=5 splashimage=(hd0,0)/grub/splash.xpm.gz hiddenmenu title Red Hat Enterprise Linux AS (2.</description>
+    </item>
     
     <item>
       <title>制作CentOS ISO</title>

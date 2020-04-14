@@ -70,6 +70,33 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC" >AUTO-EPC</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年2月20日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">DEVOPS</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
+wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
+yum install [rpm包名]  如果是升级，执行
+yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
+EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.168.9.105:60080/baicells/ovs-rest ovsdb-config-agent库 http://192.168.9.105:60080/baicells/ovsdb-config-agent openapi库 http://192.168.9.105:60080/dongfeng/openapi signaltrace库 http://192.168.9.105:60080/dongfeng/signaltrace epc-c库 http://192.168.9.105:60080/dongfeng/epc-c ovs库 http://192.168.9.105:60080/dongfeng/ovs  RPM包构造方法  开发在git代码托管服务器http://192.168.9.105:60080 上提交更新代码 由web钩子触发后台drone自动使用fpm进行rpm打包 打包好的rpm包自动拷贝到文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 并自动更新本地yum仓库  RPM打包版本 版本说明 以baicells-epc-ui-3.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
                                 </h1>
                             </header>
@@ -164,6 +191,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制">linux内核定制</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改">WCG内核修改</a>
     </li>
     
@@ -199,10 +230,6 @@
         <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD">EPC的CI/CD</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器">使用caddy搭建文件服务器</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -225,7 +252,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/kernel/">kernel(1)</a>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(2)</a>
     </li>
     
     <li>

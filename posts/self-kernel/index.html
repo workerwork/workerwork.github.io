@@ -7,22 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>k8s | WorkSpace</title>
-    <meta property="og:title" content="k8s - WorkSpace">
+    <title>linux内核定制 | WorkSpace</title>
+    <meta property="og:title" content="linux内核定制 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2020-04-14T16:20:00&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-04-14T16:20:00&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="k8s">
+    <meta name="description" content="linux内核定制">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/tags/k8s/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/self-kernel/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
+        <link rel="stylesheet" href="/css/prism.css">
+    
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/k8s/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -31,7 +36,6 @@
     
     
 </head>
-
 
 <body>
 <header id="header" class="clearfix">
@@ -68,51 +72,143 @@
 
             <div class="col-8" id="main">
                 <div class="res-cons">
-                    
-                    <h3 class="archive-title">
-                        包含标签
-                        <span class="keyword">k8s</span>
-                        的文章
-                    </h3>
-                    
-
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/kubernetes-deploy/">部署kubernetes</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月28日
-                            </date>
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">linux内核定制</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年4月14日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
                             
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96">虚拟化</a>
-                                
-                            </div>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/kernel">kernel</a></span>
                             
-                            <div class="post-content">
-                                kubernetes Kubernetes官方提供三种部署方式： minikube minikube可以实现一种轻量级的Kubernetes集群，通过在本地计算机上创建虚拟机并部署只包含单个节点的简单集群。Minikube适用于Linux，MacOS和Windows系统。Minikube CLI提供集群管理的基本操作，包括 start、stop、status和delete
-kubeadm kubeadm是Kubernetes1.6开始官方推出的快速部署Kubernetes集群工具，其思路是将Kubernetes相关服务容器化(Kubernetes静态Pod)以简化部署
-custom solutions 最完整的方式，从零开始二进制搭建
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
 
-部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i 's/enforcing/disabled/' /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.conf: net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-arptables = 1 # 设置主机名： # hostnamectl set-hostname master # 修改/etc/hosts文件: # cat /etc/hosts 127.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/kubernetes-deploy/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
+<h2 id="1-下载内核源代码">1. 下载内核源代码</h2>
 
-                    
+<p>从 <a href="http://www.kernel.org">http://www.kernel.org</a> 下载内核源代码RPM包
+例如linux-2.6.27.62.tar.bz2</p>
+
+<h2 id="2-解压内核">2. 解压内核</h2>
+
+<pre><code class="language-shell"># bzip2 -d linux-2.6.27.62.tar.bz2
+# tar -xvf linux-2.6.27.62.tar
+
+</code></pre>
+
+<h2 id="3-定制内核">3. 定制内核</h2>
+
+<pre><code class="language-shell">#定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法)
+# make config
+# make defconfig
+# make menuconfig
+#会生成.config文件，这个文件也可以从/boot路径下拷贝
+#Y是该选项能够构建到内核内部
+#M是构建模块
+
+</code></pre>
+
+<h2 id="4-构建内核">4. 构建内核</h2>
+
+<pre><code class="language-shell"># make clean //这一步最好执行一下
+# make -j2
+
+</code></pre>
+
+<h2 id="5-打包成rpm">5. 打包成rpm</h2>
+
+<pre><code class="language-shell"># make rpm
+
+</code></pre>
+
+<h2 id="6-安装并引导内核">6. 安装并引导内核</h2>
+
+<pre><code class="language-shell"># make modules_install //安装模块
+# make install  //安装内核
+
+#这时，系统会自动在你的启动菜单中加入启动新内核的菜单,如
+[root@localhost linux-2.6.27.62]# cat /boot/grub/menu.lst
+default=1
+timeout=5
+splashimage=(hd0,0)/grub/splash.xpm.gz
+hiddenmenu
+title Red Hat Enterprise Linux AS (2.6.27.62)
+        root (hd0,0)
+        kernel /vmlinuz-2.6.27.62 ro root=/dev/VolGroup00/LogVol00 rhgb quiet
+        initrd /initrd-2.6.27.62.img
+title Red Hat Enterprise Linux AS (2.6.9-67.EL)
+        root (hd0,0)
+        kernel /vmlinuz-2.6.9-67.EL ro root=/dev/VolGroup00/LogVol00 rhgb quiet
+        initrd /initrd-2.6.9-67.EL.img
+
+# 将default=1,改为default=0（它是以0开始的），此时就会启动新内核。
+
+# reboot
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/wcg-kernel/">WCG内核修改</a></li>
+        
+        <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
+        
+        <li><a href="/posts/5gc-c-build/">Build 5GC-C</a></li>
+        
+        <li><a href="/posts/ubuntu-docker/">创建ubuntu docker镜像</a></li>
+        
+        <li><a href="/books/">something</a></li>
+        
+    </ul>
+</div>
 
 
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/kernel">kernel</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
                 </div>
             </div>
-
             <div id="secondary">
     <section class="widget">
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
@@ -435,9 +531,24 @@ custom solutions 最完整的方式，从零开始二进制搭建
 </footer>
 
 
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
-
 
 
 
