@@ -103,6 +103,31 @@
                             </div>
                         </article>
                     
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-kernel/">WCG内核修改</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                1年1月1日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
 
                     
 
@@ -188,6 +213,10 @@
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/linux/">linux(4)</a>
     </li>
     
@@ -259,6 +288,8 @@
     <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
     
     <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
     
     <a href="https://workerwork.github.io/tags/kube/">kube</a>
     
