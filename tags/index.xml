@@ -6,10 +6,46 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 01 Apr 2020 15:57:51 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2020 09:40:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kernel</title>
+      <link>https://workerwork.github.io/tags/kernel/</link>
+      <pubDate>Tue, 14 Apr 2020 09:40:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/kernel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rpm</title>
+      <link>https://workerwork.github.io/tags/rpm/</link>
+      <pubDate>Tue, 14 Apr 2020 09:40:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/rpm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rpm打包</title>
+      <link>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</link>
+      <pubDate>Tue, 14 Apr 2020 09:40:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>wcg</title>
+      <link>https://workerwork.github.io/tags/wcg/</link>
+      <pubDate>Tue, 14 Apr 2020 09:40:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/wcg/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>5gc</title>
@@ -165,15 +201,6 @@
     </item>
     
     <item>
-      <title>rpm打包</title>
-      <link>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</link>
-      <pubDate>Thu, 29 Aug 2019 14:17:51 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>caddy</title>
       <link>https://workerwork.github.io/tags/caddy/</link>
       <pubDate>Thu, 29 Aug 2019 11:56:51 +0800</pubDate>
@@ -246,15 +273,6 @@
     </item>
     
     <item>
-      <title>rpm</title>
-      <link>https://workerwork.github.io/tags/rpm/</link>
-      <pubDate>Wed, 28 Aug 2019 15:00:21 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/rpm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>yum</title>
       <link>https://workerwork.github.io/tags/yum/</link>
       <pubDate>Wed, 28 Aug 2019 15:00:21 +0800</pubDate>
@@ -314,24 +332,6 @@
       <pubDate>Wed, 20 Feb 2019 16:46:44 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/auto/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>wcg</title>
-      <link>https://workerwork.github.io/tags/wcg/</link>
-      <pubDate>Mon, 21 Jan 2019 16:46:44 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/wcg/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kernel</title>
-      <link>https://workerwork.github.io/tags/kernel/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/kernel/</guid>
       <description></description>
     </item>
     

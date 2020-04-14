@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年1月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1 前言 1.1 术语    英文缩写 英文全称 中文全称     eGW enterprise gateway 企业网关   OMC operation and maintenance center 操作管理中心    1.2 目的 本文档用来指导安装部署业务网关
+2 安装指导 2.1 安装系统 系统版本要求：centos7.2
+安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
+2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
                                 </h1>
                             </header>
@@ -88,31 +114,6 @@
                                 this is the first test for hugo!……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/my-first-post/">阅读全文</a></p>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改" >WCG内核修改</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                1年1月1日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/kernel">kernel</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
-3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
                         </article>
                     
 
@@ -163,6 +164,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改">WCG内核修改</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
     </li>
     
@@ -196,10 +201,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器">使用caddy搭建文件服务器</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/drone/" title="使用docker-compose搭建drone服务器">使用docker-compose搭建drone服务器</a>
     </li>
     
 </ul>
