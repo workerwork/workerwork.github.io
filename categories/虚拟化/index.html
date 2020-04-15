@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm/">kvm虚拟机</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月15日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96">虚拟化</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 检查CPU是否支持kvm # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes!&quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo　//epel源 # yum clean all　//清空yum缓存  3. 安装虚拟机管理工具和依赖 # yum -y install qemu-kvm //KVM主程序，KVM虚拟化模块 # yum -y install virt-install //安装虚拟机的工具 # 这个包主要安装了virt-install、virt-clone和virt-xml命令，分别用于安装虚拟机系统、克隆虚拟机和编辑虚拟机的xml配置文件。 # yum -y install virt-manager //KVM图形化管理工具 # yum -y install libvirt //虚拟化服务库 # libvirt是用于管理虚拟化平台的开源的API（libvirt API），后台程序（libvirtd进程）和管理工具（virsh工具集）。 # 它可以用于管理KVM、Xen、VMware ESX，QEMU和其他虚拟化技术。这些API在云计算的解决方案中广泛使用。 # libvirtd进程主要实现远程代理、本地环境初始化、根据环境注册各种Driver（qemu、xen、storage）的实现。 # virsh工具集主要用于管理、操作虚拟主机。 # yum -y install libguestfs-tools //虚拟机的系统管理工具 # libguestfs -tools是一组Linux下的C语言的API，用来访问虚拟机的磁盘映像文件。 # 该工具包内包含的工具有virt-cat、virt-df、virt-list、virt-copy-in、virt-copy-out、 # virt-edit、guestfs、guestmount、virt-list-filesystems、virt-list-partitions等工具。 # 该工具可以在不启动KVM guest主机的情况下，直接查看guest主机内的文内容，也可以直接向img镜像中写入文件和复制文件到外面的物理机， # 也可以将guest的镜像文件挂载，功能相当强大 # yum -y install libvirt-python //python调用libvirt虚拟化服务的api接口库文件  4.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kvm/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kubernetes-deploy/">部署kubernetes</a>
                                 </h1>
                             </header>
@@ -128,6 +151,10 @@ custom solutions 最完整的方式，从零开始二进制搭建
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制">linux内核定制</a>
     </li>
     
@@ -161,10 +188,6 @@ custom solutions 最完整的方式，从零开始二进制搭建
     
     <li>
         <a href="https://workerwork.github.io/posts/security/" title="CentOS7安全加固">CentOS7安全加固</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD">EPC的CI/CD</a>
     </li>
     
 </ul>
@@ -213,7 +236,7 @@ custom solutions 最完整的方式，从零开始二进制搭建
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(1)</a>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
     </li>
     
 </ul>
@@ -271,6 +294,8 @@ custom solutions 最完整的方式，从零开始二进制搭建
     
     <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
     
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
@@ -283,6 +308,8 @@ custom solutions 最完整的方式，从零开始二进制搭建
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
     
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
     <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
     
     <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
@@ -294,6 +321,8 @@ custom solutions 最完整的方式，从零开始二进制搭建
     <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
     
     <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
     
 </div>
     </section>

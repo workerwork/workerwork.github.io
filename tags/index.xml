@@ -6,10 +6,37 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 14 Apr 2020 16:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2020 09:45:52 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kvm</title>
+      <link>https://workerwork.github.io/tags/kvm/</link>
+      <pubDate>Wed, 15 Apr 2020 09:45:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/kvm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vm</title>
+      <link>https://workerwork.github.io/tags/vm/</link>
+      <pubDate>Wed, 15 Apr 2020 09:45:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/vm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>虚机</title>
+      <link>https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/</link>
+      <pubDate>Wed, 15 Apr 2020 09:45:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>kernel</title>
@@ -48,7 +75,7 @@
     </item>
     
     <item>
-      <title>wcg</title>
+      <title>WCG</title>
       <link>https://workerwork.github.io/tags/wcg/</link>
       <pubDate>Tue, 14 Apr 2020 09:40:51 +0800</pubDate>
       
