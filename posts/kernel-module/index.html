@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>WCG内核修改 | WorkSpace</title>
-    <meta property="og:title" content="WCG内核修改 - WorkSpace">
+    <title>kernel module编程 | WorkSpace</title>
+    <meta property="og:title" content="kernel module编程 - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2020-04-14T09:40:51&#43;08:00">
+    <meta property="article:published_time" content="2020-04-17T10:33:52&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2020-04-14T09:40:51&#43;08:00">
+    <meta property="article:modified_time" content="2020-04-17T10:33:52&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="WCG内核修改">
+    <meta name="description" content="kernel module编程">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/wcg-kernel/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/kernel-module/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,10 +74,10 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">WCG内核修改</h1>
+                            <h1 class="post-title">kernel module编程</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2020年4月14日
+                            2020年4月17日
                         </date>
                         
                         <div class="post-meta">
@@ -91,314 +91,104 @@
                         <div class="post-content">
                             
 
-<h2 id="1-下载源代码包">1. 下载源代码包</h2>
+<h2 id="1-linux-kernel-module是什么">1. Linux Kernel Module是什么</h2>
 
-<p>从 <a href="http://vault.centos.org">http://vault.centos.org</a> 下载内核源代码RPM包</p>
+<p>Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。</p>
 
-<h2 id="2-安装源代码包">2. 安装源代码包</h2>
+<p>如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。</p>
 
-<pre><code class="language-shell">[root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm
-</code></pre>
+<h2 id="2-kernel-module编程">2. kernel module编程</h2>
 
-<p>执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES</p>
-
-<h2 id="3-修改源码">3. 修改源码</h2>
-
-<pre><code class="language-shell">[root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES
-[root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz
-[root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar
-#将修改后的代码替换
-[root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/
-[root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/
-[root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c .
-[root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/
-[root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h .
-[root@wcg-9-73 linux]# cd ../../../
-[root@wcg-9-73 SOURCES]# tar -cvf linux-3.10.0-1062.el7.tar linux-3.10.0-1062.el7
-[root@wcg-9-73 SOURCES]# xz -zv linux-3.10.0-1062.el7.tar
+<pre><code class="language-shell">[root@localhost test]# ll
+总用量 16
+-rw-r--r--. 1 root root 728 4月  17 10:28 hello.c
+-rw-r--r--. 1 root root 229 4月  17 10:24 Makefile
+-rw-r--r--. 1 root root 190 4月  17 10:26 mymax.c
+-rw-r--r--. 1 root root  70 4月  17 10:17 mymax.h
 
 </code></pre>
 
-<h2 id="4-编译打包">4. 编译打包</h2>
+<pre><code class="language-c">[root@localhost test]# cat hello.c 
+#include &lt;linux/init.h&gt;		/* Needed for the module-macros */
+#include &lt;linux/module.h&gt;	/* Needed by all modules */
+#include &lt;linux/configfs.h&gt;     /* Needed for KERN_ALERT */
 
-<pre><code class="language-shell">[root@wcg-9-73 SOURCES]# cd ..
-[root@wcg-9-73 rpmbuild]# nohup rpmbuild -bb SPECS/kernel.spec &amp;
-#只编译kernel rpm
-[root@wcg-9-73 rpmbuild]# rpmbuild -bb --without debug --without debuginfo --without tools --without perf --without doc SPECS/kernel.spec
+#include &quot;mymax.h&quot;
 
-</code></pre>
-
-<h2 id="5-单独编译kernel">5. 单独编译kernel</h2>
-
-<pre><code class="language-shell"># cd /root/rpmbuild/BUILD/kernel-3.10.0-327.36.3.el7/linux-3.10.0-327.36.3.el7.x86_64
-# make -j20 bzImage
-
-</code></pre>
-
-<h2 id="6-替换kernel进行测试">6. 替换kernel进行测试</h2>
-
-<pre><code class="language-shell"># cp arch/x86/boot/bzImage /boot
-# cd /boot
-# mv bzImage vmlinuz-3.10.0-327.36.3.el7.x86_64
-# reboot
-
-</code></pre>
-
-<h2 id="7-修改的源码">7. 修改的源码</h2>
-
-<p><details>
-<summary><mark><font color=darkred>udp.h</font></mark></summary></p>
-
-<pre><code class="language-c">/*
- * INET     An implementation of the TCP/IP protocol suite for the LINUX
- *      operating system.  INET is implemented using the  BSD Socket
- *      interface as the means of communication with the user level.
- *
- *      Definitions for the UDP protocol.
- *
- * Version: @(#)udp.h   1.0.2   04/28/93
- *
- * Author:  Fred N. van Kempen, &lt;waltje@uWalt.NL.Mugnet.ORG&gt;
- *
- *      This program is free software; you can redistribute it and/or
- *      modify it under the terms of the GNU General Public License
- *      as published by the Free Software Foundation; either version
- *      2 of the License, or (at your option) any later version.
- */
-#ifndef _UAPI_LINUX_UDP_H
-#define _UAPI_LINUX_UDP_H
-
-#include &lt;linux/types.h&gt;
-
-struct udphdr {
-    __be16  source;
-    __be16  dest;
-    __be16  len;
-    __sum16 check;
-};
-
-/* UDP socket options */
-#define UDP_CORK    1   /* Never send partially complete segments */
-#define UDP_ENCAP   100 /* Set the socket to accept encapsulated packets */
-#define UDP_NO_CHECK6_TX 101    /* Disable sending checksum for UDP6X */
-#define UDP_NO_CHECK6_RX 102    /* Disable accpeting checksum for UDP6 */
-
-/* UDP encapsulation types */
-#define UDP_ENCAP_ESPINUDP_NON_IKE  1 /* draft-ietf-ipsec-nat-t-ike-00/01 */
-#define UDP_ENCAP_ESPINUDP  2 /* draft-ietf-ipsec-udp-encaps-06 */
-#define UDP_ENCAP_L2TPINUDP 3 /* rfc2661 */
-
-// add by dongfeng 2020-04-13
-#define UDP_ENCAP_GTP_DOWN 7
-#define UDP_ENCAP_GTP_UP 8
-// end add
-
-#endif /* _UAPI_LINUX_UDP_H */
-
-
-</code></pre>
-
-<p></details></p>
-
-<p><details>
-<summary><mark><font color=darkred>udp.c</font></mark></summary></p>
-
-<pre><code class="language-c">...
-int sysctl_udp_wmem_min __read_mostly;
-EXPORT_SYMBOL(sysctl_udp_wmem_min);
-
-atomic_long_t udp_memory_allocated;
-EXPORT_SYMBOL(udp_memory_allocated);
-
-// add by dongfeng 2020-04-13
-int (*gtprelay_ko_up_rx_hook)(struct sk_buff *, int ) = NULL;
-EXPORT_SYMBOL(gtprelay_ko_up_rx_hook);
-
-int (*gtprelay_ko_down_rx_hook)(struct sk_buff *,int ) = NULL;
-EXPORT_SYMBOL(gtprelay_ko_down_rx_hook);
-// end add
-
-
-#define MAX_UDP_PORTS 65536
-#define PORTS_PER_CHAIN (MAX_UDP_PORTS / UDP_HTABLE_SIZE_MIN)
-...
-
-...
-int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
+int a = 1; 
+int b = 2; 
+module_param(a, int, 0644); /sys/module/test/parameters/a  */
+module_param(b, int, 0644); /sys/module/test/parameters/b  */
+ 
+static int hello_init(void)
 {
-    struct udp_sock *up = udp_sk(sk);
-    int is_udplite = IS_UDPLITE(sk);
-
-    /*
-     *  Charge it to the socket, dropping if the queue is full.
-     */
-    if (!xfrm4_policy_check(sk, XFRM_POLICY_IN, skb))
-        goto drop;
-    nf_reset(skb);
-
-    if (static_key_false(&amp;udp_encap_needed) &amp;&amp; up-&gt;encap_type) {
-        int (*encap_rcv)(struct sock *sk, struct sk_buff *skb);
-
-        /*
-         * This is an encapsulation socket so pass the skb to
-         * the socket's udp_encap_rcv() hook. Otherwise, just
-         * fall through and pass this up the UDP socket.
-         * up-&gt;encap_rcv() returns the following value:
-         * =0 if skb was successfully passed to the encap
-         *    handler or was discarded by it.
-         * &gt;0 if skb should be passed on to UDP.
-         * &lt;0 if skb should be resubmitted as proto -N
-         */
-
-        /* if we're overly short, let UDP handle it */
-        encap_rcv = ACCESS_ONCE(up-&gt;encap_rcv);
-        if (encap_rcv) {
-            int ret;
-
-            /* Verify checksum before giving to encap */
-            if (udp_lib_checksum_complete(skb))
-                goto csum_error;
-
-            ret = encap_rcv(sk, skb);
-            if (ret &lt;= 0) {
-                UDP_INC_STATS_BH(sock_net(sk),
-                         UDP_MIB_INDATAGRAMS,
-                         is_udplite);
-                return -ret;
-            }
-        }
-        
-        // add by dongfeng 2020-04-13
-        switch(up-&gt;encap_type) {
-            case UDP_ENCAP_GTP_DOWN:
-                 // printk(&quot;UDP_ENCAP_GTP_DOWN \n&quot;);
-                if(gtprelay_ko_down_rx_hook) {
-                    int ret1 = 0;
-                    ret1 = gtprelay_ko_down_rx_hook(skb,1);
-                    if(ret1 == 1) {
-                        break;
-                    } else if(ret1 == 2) {
-                        kfree_skb(skb);
-                        return 0;
-                    } else {
-                        return 0;
-                    }
-                }
-                break;
-            case UDP_ENCAP_GTP_UP:
-                //printk(&quot;UDP_ENCAP_GTP_UP \n&quot;);
-                if(gtprelay_ko_up_rx_hook) {
-                    int ret1 = 0;
-                    ret1 = gtprelay_ko_up_rx_hook(skb,1);
-                    if(ret1 == 1) {
-                        break;
-                    } else if(ret1 == 2) {
-                         kfree_skb(skb);
-                         return 0;
-                    } else {
-                        return 0;
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-        // end add
-
-        /* FALLTHROUGH -- it's a UDP Packet */
-    }
-...
-
-
-...
-/*
- *  Socket option code for UDP
- */
-int udp_lib_setsockopt(struct sock *sk, int level, int optname,
-               char __user *optval, unsigned int optlen,
-               int (*push_pending_frames)(struct sock *))
+    printk(&quot;test, Hello world\n&quot;);
+    printk(&quot;a + b = %d\n&quot;, a+b);
+    mymax();
+    return 0;
+}
+ 
+static void hello_exit(void)
 {
-    struct udp_sock *up = udp_sk(sk);
-    int val, valbool;
-    int err = 0;
-    int is_udplite = IS_UDPLITE(sk);
+    printk(KERN_ALERT &quot;test, Good bye\n&quot;);
+}
+ 
+module_init(hello_init);
+module_exit(hello_exit);  
+MODULE_LICENSE(&quot;Dual BSD/GPL&quot;);  //should always exist or you’ll get a warning  
+MODULE_AUTHOR(&quot;DONGFENG&quot;); //optional  
+MODULE_DESCRIPTION(&quot;STUDY_MODULE&quot;); //optional 
 
-    if (optlen &lt; sizeof(int))
-        return -EINVAL;
-
-    if (get_user(val, (int __user *)optval))
-        return -EFAULT;
-
-    valbool = val ? 1 : 0;
-
-    switch (optname) {
-    case UDP_CORK:
-        if (val != 0) {
-            up-&gt;corkflag = 1;
-        } else {
-            up-&gt;corkflag = 0;
-            lock_sock(sk);
-            push_pending_frames(sk);
-            release_sock(sk);
-        }
-        break;
-
-    case UDP_ENCAP:
-        switch (val) {
-        case 0:
-        case UDP_ENCAP_ESPINUDP:
-        case UDP_ENCAP_ESPINUDP_NON_IKE:
-            up-&gt;encap_rcv = xfrm4_udp_encap_rcv;
-            /* FALLTHROUGH */
-        case UDP_ENCAP_L2TPINUDP:
-            up-&gt;encap_type = val;
-            udp_encap_enable();
-            break;
-        // add by dongfeng 2020-04-13
-        case UDP_ENCAP_GTP_DOWN:
-        case UDP_ENCAP_GTP_UP:
-            up-&gt;encap_type = val;
-            udp_encap_enable();
-            //printk(&quot;udp_setsockopt %d\n&quot;,up-&gt;encap_type);
-            break;
-        // end add   
-
-        default:
-            err = -ENOPROTOOPT;
-            break;
-        }
-        break;
-
-    case UDP_NO_CHECK6_TX:
-        up-&gt;no_check6_tx = valbool;
-        break;
-
-    case UDP_NO_CHECK6_RX:
-        up-&gt;no_check6_rx = valbool;
-        break;
-
-    /*
-     *  UDP-Lite's partial checksum coverage (RFC 3828).
-     */
-    /* The sender sets actual checksum coverage length via this option.
-     * The case coverage &gt; packet length is handled by send module. */
-    case UDPLITE_SEND_CSCOV:
-        if (!is_udplite)         /* Disable the option on UDP sockets */
-            return -ENOPROTOOPT;
-        if (val != 0 &amp;&amp; val &lt; 8) /* Illegal coverage: use default (8) */
-            val = 8;
-        else if (val &gt; USHRT_MAX)
-            val = USHRT_MAX;
-        up-&gt;pcslen = val;
-        up-&gt;pcflag |= UDPLITE_SEND_CC;
-        break;
-...
-
-
+EXPORT_SYMBOL(mymax); /* 别的module可以调用  */
 
 </code></pre>
 
-<p></details></p>
+<pre><code class="language-c">[root@localhost test]# cat mymax.h
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+ 
+void mymax(void);
+
+</code></pre>
+
+<pre><code class="language-c">[root@localhost test]# cat mymax.c
+//#include &lt;linux/init.h&gt;
+//#include &lt;linux/module.h&gt;
+ 
+#include &quot;mymax.h&quot;
+//MODULE_LICENSE(&quot;Dual BSD/GPL&quot;);
+ 
+void mymax(void)
+{
+    printk(&quot;test, enter max\n&quot;);
+}
+
+//EXPORT_SYMBOL(mymax);
+
+</code></pre>
+
+<pre><code class="language-c">[root@localhost test]# cat Makefile 
+obj-m := test.o
+#test-objs := hello.o mymax.o
+test-objs := hello.o
+test-objs += mymax.o
+PWD := $(shell pwd)
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+clean:
+	rm -rf *.o *.ko *~ *.mod.c *.order *.symvers
+
+</code></pre>
+
+<h2 id="3-使用dmesg验证">3 使用dmesg验证</h2>
+
+<pre><code class="language-shell">[root@localhost test]# dmesg |tail -n 4
+[170006.139126] test, Hello world
+[170006.139131] a + b = 3
+[170006.139133] test, enter max
+[170980.892707] test, Good bye
+
+</code></pre>
 
                         </div>
 						<br>
@@ -409,15 +199,15 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/epc-cicd/">EPC的CI/CD</a></li>
+        <li><a href="/posts/self-kernel/">linux内核定制</a></li>
         
-        <li><a href="/posts/local-yum/">搭建本地yum仓库</a></li>
+        <li><a href="/posts/wcg-kernel/">WCG内核修改</a></li>
+        
+        <li><a href="/posts/centos-iso/">制作CentOS ISO</a></li>
+        
+        <li><a href="/posts/kvm/">kvm虚拟机</a></li>
         
         <li><a href="/posts/5gc-c-build/">Build 5GC-C</a></li>
-        
-        <li><a href="/posts/ubuntu-docker/">创建ubuntu docker镜像</a></li>
-        
-        <li><a href="/books/">something</a></li>
         
     </ul>
 </div>
@@ -427,13 +217,11 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
                             
                             <ul class="clearfix">
                                 
-                                <li><a href="https://workerwork.github.io/tags/wcg">WCG</a></li>
-                                
-                                <li><a href="https://workerwork.github.io/tags/rpm">rpm</a></li>
-                                
-                                <li><a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85">rpm打包</a></li>
-                                
                                 <li><a href="https://workerwork.github.io/tags/kernel">kernel</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/module">module</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
                                 
                             </ul>
                             
