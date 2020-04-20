@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/local-yum/" title="搭建本地yum仓库" >搭建本地yum仓库</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml .  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5. 在客户端添加本地yum源 cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF [local] name=local for centos7 baseurl=file://192.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/workspace/" title="使用hugo搭建WorkSpace" >使用hugo搭建WorkSpace</a>
                                 </h1>
                             </header>
@@ -249,6 +272,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/affinity/" title="cpu亲和性">cpu亲和性</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
     </li>
     
@@ -284,10 +311,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/vpp/" title="基于VPP&#43;DPDK开源框架开发UPF">基于VPP&#43;DPDK开源框架开发UPF</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/centos-good/" title="CentOS7系统优化">CentOS7系统优化</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -314,7 +337,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(4)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(5)</a>
     </li>
     
     <li>
@@ -353,6 +376,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     
     <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
     
