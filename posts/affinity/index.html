@@ -108,14 +108,255 @@
 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。
 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：<a href="http://www.cnblogs.com/wenqiang/p/4802619.html）">http://www.cnblogs.com/wenqiang/p/4802619.html）</a></p>
 
-<p>cpus_allowed用于控制进程可以在哪里处理器上运行
-sched_set_affinity() （用来修改位掩码）
-sched_get_affinity() （用来查看当前的位掩码）</p>
+<p>cpus_allowed用于控制进程可以在哪里处理器上运行</p>
+
+<p>sched_set_affinity() （用来修改位掩码）</p>
+
+<p>sched_get_affinity() （用来查看当前的位掩码）</p>
 
 <h2 id="2-进程与cpu的绑定">2. 进程与cpu的绑定</h2>
 
-<pre><code class="language-shell">sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
+<p>sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做</p>
 
+<p>在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点</p>
+
+<pre><code class="language-shell">SCHED_SETAFFINITY(2)                                                                      Linux Programmer's Manual                                                                     SCHED_SETAFFINITY(2)
+
+NAME
+       sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask
+
+SYNOPSIS
+       #define _GNU_SOURCE             /* See feature_test_macros(7) */
+       #include &lt;sched.h&gt;
+
+       int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+       /*该函数设置进程为pid的这个进程,让它运行在mask所设定的CPU上.如果pid的值为0,
+        *则表示指定的是当前进程,使当前进程运行在mask所设定的那些CPU上.
+        *第二个参数cpusetsize是mask所指定的数的长度.通常设定为sizeof(cpu_set_t).
+        *如果当前pid所指定的进程此时没有运行在mask所指定的任意一个CPU上,
+        *则该指定的进程会从其它CPU上迁移到mask的指定的一个CPU上运行.*/
+
+       int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+       /*该函数获得pid所指示的进程的CPU位掩码,并将该掩码返回到mask所指向的结构中.
+        *即获得指定pid当前可以运行在哪些CPU上.
+        *同样,如果pid的值为0.也表示的是当前进程*/
+
+RETURN VALUE
+       On success, sched_setaffinity() and sched_getaffinity() return 0.  On error, -1 is returned, and errno is set appropriately.
+
+</code></pre>
+
+<p>设置cpu affinity还需要用到一下宏函数</p>
+
+<pre><code class="language-shell">void CPU_ZERO (cpu_set_t *set)
+/*这个宏对 CPU 集 set 进行初始化，将其设置为空集。*/
+void CPU_SET (int cpu, cpu_set_t *set)
+/*这个宏将 指定的 cpu 加入 CPU 集 set 中*/
+void CPU_CLR (int cpu, cpu_set_t *set)
+/*这个宏将 指定的 cpu 从 CPU 集 set 中删除。*/
+int CPU_ISSET (int cpu, const cpu_set_t *set)
+/*如果 cpu 是 CPU 集 set 的一员，这个宏就返回一个非零值（true），否则就返回零（false）。*/
+
+</code></pre>
+
+<p>下面下一个具体的例子：将当前进程绑定到0、1、2、3号cpu上</p>
+
+<pre><code class="language-c">#define _GNU_SOURCE
+#include &lt;sched.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+
+/* sysconf( _SC_NPROCESSORS_CONF ) 查看cpu的个数；打印用%ld长整。
+ * sysconf( _SC_NPROCESSORS_ONLN ) 查看在使用的cpu个数；打印用%ld长整 */
+int main(int argc, char **argv)
+{
+    int cpus = 0;
+    int  i = 0;
+    cpu_set_t mask;
+    cpu_set_t get;
+
+    cpus = sysconf(_SC_NPROCESSORS_CONF);
+    printf(&quot;cpus: %d\n&quot;, cpus);
+
+    CPU_ZERO(&amp;mask);    /* 初始化set集，将set置为空*/
+    CPU_SET(0, &amp;mask);  /* 依次将0、1、2、3号cpu加入到集合，前提是你的机器是多核处理器*/
+    CPU_SET(1, &amp;mask);
+    CPU_SET(2, &amp;mask);
+    CPU_SET(3, &amp;mask);
+    
+    /*设置cpu 亲和性（affinity）*/
+    if (sched_setaffinity(0, sizeof(mask), &amp;mask) == -1) {
+        printf(&quot;Set CPU affinity failue, ERROR:%s\n&quot;, strerror(errno));
+        return -1; 
+    }   
+    usleep(1000); /* 让当前的设置有足够时间生效*/
+
+    /*查看当前进程的cpu 亲和性*/
+    CPU_ZERO(&amp;get);
+    if (sched_getaffinity(0, sizeof(get), &amp;get) == -1) {
+        printf(&quot;get CPU affinity failue, ERROR:%s\n&quot;, strerror(errno));
+        return -1; 
+    }   
+    
+    /*查看运行在当前进程的cpu*/
+    for(i = 0; i &lt; cpus; i++) {
+
+        if (CPU_ISSET(i, &amp;get)) { /*查看cpu i 是否在get 集合当中*/
+            printf(&quot;this process %d of running processor: %d\n&quot;, getpid(), i); 
+        }    
+    }
+    sleep(3); //让程序停在这儿，方便top命令查看
+       
+    return 0;
+}
+
+</code></pre>
+
+<p>运行结果如下:</p>
+
+<pre><code class="language-shell">1 [root@localhost test]# ./test    
+2 cpus: 24
+3 this process 2848 of running processor: 0
+4 this process 2848 of running processor: 1
+5 this process 2848 of running processor: 2
+6 this process 2848 of running processor: 3
+
+</code></pre>
+
+<p>上面代码当中用到了syscall这个函数，顺便也在这里做一下说明</p>
+
+<p>syscall是执行一个系统调用，根据指定的参数number和所有系统调用的接口来确定调用哪个系统调用，用于用户空间跟内核之间的数据交换</p>
+
+<p>下面是syscall函数原型及一些常用的number　</p>
+
+<pre><code class="language-shell">//syscall - indirect system call
+SYNOPSIS
+       #define _GNU_SOURCE         /* See feature_test_macros(7) */
+       #include &lt;unistd.h&gt;
+       #include &lt;sys/syscall.h&gt;   /* For SYS_xxx definitions */
+
+       int syscall(int number, ...);
+       
+/* sysconf( _SC_PAGESIZE );  此宏查看缓存内存页面的大小；打印用%ld长整型。
+ sysconf( _SC_PHYS_PAGES ) 此宏查看内存的总页数；打印用%ld长整型。
+ sysconf( _SC_AVPHYS_PAGES ) 此宏查看可以利用的总页数；打印用%ld长整型。
+ sysconf( _SC_NPROCESSORS_CONF ) 查看cpu的个数；打印用%ld长整。
+ sysconf( _SC_NPROCESSORS_ONLN ) 查看在使用的cpu个数；打印用%ld长整。
+ (long long)sysconf(_SC_PAGESIZE) * (long long)sysconf(_SC_PHYS_PAGES) 计算内存大小。
+ sysconf( _SC_LOGIN_NAME_MAX ) 查看最大登录名长度；打印用%ld长整。
+ sysconf( _SC_HOST_NAME_MAX ) 查看最大主机长度；打印用%ld长整。
+ sysconf( _SC_OPEN_MAX )  每个进程运行时打开的文件数目；打印用%ld长整。
+ sysconf(_SC_CLK_TCK) 查看每秒中跑过的运算速率；打印用%ld长整。*/
+
+</code></pre>
+
+<h2 id="3-线程与cpu的绑定">3. 线程与cpu的绑定</h2>
+
+<p>线程于进程的绑定方法大体一致，需要注意的是线程绑定于进程的区别是所用函数不一样</p>
+
+<p>线程绑定用到下面两个函数，跟进程类似就不做详细说明，下面直接贴出函数原型：</p>
+
+<pre><code class="language-shell">NAME
+       pthread_setaffinity_np, pthread_getaffinity_np - set/get CPU affinity of a thread
+
+SYNOPSIS
+       #define _GNU_SOURCE             /* See feature_test_macros(7) */
+       #include &lt;pthread.h&gt;
+
+       int pthread_setaffinity_np(pthread_t thread, size_t cpusetsize,
+                                  const cpu_set_t *cpuset);
+       int pthread_getaffinity_np(pthread_t thread, size_t cpusetsize,
+                                  cpu_set_t *cpuset);
+
+       Compile and link with -pthread.
+
+DESCRIPTION
+       The  pthread_setaffinity_np()  function  sets the CPU affinity mask of the thread thread to the CPU set pointed to by cpuset.  If the call is successful, and the thread is not
+       currently running on one of the CPUs in cpuset, then it is migrated to one of those CPUs.
+
+       The pthread_getaffinity_np() function returns the CPU affinity mask of the thread thread in the buffer pointed to by cpuset.
+
+       For more details on CPU affinity masks, see sched_setaffinity(2).  For a description of a set of macros that can be used to manipulate and inspect CPU sets, see CPU_SET(3).
+
+       The argument cpusetsize is the length (in bytes) of the buffer pointed to by cpuset.  Typically, this argument would be specified as sizeof(cpu_set_t).  (It may be some  other
+       value, if using the macros described in CPU_SET(3) for dynamically allocating a CPU set.)
+
+RETURN VALUE
+       On success, these functions return 0; on error, they return a nonzero error number
+
+</code></pre>
+
+<p>下面同样是个具体的例子：将当前线程绑定到0、1、2、3号cpu上</p>
+
+<pre><code class="language-c">#define _GNU_SOURCE
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;sched.h&gt;
+
+void *testfunc(void *arg)
+{
+    int i, cpus = 0;
+    cpu_set_t mask;
+    cpu_set_t get;
+
+    cpus = sysconf(_SC_NPROCESSORS_CONF);
+    printf(&quot;this system has %d processor(s)\n&quot;, cpus);
+    
+    CPU_ZERO(&amp;mask);
+    for (i = 0; i &lt; 4; i++) { /*将0、1、2、3添加到集合中*/
+        CPU_SET(i, &amp;mask);
+    }   
+
+    /* 设置cpu 亲和性(affinity)*/
+    if (pthread_setaffinity_np(pthread_self(), sizeof(mask), &amp;mask) &lt; 0) {
+        fprintf(stderr, &quot;set thread affinity failed\n&quot;);
+    }   
+    
+    /* 查看cpu 亲和性(affinity)*/
+    CPU_ZERO(&amp;get);
+    if (pthread_getaffinity_np(pthread_self(), sizeof(get), &amp;get) &lt; 0) {
+        fprintf(stderr, &quot;get thread affinity failed\n&quot;);
+    }   
+
+    /* 查看当前线程所运行的所有cpu*/
+    for (i = 0; i &lt; cpus; i++) {
+        if (CPU_ISSET(i, &amp;get)) {
+            printf(&quot;this thread %d is running in processor %d\n&quot;, (int)pthread_self(), i); 
+        }   
+    }   
+    sleep(3); //查看
+    
+    pthread_exit(NULL);
+}
+ 
+int main(int argc, char *argv[])
+{
+    pthread_t tid;
+    if (pthread_create(&amp;tid, NULL, (void *)testfunc, NULL) != 0) {
+        fprintf(stderr, &quot;thread create failed\n&quot;);
+        return -1; 
+    }   
+
+    pthread_join(tid, NULL);
+    return 0;
+}
+
+</code></pre>
+
+<p>运行结果如下:</p>
+
+<pre><code class="language-shell">1 [root@localhost thread]# ./test                      
+2 this system has 24 processor(s)
+3 this thread 2812323584 is running in processor 0
+4 this thread 2812323584 is running in processor 1
+5 this thread 2812323584 is running in processor 2
+6 this thread 2812323584 is running in processor 3
 
 </code></pre>
 
