@@ -250,6 +250,43 @@ struct cdev *cdev;        /* will die */
 
 </code></pre>
 
+<ul>
+<li><p>open： int (*open) (struct inode *, struct file *);（打开设备，响应open系统调用）
+　　 open方法是驱动程序用来为以后的操作完成初始化准备工作的。在大部分驱动程序红，open主要完成以下工作：</p>
+
+<ul>
+<li><p>标明次设备号</p></li>
+
+<li><p>启动设备</p></li>
+</ul></li>
+
+<li><p>release： int (*release) (struct inode *, struct file *);（关闭设备，响应close系统调用）</p></li>
+
+<li><p>llseek： loff_t (*llseek) (struct file *, loff_t, int);（重定位读写指针，响应lseek系统调用）</p></li>
+
+<li><p>read：ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);（从设备读取数据，响应read系统调用）</p></li>
+</ul>
+
+<p>　　① read设备方法通常完成两件事情</p>
+
+<ul>
+<li><p>从设备中读取数据（属于硬件访问类操作）</p></li>
+
+<li><p>将读取到的数据返回给应用程序</p></li>
+</ul>
+
+<p>　　② ssize_t (*read) (struct file *filp, char __user *buff, size_t count, loff_t *offp)</p>
+
+<p>　　filp：与字符设备文件关联的file结构，由内核创建</p>
+
+<p>　　buff：从设备文件读取到的数据，需要保存到的位置。由read系统调用提供该参数</p>
+
+<p>　　count：请求传输的数据量，由read系统调用提供该参数</p>
+
+<p>　　offp：文件的读写位置，由内核从file结构中取出后，传递进来</p>
+
+<p>　　③ buff参数是来源于用户空间的指针，这类指针都不能被内核代码直接引用，必须使用专门的函数</p>
+
                         </div>
 						<br>
 						<br>
