@@ -180,25 +180,29 @@ struct cdev *cdev;        /* will die */
 
 <h2 id="8-字符设备描述结构的分配-注册与注销">8. 字符设备描述结构的分配、注册与注销</h2>
 
-<ol>
+<ul>
 <li>cdev变量的定义可以采用静态和动态两种方法</li>
-</ol>
+</ul>
 
 <p>　　* 静态分配：struct cdev mdev;
-　　* 动态分配：struct cdev* pdev = cdev_alloc();(可以通过命令：cat /proc/devices查看主设备号)</p>
+　　
+    * 动态分配：struct cdev* pdev = cdev_alloc();(可以通过命令：cat /proc/devices查看主设备号)</p>
 
-<ol>
+<ul>
 <li>cdev变量的初始化使用cdev_init()函数来完成</li>
-</ol>
+</ul>
 
 <p>　　void cdev_init(struct cdev *cdev, const struct file_operations *fops)
-　　cdev: 待初始化的cdev结构
-　　fops: 设备对应的操作函数集</p>
+　　
+    cdev: 待初始化的cdev结构
+　　
+    fops: 设备对应的操作函数集</p>
 
-<ol>
-<li>字符设备的注册使用cdev_add()函数来完成</li>
-<li>字符设备的注销使用cdev_del()函数来完成</li>
-</ol>
+<ul>
+<li><p>字符设备的注册使用cdev_add()函数来完成</p></li>
+
+<li><p>字符设备的注销使用cdev_del()函数来完成</p></li>
+</ul>
 
 <h2 id="9-设计linux字符设备驱动程序的主要工作">9. 设计Linux字符设备驱动程序的主要工作：</h2>
 
