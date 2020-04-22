@@ -6,10 +6,26 @@
     <description>Recent content in kernel on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Fri, 17 Apr 2020 10:33:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Apr 2020 15:14:50 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/kernel/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kernel 字符设备驱动</title>
+      <link>https://workerwork.github.io/posts/kernel-dev/</link>
+      <pubDate>Wed, 22 Apr 2020 15:14:50 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/kernel-dev/</guid>
+      <description>1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
+通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
+struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
+  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
+ 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
+static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.</description>
+    </item>
     
     <item>
       <title>kernel module编程</title>

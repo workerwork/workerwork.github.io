@@ -6,10 +6,37 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 20 Apr 2020 16:17:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Apr 2020 15:14:50 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>device</title>
+      <link>https://workerwork.github.io/tags/device/</link>
+      <pubDate>Wed, 22 Apr 2020 15:14:50 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/device/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kernel</title>
+      <link>https://workerwork.github.io/tags/kernel/</link>
+      <pubDate>Wed, 22 Apr 2020 15:14:50 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/kernel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://workerwork.github.io/tags/linux/</link>
+      <pubDate>Wed, 22 Apr 2020 15:14:50 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/linux/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>cpu</title>
@@ -17,24 +44,6 @@
       <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/cpu/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>linux</title>
-      <link>https://workerwork.github.io/tags/linux/</link>
-      <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/linux/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kernel</title>
-      <link>https://workerwork.github.io/tags/kernel/</link>
-      <pubDate>Fri, 17 Apr 2020 10:33:52 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/kernel/</guid>
       <description></description>
     </item>
     

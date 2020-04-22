@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>device | WorkSpace</title>
+    <meta property="og:title" content="device - WorkSpace">
+    <meta property="og:type" content="article">
+        
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="device">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/tags/device/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/device/index.xml" title="WorkSpace" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                    <h3 class="archive-title">
+                        包含标签
+                        <span class="keyword">device</span>
+                        的文章
+                    </h3>
+                    
+
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kernel-dev/">kernel 字符设备驱动</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
+通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
+struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
+  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
+ 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
+static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+
+                    
+
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-dev/" title="kernel 字符设备驱动">kernel 字符设备驱动</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/affinity/" title="cpu亲和性">cpu亲和性</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制">linux内核定制</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改">WCG内核修改</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像">创建ubuntu docker镜像</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器">ubuntu搭建gitlab服务器</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.google.com/" title="google搜索">google搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.mdeditor.com/" title="Markdown在线编辑器">MdEditor</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust教程">rust教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+
+</body>
+</html>
