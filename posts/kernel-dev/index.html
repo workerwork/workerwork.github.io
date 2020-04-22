@@ -160,15 +160,13 @@ struct cdev *cdev;        /* will die */
 
 <h2 id="5-linux内核中使用dev-t类型来定义设备号-dev-t其实质为32位unsigned-int类型-其中高12位为主设备号-低20位为次设备号">5. Linux内核中使用dev_t类型来定义设备号，dev_t其实质为32位unsigned int类型，其中高12位为主设备号，低20位为次设备号。</h2>
 
-<pre><code class="language-shell">（1）MKDEV(主设备号，次设备号)
+<ol>
+<li>MKDEV(主设备号，次设备号)</li>
+<li>MAJOR(dev_t dev)</li>
+<li>MINOR(dev_t dev)</li>
+</ol>
 
-（2）MAJOR(dev_t dev)
-
-（3）MINOR(dev_t dev)
-
-注：字符设备文件与字符设备驱动是通过主设备号建立对应关系；驱动程序用次设备号来区分同类型的设备
-
-</code></pre>
+<p>注：字符设备文件与字符设备驱动是通过主设备号建立对应关系；驱动程序用次设备号来区分同类型的设备</p>
 
 <h2 id="6-设备号的申请与注销">6. 设备号的申请与注销</h2>
 
@@ -182,43 +180,42 @@ struct cdev *cdev;        /* will die */
 
 <h2 id="8-字符设备描述结构的分配-注册与注销">8. 字符设备描述结构的分配、注册与注销</h2>
 
-<pre><code class="language-shell">（1）cdev变量的定义可以采用静态和动态两种方法
+<ol>
+<li>cdev变量的定义可以采用静态和动态两种方法</li>
+</ol>
 
-　　* 静态分配：struct cdev mdev;
+<p>　　* 静态分配：struct cdev mdev;</p>
 
-　　* 动态分配：struct cdev* pdev = cdev_alloc();(可以通过命令：cat /proc/devices查看主设备号)
+<p>　　* 动态分配：struct cdev* pdev = cdev_alloc();(可以通过命令：cat /proc/devices查看主设备号)</p>
 
-（2）cdev变量的初始化使用cdev_init()函数来完成
+<ol>
+<li>cdev变量的初始化使用cdev_init()函数来完成</li>
+</ol>
 
-　　void cdev_init(struct cdev *cdev, const struct file_operations *fops)
+<p>　　void cdev_init(struct cdev *cdev, const struct file_operations *fops)</p>
 
-　　cdev: 待初始化的cdev结构
+<p>　　cdev: 待初始化的cdev结构</p>
 
-　　fops: 设备对应的操作函数集
+<p>　　fops: 设备对应的操作函数集</p>
 
-（3）字符设备的注册使用cdev_add()函数来完成
+<ol>
+<li><p>字符设备的注册使用cdev_add()函数来完成</p></li>
 
-（4）字符设备的注销使用cdev_del()函数来完成
-
-</code></pre>
+<li><p>字符设备的注销使用cdev_del()函数来完成</p></li>
+</ol>
 
 <h2 id="9-设计linux字符设备驱动程序的主要工作">9. 设计Linux字符设备驱动程序的主要工作：</h2>
 
-<pre><code class="language-shell">（1）根据外部设备的特点，实现file_operations结构所需要的函数
+<ol>
+<li>根据外部设备的特点，实现file_operations结构所需要的函数</li>
+<li>调用函数cdev_alloc()函数向系统动态申请一个cdev结构实例</li>
+<li>调用函数cdev_init()初始化cdev实例，并建立cdev实例与file_operations实例之间的连接</li>
+<li>调用函数alloc_chrdev_region()向系统申请一个设备号</li>
+<li>调用函数cdev_add()向系统添加一个设备</li>
+<li>调用函数cdev_del()从系统删除一个cdev结构实例</li>
+</ol>
 
-（2）调用函数cdev_alloc()函数向系统动态申请一个cdev结构实例
-
-（3）调用函数cdev_init()初始化cdev实例，并建立cdev实例与file_operations实例之间的连接
-
-（4）调用函数alloc_chrdev_region()向系统申请一个设备号
-
-（5）调用函数cdev_add()向系统添加一个设备
-
-（6）调用函数cdev_del()从系统删除一个cdev结构实例
-
-注：如果把驱动程序制作成一个内核模块，上述的第（2）、（3）、（4）、（5）步应在模块的初始化函数中实现，而第（6）步应在模块的卸载函数中实现
-
-</code></pre>
+<p>注：如果把驱动程序制作成一个内核模块，上述的第2、3、4、5步应在模块的初始化函数中实现，而第6步应在模块的卸载函数中实现</p>
 
 <h2 id="10-设备操作-struct-file-operations">10. 设备操作：struct file_operations</h2>
 
