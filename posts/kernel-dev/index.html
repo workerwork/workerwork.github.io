@@ -297,7 +297,8 @@ int copy_to_user(void __user *to, const void *from, int n)
 
 <ul>
 <li><p>write：ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);（向设备写入数据，响应write系统调用）
-　　① write设备方法通常完成2件事情</p>
+　　
+① write设备方法通常完成2件事情</p>
 
 <ul>
 <li><p>从应用程序提供的地址中取出数据</p></li>
@@ -306,7 +307,7 @@ int copy_to_user(void __user *to, const void *from, int n)
 </ul></li>
 </ul>
 
-<p>　　② 其参数类似于read</p>
+<p>② 其参数类似于read</p>
 
 <h2 id="11-字符设备简单示例">11. 字符设备简单示例</h2>
 
