@@ -170,6 +170,13 @@ CMD [&quot;/lib/systemd/systemd&quot;]
 
 </code></pre>
 
+<h2 id="7-使用镜像">7.使用镜像</h2>
+
+<pre><code class="language-shell">sudo docker run -d  --privileged=true --name=ubuntu workerwork/ubuntu18.04-base
+sudo docker exec -it ubuntu /bin/bash
+
+</code></pre>
+
                         </div>
 						<br>
 						<br>
