@@ -108,6 +108,10 @@ sudo apt-get install -y apt-transport-https ca-certificates curl software-proper
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-get update
 
+#添加docker仓库
+sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot;
+sudo apt-get update
+
 #列出docker可用版本，选择一个安装
 sudo apt-cache madison docker-ce
 sudo apt-get install docker-ce=
