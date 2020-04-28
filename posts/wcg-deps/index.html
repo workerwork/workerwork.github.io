@@ -94,7 +94,8 @@
 <h2 id="1-下载对应的依赖包">1. 下载对应的依赖包</h2>
 
 <pre><code class="language-shell"># yumdownloader --downloadonly --downloaddir=. xxx
-
+# 提取包内容
+# rpm2cpio *.rpm | cpio -div
 </code></pre>
 
 <h2 id="2-install-sh">2. install.sh</h2>
