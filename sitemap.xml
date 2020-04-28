@@ -4,7 +4,42 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-04-22T15:14:50+08:00</lastmod>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/linux/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/shell/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/shell/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/wcg-deps/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
   </url>
   
   <url>
@@ -24,26 +59,6 @@
   
   <url>
     <loc>https://workerwork.github.io/posts/kernel-dev/</loc>
-    <lastmod>2020-04-22T15:14:50+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/linux/</loc>
-    <lastmod>2020-04-22T15:14:50+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-04-22T15:14:50+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-04-22T15:14:50+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2020-04-22T15:14:50+08:00</lastmod>
   </url>
   

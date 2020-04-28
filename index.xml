@@ -6,10 +6,19 @@
     <description>Recent content on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 22 Apr 2020 15:14:50 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 28 Apr 2020 09:45:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>WCG-deps-install</title>
+      <link>https://workerwork.github.io/posts/wcg-deps/</link>
+      <pubDate>Tue, 28 Apr 2020 09:45:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/wcg-deps/</guid>
+      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx  2. install.sh #!/bin/bash - ################################################################################################ # wcg-deps-install.sh # version:1.0 # update:20181120 ################################################################################################ DIR=&amp;quot;/home/wcg/WCG-deps&amp;quot; function wcg_deps() { for dir in {curl,fcgi,gsoap,lksctp,lrzsz,vconfig,tftp,redis,spawn-fcgi,keepalived,openssh,nginx} do cd $DIR/$dir &amp;amp;&amp;amp; rpm -Uvh *.rpm --force --nodeps &amp;amp; done } function segw_deps() { for dir in {segw} do cd $DIR/$dir &amp;amp;&amp;amp; rpm -Uvh *.rpm --force --nodeps &amp;amp; done } function kernel_deps() { for dir in {kernel} do cd $DIR/$dir &amp;amp;&amp;amp; rpm -Uvh *.</description>
+    </item>
     
     <item>
       <title>kernel 字符设备驱动</title>

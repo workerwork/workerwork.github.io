@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-deps/">WCG-deps-install</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/shell">shell</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx  2. install.sh #!/bin/bash - ################################################################################################ # wcg-deps-install.sh # version:1.0 # update:20181120 ################################################################################################ DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in {curl,fcgi,gsoap,lksctp,lrzsz,vconfig,tftp,redis,spawn-fcgi,keepalived,openssh,nginx} do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in {segw} do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function kernel_deps() { for dir in {kernel} do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kernel-dev/">kernel 字符设备驱动</a>
                                 </h1>
                             </header>
@@ -237,6 +260,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install">WCG-deps-install</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kernel-dev/" title="kernel 字符设备驱动">kernel 字符设备驱动</a>
     </li>
     
@@ -272,10 +299,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
         <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像">创建ubuntu基础镜像</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器">ubuntu搭建gitlab服务器</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -307,6 +330,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
     </li>
     
     <li>
@@ -395,6 +422,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
