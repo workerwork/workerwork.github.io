@@ -4,17 +4,47 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/linux/</loc>
-    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/plugin/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/vpp/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/vpp/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/vpp-sample-plugin/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2020-04-28T17:25:50+08:00</lastmod>
   </url>
   
   <url>
@@ -23,17 +53,7 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/wcg-deps/</loc>
-    <lastmod>2020-04-28T09:45:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2020-04-28T09:45:51+08:00</lastmod>
   </url>
   
@@ -48,12 +68,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/kernel/</loc>
+    <loc>https://workerwork.github.io/categories/kernel/</loc>
     <lastmod>2020-04-22T15:14:50+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/kernel/</loc>
+    <loc>https://workerwork.github.io/tags/kernel/</loc>
     <lastmod>2020-04-22T15:14:50+08:00</lastmod>
   </url>
   
@@ -238,11 +258,6 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/vpp/</loc>
-    <lastmod>2019-11-01T16:11:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/vpp/</loc>
     <lastmod>2019-11-01T16:11:51+08:00</lastmod>
   </url>
@@ -363,12 +378,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/hugo/</loc>
+    <loc>https://workerwork.github.io/tags/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/hugo/</loc>
+    <loc>https://workerwork.github.io/categories/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   

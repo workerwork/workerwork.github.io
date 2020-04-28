@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>plugin on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/plugin/</link>
+    <description>Recent content in plugin on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 28 Apr 2020 17:25:50 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/plugin/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>vpp sample plugin</title>
+      <link>https://workerwork.github.io/posts/vpp-sample-plugin/</link>
+      <pubDate>Tue, 28 Apr 2020 17:25:50 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/vpp-sample-plugin/</guid>
+      <description>1. plugin_sample.c 在此文件中定义feature和cli
+#include &amp;lt;vnet/plugin/plugin.h&amp;gt; #include &amp;lt;plugin_sample/plugin_sample.h&amp;gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&amp;gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&amp;gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&amp;quot;ip4-unicast&amp;quot;, //挂载节点 &amp;quot;plugin_sample&amp;quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !</description>
+    </item>
+    
+  </channel>
+</rss>

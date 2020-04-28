@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>vpp sample plugin | WorkSpace</title>
+    <meta property="og:title" content="vpp sample plugin - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-04-28T17:25:50&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-04-28T17:25:50&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="vpp sample plugin">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/vpp-sample-plugin/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">vpp sample plugin</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年4月28日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-plugin-sample-c">1. plugin_sample.c</h2>
+
+<p>在此文件中定义feature和cli</p>
+
+<pre><code class="language-c">#include &lt;vnet/plugin/plugin.h&gt;
+#include &lt;plugin_sample/plugin_sample.h&gt;
+
+plugin_sample_main_t plugin_sample_main;
+
+//开关实现
+int plugin_sample_enable_disable(u32 sw_if_index, //index
+								int enable_disable)	//开关标识
+{
+	vnet_sw_interface_t *sw;
+	int ret = 0;
+
+	/* Utterly wrong? */
+	if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口
+							sw_if_index)) //接口索引
+		return VNET_API_ERROR_INVALID_SW_IF_INDEX;
+        
+	/* Not a physical port? */
+	sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构
+							sw_if_index);	
+	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE)
+		return VNET_API_ERROR_INVALID_SW_IF_INDEX;
+
+	vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点
+								&quot;plugin_sample&quot;, 
+								sw_if_index, 
+								enable_disable, 0, 0);
+    
+	return ret;
+}
+
+
+static clib_error_t*
+plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构
+                                    unformat_input_t *input,
+                                    vlib_cli_command_t *cmd)
+{
+    u32 sw_if_index = ~0;	//~0 取反= 1
+    int enable_disable = 1;
+
+    while(unformat_check_input(input) != UNFORMAT_END_OF_INPUT) //非空则继续输入
+	{
+        if (unformat(input, &quot;disable&quot;))
+            enable_disable = 0;
+        else if (unformat(input, &quot;%U&quot;,
+            unformat_vnet_sw_interface,
+            plugin_sample_main.vnet_main, &amp;sw_if_index));
+        else
+            break;
+    }
+
+    if (sw_if_index == ~0)
+        return clib_error_return(0, &quot;Please specify an interface...&quot;);
+
+    plugin_sample_enable_disable(sw_if_index, enable_disable);	//调用plugin_sample_enable_disable()
+
+    return 0;
+}
+
+//注册开关CLI
+//指定interface的开关
+VLIB_CLI_COMMAND (plugin_sample_command, static) = {
+    .path = &quot;plugin sample&quot;,
+    .short_help = 
+    &quot;plugin sample &lt;interface-name&gt; [disable]&quot;,
+    .function = plugin_sample_enable_disable_command_fn,
+};
+
+/*注册插件*****start*****/
+VLIB_PLUGIN_REGISTER () = {
+    .version = PLUGIN_SAMPLE_PLUGIN_BUILD_VER,
+    .description = &quot;Sample of VPP Plugin&quot;,
+};
+
+static clib_error_t *plugin_sample_init(vlib_main_t* vm)
+{
+	plugin_sample_main.vnet_main = vnet_get_main();
+	return 0;
+}
+
+VLIB_INIT_FUNCTION(plugin_sample_init);
+/*注册插件*****end*****/
+
+
+//将node注册在ip4-unicast的arc中，指定ip-lookup之前Hook到数据包
+VNET_FEATURE_INIT(plugin_sample, static) = 
+{
+	.arc_name = &quot;ip4-unicast&quot;,
+	.node_name = &quot;plugin_sample&quot;,
+	.runs_before = VNET_FEATURES(&quot;ip4-lookup&quot;),
+};
+
+</code></pre>
+
+<h2 id="2-plugin-sample-node-c">2. plugin_sample_node.c</h2>
+
+<p>在此文件中定义node和包处理函数</p>
+
+<pre><code class="language-c">#include &lt;vlib/vlib.h&gt;
+#include &lt;vnet/vnet.h&gt;
+#include &lt;vnet/pg/pg.h&gt;
+#include &lt;vnet/ethernet/ethernet.h&gt;
+#include &lt;vppinfra/error.h&gt;
+#include &lt;plugin_sample/plugin_sample.h&gt;
+
+typedef enum
+{
+  PLUGIN_SAMPLE_NEXT_IP4,
+  PLUGIN_SAMPLE_DROP,
+  PLUGIN_SAMPLE_NEXT_N,
+} plugin_sample_next_t;
+
+typedef struct
+{
+  u32 next_index;
+  u32 sw_if_index;
+  u8 new_src_mac[6];
+  u8 new_dst_mac[6];
+} plugin_sample_trace_t;
+
+#define foreach_plugin_sample_error \
+_(SHOWED, &quot;show packets processed&quot;)
+
+typedef enum
+{
+#define _(sym,str) SAMPLE_ERROR_##sym,
+  foreach_plugin_sample_error
+#undef _
+    SAMPLE_N_ERROR,
+} plugin_sample_error_t;
+
+
+static char *plugin_sample_error_strings[] = {
+#define _(sym, str) str,
+        foreach_plugin_sample_error
+#undef _
+};
+
+extern vlib_node_registration_t plugin_sample_node;
+
+static u8 *
+format_plugin_sample_trace (u8 * s, va_list * args)
+{
+        s = format(s, &quot;To Do!\n&quot;);
+        return s;
+}
+
+//Node处理packet主函数
+static uword plugin_sample_node_fn(vlib_main_t *vm, vlib_node_runtime_t *node,
+        vlib_frame_t * frame)
+{
+        u32 n_left_from, *from, *to_next;
+        plugin_sample_next_t     next_index;
+
+        from        = vlib_frame_vector_args(frame);
+        n_left_from = frame-&gt;n_vectors;
+        next_index  = node-&gt;cached_next_index;
+
+        while(n_left_from &gt; 0){
+                u32 n_left_to_next;
+				// 从流程中获取包
+                vlib_get_next_frame(vm, node, next_index, to_next, n_left_to_next);
+
+                while(n_left_from &gt; 0 &amp;&amp; n_left_to_next &gt; 0){
+                        vlib_buffer_t  *b0;
+                        u32             bi0, next0 = 0;
+
+                        bi0 = to_next[0] = from[0];
+                        from           += 1;
+                        to_next        += 1;
+                        n_left_to_next -= 1;
+                        n_left_from    -= 1;
+
+                        b0 = vlib_get_buffer(vm, bi0);
+						//获取到IP header
+						void *en0 = vlib_buffer_get_current(b0);
+                        int i = 0;
+						//打印前20 bytes, 即ip header
+                        for (i = 0; i &lt; 20; i++)
+                        {
+                                printf(&quot;%02x &quot;, *(u8*)(en0+i));
+                        }
+                        printf(&quot;\n&quot;);
+                        vlib_validate_buffer_enqueue_x1(vm, node, next_index,
+                                to_next, n_left_to_next, bi0, next0);
+                }
+				// 包放回流程中去
+                vlib_put_next_frame(vm, node, next_index, n_left_to_next);
+        }
+
+        return frame-&gt;n_vectors;
+}
+
+//注册NODE
+//node初始化信息，生成一堆该Node的构造/析构函数
+VLIB_REGISTER_NODE (plugin_sample_node) = {
+        .name		= &quot;plugin_sample&quot;,
+        .function       = plugin_sample_node_fn,
+        .vector_size    = sizeof(u32),
+        .format_trace   = format_plugin_sample_trace,
+        .type           = VLIB_NODE_TYPE_INTERNAL,
+        .n_errors       = ARRAY_LEN(plugin_sample_error_strings),
+        .error_strings  = plugin_sample_error_strings,
+        .n_next_nodes   = PLUGIN_SAMPLE_NEXT_N,
+        .next_nodes     = {
+                [PLUGIN_SAMPLE_NEXT_IP4]    = &quot;ip4-lookup&quot;,
+                [PLUGIN_SAMPLE_DROP]        = &quot;error-drop&quot;,
+        },
+};
+
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
+        
+        <li><a href="/posts/kernel-dev/">kernel 字符设备驱动</a></li>
+        
+        <li><a href="/posts/affinity/">cpu亲和性</a></li>
+        
+        <li><a href="/posts/kernel-module/">kernel module编程</a></li>
+        
+        <li><a href="/posts/self-kernel/">linux内核定制</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/plugin">plugin</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin">vpp sample plugin</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install">WCG-deps-install</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-dev/" title="kernel 字符设备驱动">kernel 字符设备驱动</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/affinity/" title="cpu亲和性">cpu亲和性</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制">linux内核定制</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改">WCG内核修改</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像">创建ubuntu docker镜像</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.google.com/" title="google搜索">google搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.mdeditor.com/" title="Markdown在线编辑器">MdEditor</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust教程">rust教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>
