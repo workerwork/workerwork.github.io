@@ -109,21 +109,21 @@
 DIR=&quot;/home/wcg/WCG-deps&quot;
 
 function wcg_deps() {
-    for dir in {curl,fcgi,gsoap,lksctp,lrzsz,vconfig,tftp,redis,spawn-fcgi,keepalived,openssh,nginx,net-tools,libevent}
+    for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent
     do
         cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp;
     done
 }
 
 function segw_deps() {
-    for dir in {segw}
+    for dir in segw
     do
         cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp;
     done
 }
 
 function kernel_deps() {
-    for dir in {kernel}
+    for dir in kernel
 	do
         cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp;
     done
