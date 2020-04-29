@@ -24,10 +24,8 @@
 通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
 如果选择按照feature机制来加入结点的话需要注意以下几点：
 VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
-1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  3. 在arc类上登记feature结点 arc_name：为我们选定的feature结点要插入的地方
-node_name：为我们自己新注册的结点名
-runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径
-/* 关闭自动缩进，因为下面的宏对格式有严格要求 */ /* *INDENT-OFF* */	VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = { .arc_name = &amp;quot;ip4-unicast&amp;quot;, .node_name = &amp;quot;ip4-gtpu-bypass&amp;quot;, .runs_before = VNET_FEATURES (&amp;quot;ip4-lookup&amp;quot;), }; VNET_FEATURE_INIT (ip6_gtpu_bypass, static) = { .</description>
+1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  ip4-unicast arc
+文件：ip4_forward.c /* Built-in ip4 unicast rx feature path definition */ /* *INDENT-OFF* */ VNET_FEATURE_ARC_INIT (ip4_unicast, static) = { .arc_name = &amp;quot;ip4-unicast&amp;quot;, /*arc 类 名字*/ .start_nodes = VNET_FEATURES (&amp;quot;ip4-input&amp;quot;, &amp;quot;ip4-input-no-checksum&amp;quot;), /*开始node*/ .</description>
     </item>
     
     <item>

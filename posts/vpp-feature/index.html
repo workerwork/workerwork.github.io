@@ -130,6 +130,56 @@
 
 </code></pre>
 
+<p>ip4-unicast arc</p>
+
+<pre><code class="language-c">文件：ip4_forward.c
+
+/* Built-in ip4 unicast rx feature path definition */
+/* *INDENT-OFF* */
+VNET_FEATURE_ARC_INIT (ip4_unicast, static) =
+{
+  .arc_name = &quot;ip4-unicast&quot;,          /*arc 类 名字*/
+  .start_nodes = VNET_FEATURES (&quot;ip4-input&quot;, &quot;ip4-input-no-checksum&quot;),  /*开始node*/
+  .end_node = &quot;ip4-lookup&quot;,/*结束node*/
+  .arc_index_ptr = &amp;ip4_main.lookup_main.ucast_feature_arc_index,
+};
+
+这个宏里的构造函数（在源码里找到这个宏的全部代码）会在main执行前执行，
+大体意思就是初始化ip4-unicast类的feature并添加到vnet_feature_main_t feature_main-&gt;next_feature的链表上，
+这是vpp固定代码里实现的，ip4-unicast初始化后，
+我们就可以在ip4-unicast的开始node和结束node之间添加我们自己的node节点，
+在测试时，关注的是结束node ip4-lookup
+
+文件：ip4_input.c
+
+/* *INDENT-OFF* */
+VLIB_REGISTER_NODE (ip4_input_node) = {
+  .function = ip4_input,
+  .name = &quot;ip4-input&quot;,
+  .vector_size = sizeof (u32),
+  .n_errors = IP4_N_ERROR,
+  .error_strings = ip4_error_strings,
+  .n_next_nodes = IP4_INPUT_N_NEXT,
+  .next_nodes = {
+    [IP4_INPUT_NEXT_DROP] = &quot;error-drop&quot;,
+    [IP4_INPUT_NEXT_PUNT] = &quot;error-punt&quot;,
+    [IP4_INPUT_NEXT_LOOKUP] = &quot;ip4-lookup&quot;,
+    [IP4_INPUT_NEXT_LOOKUP_MULTICAST] = &quot;ip4-lookup-multicast&quot;,
+    [IP4_INPUT_NEXT_ICMP_ERROR] = &quot;ip4-icmp-error&quot;,
+  },
+
+  .format_buffer = format_ip4_header,
+  .format_trace = format_ip4_input_trace,
+};
+
+节点通过函数.function执行决定下一个节点是.next_nodes中的哪一个，
+然后通过名字关联下一个节点。
+当处理流程到ip4-input节点时执行ip4_input函数：
+ip4_input-&gt;ip4_input_inline-&gt;vnet_feature_arc_start (arc0, sw_if_index0, &amp;next0, p0);
+vnet_feature_arc_start函数从ip4-input所在的ip4-unicast类feature里找到优先级最高的feature 节点并执行
+
+</code></pre>
+
 <h2 id="3-在arc类上登记feature结点">3. 在arc类上登记feature结点</h2>
 
 <p>arc_name：为我们选定的feature结点要插入的地方</p>
@@ -138,7 +188,39 @@
 
 <p>runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径</p>
 
-<pre><code class="language-c">/* 关闭自动缩进，因为下面的宏对格式有严格要求 */
+<pre><code class="language-c">/* 首先要注册一个node(gtpu_decap.c) */
+VLIB_REGISTER_NODE (ip4_gtpu_bypass_node) = {
+  .name = &quot;ip4-gtpu-bypass&quot;,
+  .vector_size = sizeof (u32),
+
+  .n_next_nodes = IP_GTPU_BYPASS_N_NEXT,
+  .next_nodes = {
+    [IP_GTPU_BYPASS_NEXT_DROP] = &quot;error-drop&quot;,
+    [IP_GTPU_BYPASS_NEXT_GTPU] = &quot;gtpu4-input&quot;,
+  },
+
+  .format_buffer = format_ip4_header,
+  .format_trace = format_ip4_forward_next_trace,
+};
+
+VLIB_REGISTER_NODE (ip6_gtpu_bypass_node) = {
+  .name = &quot;ip6-gtpu-bypass&quot;,
+  .vector_size = sizeof (u32),
+
+  .n_next_nodes = IP_GTPU_BYPASS_N_NEXT,
+  .next_nodes = {
+    [IP_GTPU_BYPASS_NEXT_DROP] = &quot;error-drop&quot;,
+    [IP_GTPU_BYPASS_NEXT_GTPU] = &quot;gtpu6-input&quot;,
+  },
+
+  .format_buffer = format_ip6_header,
+  .format_trace = format_ip6_forward_next_trace,
+};
+
+这个只是将节点注册到vpp的节点管理链表里，并不会产生关联关系
+
+/* feature节点关联(gtpu.c) */
+/* 关闭自动缩进，因为下面的宏对格式有严格要求 */
 /* *INDENT-OFF* */	
 VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = {
   .arc_name = &quot;ip4-unicast&quot;,
@@ -152,11 +234,20 @@ VNET_FEATURE_INIT (ip6_gtpu_bypass, static) = {
   .runs_before = VNET_FEATURES (&quot;ip6-lookup&quot;),
 };
 
+VNET_FEATURE_INIT的执行会将节点添加到ip4-unicast类的feature链表里，
+.runs_before指定ip4_gtpu_bypass在ip4-lookup前执行，
+这个关联就是在给节点设置优先级，排在越前越先执行（已经端口使能了）
+
+/* 指定端口使能 */
+feature节点真正生效还需要在指定端口（网络接口）上使能
+（注意vnet_feature_arc_start (arc0, sw_if_index0, &amp;next0, p0)函数的第2个参数是端口索引）
+
+vnet_feature_enable_disable (arc_name, feature_name, sw_if_index, !is_del, 0, 0)函数
+就是在指定 sw_if_index端口上添加arc_name feature类的feature_name feature节点
+
+到现在为止，一个feature节点才正式注册成功
+
 </code></pre>
-
-<h2 id="4-关联feature结点及其通过函数-新版这步可能已经可以省略">4. 关联feature结点及其通过函数(新版这步可能已经可以省略)</h2>
-
-<p>VLIB_NODE_FUNCTION_MULTIARCH(ip4_gtpu_bypass_node, ip4_gtpu_bypass)</p>
 
 <h2 id="5-不使用feature机制">5. 不使用feature机制</h2>
 
