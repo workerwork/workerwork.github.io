@@ -153,7 +153,7 @@ VNET_FEATURE_ARC_INIT (ip4_unicast, static) =
 在arc中指定的起始node中，必须调用vnet_feature_arc_start函数，
 才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature
 在需要开始使用feature机制的业务node中调用如下函数即可，注意该业务node必须是arc中的起始node
-tatic_always_inline void vnet_feature_arc_start (u8 arc,
+static_always_inline void vnet_feature_arc_start (u8 arc,
             u32 sw_if_index, u32 * next0, vlib_buffer_t * b0)
 {
     vnet_feature_arc_start_with_data (arc, sw_if_index, next0, b0, 0);
