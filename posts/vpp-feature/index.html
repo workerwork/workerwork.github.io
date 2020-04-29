@@ -7,22 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>5G | WorkSpace</title>
-    <meta property="og:title" content="5G - WorkSpace">
+    <title>vpp feature节点以及数据走向控制 | WorkSpace</title>
+    <meta property="og:title" content="vpp feature节点以及数据走向控制 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2020-04-29T16:04:24&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-04-29T16:04:24&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="5G">
+    <meta name="description" content="vpp feature节点以及数据走向控制">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/categories/5g/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/vpp-feature/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
+        <link rel="stylesheet" href="/css/prism.css">
+    
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/categories/5g/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -31,7 +36,6 @@
     
     
 </head>
-
 
 <body>
 <header id="header" class="clearfix">
@@ -68,59 +72,183 @@
 
             <div class="col-8" id="main">
                 <div class="res-cons">
-                    
-                    <h3 class="archive-title">
-                        分类
-                        <span class="keyword">5G</span>
-                        中的文章
-                    </h3>
-                    
-
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp/">基于VPP&#43;DPDK开源框架开发UPF</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年11月1日
-                            </date>
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">vpp feature节点以及数据走向控制</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年4月29日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
                             
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/5g">5G</a>
-                                
-                            </div>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
                             
-                            <div class="post-content">
-                                DPDK DPDK是什么 DPDK全称为Date plane development kit，是一个用来进行包数据处理加速的软件库。
-为什么DPDK 传统 Linux 内核网络数据流程：
-硬件中断---&gt;取包分发至内核线程---&gt;软件中断---&gt;内核线程在协议栈中处理包---&gt;处理完毕通知用户层 用户层收包--&gt;网络层---&gt;逻辑层---&gt;业务层  基于传统 OS 内核的数据处理的弊端：
- 中断处理。当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。
- 内存拷贝。正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.1%。
- 上下文切换。频繁到达的硬件中断和软中断都可能随时抢占系统调用的运行，这会产生大量的上下文切换开销。另外，在基于多线程的服务器设计框架中，线程间的调度也会产生频繁的上下文切换开销，同样，锁竞争的耗能也是一个非常严重的问题。
- 局部性失效。如今主流的处理器都是多个核心的，这意味着一个数据包的处理可能跨多个 CPU 核心，比如一个数据包可能中断在 cpu0，内核态处理在 cpu1，用户态处理在 cpu2，这样跨多个核心，容易造成 CPU 缓存失效，造成局部性失效。如果是 NUMA 架构，更会造成跨 NUMA 访问内存，性能受到很大影响。
- 内存管理。传统服务器内存页为 4K，为了提高内存的访问速度，避免 cache miss，可以增加 cache 中映射表的条目，但这又会影响 CPU 的检索效率。
-  如何改进：
- 控制层和数据层分离。将数据包处理、内存管理、处理器调度等任务转移到用户空间去完成，而内核仅仅负责部分控制指令的处理。这样就不存在上述所说的系统中断、上下文切换、系统调用、系统调度等等问题。
- 使用多核编程技术代替多线程技术，并设置 CPU 的亲和性，将线程和 CPU 核进行一比一绑定，减少彼此之间调度切换。
- 针对 NUMA 系统，尽量使 CPU 核使用所在 NUMA 节点的内存，避免跨内存访问。
- 使用大页内存代替普通的内存，减少 cache-miss。……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
 
-                    
+<h2 id="1-feature介绍">1. feature介绍</h2>
+
+<p>早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制</p>
+
+<p>这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向</p>
+
+<h2 id="2-选择合适的arc类">2. 选择合适的arc类</h2>
+
+<p>对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体</p>
+
+<p>通过set interface feature <intfc> <feature_name> arc <arc_name> [disable]命令来开启或关闭该feature功能</p>
+
+<p>通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向</p>
+
+<p>如果选择按照feature机制来加入结点的话需要注意以下几点：</p>
+
+<p>VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:</p>
+
+<pre><code class="language-shell">1.nsh-output:
+2.mpls-output:
+3.mpls-input:
+4.ip6-drop:
+5.ip6-punt:
+6.ip6-local:
+7.ip6-output:
+8.ip6-multicast:
+9.ip6-unicast:
+10.ip4-drop:
+11.ip4-punt:
+12.ip4-local:
+13.ip4-output:
+14.ip4-multicast:
+15.ip4-unicast:
+16.ethernet-output:
+17.interface-output:
+18.device-input:
+
+</code></pre>
+
+<h2 id="3-在arc类上登记feature结点">3. 在arc类上登记feature结点</h2>
+
+<p>arc_name：为我们选定的feature结点要插入的地方</p>
+
+<p>node_name：为我们自己新注册的结点名</p>
+
+<p>runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径</p>
+
+<pre><code class="language-c">/* 关闭自动缩进，因为下面的宏对格式有严格要求 */
+/* *INDENT-OFF* */	
+VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = {
+  .arc_name = &quot;ip4-unicast&quot;,
+  .node_name = &quot;ip4-gtpu-bypass&quot;,
+  .runs_before = VNET_FEATURES (&quot;ip4-lookup&quot;),
+};
+
+VNET_FEATURE_INIT (ip6_gtpu_bypass, static) = {
+  .arc_name = &quot;ip6-unicast&quot;,
+  .node_name = &quot;ip6-gtpu-bypass&quot;,
+  .runs_before = VNET_FEATURES (&quot;ip6-lookup&quot;),
+};
+
+</code></pre>
+
+<h2 id="4-关联feature结点及其通过函数-新版这步可能已经可以省略">4. 关联feature结点及其通过函数(新版这步可能已经可以省略)</h2>
+
+<p>VLIB_NODE_FUNCTION_MULTIARCH(ip4_gtpu_bypass_node, ip4_gtpu_bypass)</p>
+
+<h2 id="5-不使用feature机制">5. 不使用feature机制</h2>
+
+<p>不使用feature机制的话，结点间的关系相对来说更加静态，只能在编译的时候确定结点间的关系，不能在运行的时候进行改变，可以插入节点的地方只能由系统提供的几个接口</p>
+
+<p>向这些入口登记函数后，后续的数据流将传到你定义的结点</p>
+
+<p>可能还有其他的一些插入结点的函数，这里只列出常用到的几个函数：</p>
+
+<pre><code class="language-c">L1
+
+vnet_hw_interface_rx_redirect_to_node (vnet_main_t *vnm, u32 hw_if_index, u32 node_index)
+将某个hw interface的rx数据重定向到某个结点，node_index为结点的index索引
+
+L2 L3
+
+ethernet_register_input_type (vlib_main_t *vm, ethernet_type_t type, u32 node_index)
+将在&quot;ethernet-input&quot;结点后插入特定type的结点，
+这里type包括ethernet_type(0x806, ARP)、ethernet_type (0x8100, VLAN)、ethernet_type (0x800, IP4)等二、三层协议
+具体支持的相关协议见src/vnet/ethernet/types.def文件
+
+L4
+
+ip4_register_protocol (u32 protocol, u32 node_index)
+将在&quot;ip4-local&quot;结点后插入特定protocol的结点，这里protocol包括ip_protocol (6, TCP)、ip_protocol (17, UDP)等四层协议。
+具体支持的相关协议见src/vnet/ip/protocols.def文件
+
+L5
+
+udp_register_dst_port (vlib_main_t * vm, udp_dst_port_t dst_port, u32 node_index, u8 is_ip4)
+将在&quot;ip4-udp-lookup&quot;结点后插入特定dst_port的结点，这里dst_port包括ip_port (WWW, 80)等五层应用端口。
+具体支持的相关端口见src/vnet/ip/ports.def文件
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a></li>
+        
+        <li><a href="/posts/vpp-sample-plugin/">vpp sample plugin</a></li>
+        
+        <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
+        
+        <li><a href="/posts/kernel-dev/">kernel 字符设备驱动</a></li>
+        
+        <li><a href="/posts/affinity/">cpu亲和性</a></li>
+        
+    </ul>
+</div>
 
 
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/plugin">plugin</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
                 </div>
             </div>
-
             <div id="secondary">
     <section class="widget">
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
@@ -475,9 +603,24 @@
 </footer>
 
 
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
-
 
 
 

@@ -4,46 +4,51 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/linux/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/plugin/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/categories/vpp/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/vpp/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/vpp-node-fw/</loc>
-    <lastmod>2020-04-29T11:14:24+08:00</lastmod>
+    <loc>https://workerwork.github.io/posts/vpp-feature/</loc>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/</loc>
+    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/vpp-node-fw/</loc>
     <lastmod>2020-04-29T11:14:24+08:00</lastmod>
   </url>
   
@@ -383,12 +388,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/hugo/</loc>
+    <loc>https://workerwork.github.io/categories/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/hugo/</loc>
+    <loc>https://workerwork.github.io/tags/hugo/</loc>
     <lastmod>2019-08-28T10:16:21+08:00</lastmod>
   </url>
   

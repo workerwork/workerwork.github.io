@@ -70,6 +70,39 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制" >vpp feature节点以及数据走向控制</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
+这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
+2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
+通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
+如果选择按照feature机制来加入结点的话需要注意以下几点：
+VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
+1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  3. 在arc类上登记feature结点 arc_name：为我们选定的feature结点要插入的地方
+node_name：为我们自己新注册的结点名
+runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径
+/* 关闭自动缩进，因为下面的宏对格式有严格要求 */ /* *INDENT-OFF* */	VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = { .arc_name = &quot;ip4-unicast&quot;, .node_name = &quot;ip4-gtpu-bypass&quot;, .runs_before = VNET_FEATURES (&quot;ip4-lookup&quot;), }; VNET_FEATURE_INIT (ip6_gtpu_bypass, static) = { .……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析" >vpp 节点报文处理流程分析</a>
                                 </h1>
                             </header>
@@ -296,30 +329,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C" >Build 5GC-C</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月1日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装打包工具 apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2. 构建目录结构  tree文件
-root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ └── amf │ ├── config │ │ ├── amf.conf │ │ └── asn.log.properties │ ├── context │ │ └── SystemVersionDB │ ├── data │ │ └── statistics │ ├── licensefile -&gt; .……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -372,6 +381,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析">vpp 节点报文处理流程分析</a>
     </li>
     
@@ -405,10 +418,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     
     <li>
         <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改">WCG内核修改</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
     </li>
     
 </ul>
@@ -449,7 +458,7 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(2)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(3)</a>
     </li>
     
     <li>
