@@ -188,7 +188,7 @@ vnet_feature_arc_start函数从ip4-input所在的ip4-unicast类feature里找到�
 
 <p>runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径</p>
 
-<pre><code class="language-c">/* 首先要注册一个node(gtpu_decap.c) */
+<pre><code class="language-c">/* 首先要注册一个node(plugin/gtpu/gtpu_decap.c) */
 VLIB_REGISTER_NODE (ip4_gtpu_bypass_node) = {
   .name = &quot;ip4-gtpu-bypass&quot;,
   .vector_size = sizeof (u32),
@@ -218,8 +218,9 @@ VLIB_REGISTER_NODE (ip6_gtpu_bypass_node) = {
 };
 
 这个只是将节点注册到vpp的节点管理链表里，并不会产生关联关系
+在node节点注册的后面，是由VLIB_INIT_FUNCTION (vnet_feature_init)宏注册到初始化函数中，在mian loop前被调用
 
-/* feature节点关联(gtpu.c) */
+/* feature节点关联(plugin/gtpu/gtpu.c) */
 /* 关闭自动缩进，因为下面的宏对格式有严格要求 */
 /* *INDENT-OFF* */	
 VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = {
