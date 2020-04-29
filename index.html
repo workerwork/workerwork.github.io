@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析" >vpp 节点报文处理流程分析</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.c -rw-rw-r-- 1 ych ych 712 Apr 1 17:34 sample_all_api_h.h -rw-rw-r-- 1 ych ych 1068 Apr 1 17:34 sample.api -rw-rw-r-- 1 ych ych 6569 Apr 1 17:34 sample.c -rw-rw-r-- 1 ych ych 1135 Apr 1 17:34 sample.h -rw-rw-r-- 1 ych ych 960 Apr 1 17:34 sample_msg_enum.h -rw-rw-r-- 1 ych ych 5512 Apr 1 17:34 sample_test.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin" >vpp sample plugin</a>
                                 </h1>
                             </header>
@@ -297,31 +320,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
                             <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像" >创建ubuntu docker镜像</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年3月24日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list RUN apt-get update -yqq \ &amp;&amp; apt-get install -yq apt-utils \ &amp;&amp; apt-get install -yq curl \ &amp;&amp; apt-get install -yq git \ &amp;&amp; apt-get install -yq unzip zip tar \ &amp;&amp; apt-get install -yq ca-certificates \ &amp;&amp; apt-get install -yq bash-completion \ &amp;&amp; apt-get install -yq iproute2 iputils-ping \ &amp;&amp; apt-get install -yq systemd systemd-sysv \ &amp;&amp; apt-get clean \ &amp;&amp; apt-get autoclean \ &amp;&amp; apt-get autoremove \ &amp;&amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -340,6 +338,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     
     <li >
         <a href="https://workerwork.github.io/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://workerwork.github.io/page/4/">4</a>
     </li>
     
 
@@ -368,6 +370,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析">vpp 节点报文处理流程分析</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin">vpp sample plugin</a>
@@ -403,10 +409,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     
     <li>
         <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C">Build 5GC-C</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像">创建ubuntu docker镜像</a>
     </li>
     
 </ul>
@@ -447,7 +449,7 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(1)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(2)</a>
     </li>
     
     <li>

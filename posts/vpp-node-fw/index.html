@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>EPC的CI/CD | WorkSpace</title>
-    <meta property="og:title" content="EPC的CI/CD - WorkSpace">
+    <title>vpp 节点报文处理流程分析 | WorkSpace</title>
+    <meta property="og:title" content="vpp 节点报文处理流程分析 - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2019-08-29T14:17:51&#43;08:00">
+    <meta property="article:published_time" content="2020-04-29T11:14:24&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2019-08-29T14:17:51&#43;08:00">
+    <meta property="article:modified_time" content="2020-04-29T11:14:24&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="EPC的CI/CD">
+    <meta name="description" content="vpp 节点报文处理流程分析">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/epc-cicd/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/vpp-node-fw/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,16 +74,16 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">EPC的CI/CD</h1>
+                            <h1 class="post-title">vpp 节点报文处理流程分析</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2019年8月29日
+                            2020年4月29日
                         </date>
                         
                         <div class="post-meta">
                             <span>|</span>
                             
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
                             
                         </div>
                         
@@ -91,134 +91,253 @@
                         <div class="post-content">
                             
 
-<h2 id="1-流程介绍">1. 流程介绍</h2>
+<h2 id="1-以sample例子来分析vpp节点对报文的处理流程">1. 以sample例子来分析vpp节点对报文的处理流程</h2>
 
-<p>开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库</p>
+<pre><code class="language-shell">vpp/src/examples/sample-plugin/sample
+$ll
+total 56
+-rw-rw-r-- 1 ych ych   886 Apr  1 17:34 CMakeLists.txt
+-rw-rw-r-- 1 ych ych 17933 Apr  1 17:34 node.c
+-rw-rw-r-- 1 ych ych   712 Apr  1 17:34 sample_all_api_h.h
+-rw-rw-r-- 1 ych ych  1068 Apr  1 17:34 sample.api
+-rw-rw-r-- 1 ych ych  6569 Apr  1 17:34 sample.c
+-rw-rw-r-- 1 ych ych  1135 Apr  1 17:34 sample.h
+-rw-rw-r-- 1 ych ych   960 Apr  1 17:34 sample_msg_enum.h
+-rw-rw-r-- 1 ych ych  5512 Apr  1 17:34 sample_test.c
 
-<h2 id="2-drone-yml">2. .drone.yml</h2>
-
-<pre><code class="language-shell">workspace:
-    base: /root/gogs
-    path: epc-c
-
-pipeline:
-  build:
-    image: centos7.5:dev
-    environment:
-      - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no
-      - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no
-      - TEST_SERVER=root@192.168.9.105
-      - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION    
-    commands:
-      - git_rev=$(git rev-parse HEAD| cut -c1-10)
-      - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git
-      - cd pack-epc-c
-      - ./pack-epc-c.sh
-      - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot;
-      - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}')
-      - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm
-      - eval $(ssh-agent -s) 
-      - ssh-add /root/.ssh/id_rsa
-      - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot;
-      - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff
-      - cd /root/df/caddy/yum.repo
-      - rm -rf rpms/baicells-epc-c-*.rpm
-      - cp -rf ../filebrowser/files/EPC-VERSION/&quot;$rpm_newname&quot; rpms/
-      - createrepo --update .
-      - exit
-      - eeooff
 </code></pre>
 
-<h2 id="3-打包脚本">3. 打包脚本</h2>
+<h2 id="2-vpp的每一个插件internal节点报文处理函数大致如下函数">2. vpp的每一个插件internal节点报文处理函数大致如下函数</h2>
 
-<pre><code class="language-shell">#!/bin/bash
+<pre><code class="language-c">VLIB_NODE_FN (sample_node) (vlib_main_t * vm, vlib_node_runtime_t * node,
+			    vlib_frame_t * frame)
+{
+  u32 n_left_from, *from, *to_next;
+  sample_next_t next_index;
+  u32 pkts_swapped = 0;
 
-#安装依赖
-rpm -qa | grep epel-release &amp;&gt;/dev/null
-[[ $? == 1 ]] &amp;&amp; yum install -y epel-release
-rpm -qa | grep ^expect &amp;&gt;/dev/null
-[[ $? == 1 ]] &amp;&amp; yum install -y expect
-if [[ ! $(which fpm) ]];then
-	yum -y install ruby rubygems ruby-devel
-	#gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
-	#gem sources -l
-	gem install fpm
-fi
+  /* 本节点收到的vector包的起始地址 */
+  from = vlib_frame_vector_args (frame);
+  /* 本节点收到的vector包数 */
+  n_left_from = frame-&gt;n_vectors;
+  /* cached_next_index记录着上一次经过该节点时的next_index
+       next_index对应着VLIB_REGISTER_NODE (sample_node).next_nodes中下一节点的索引 */
+  next_index = node-&gt;cached_next_index;
 
-#设定分支
-git branch --set-upstream-to=origin/master master
-#git拉取最新配置
-git pull
-#git拉取子模块
-git submodule init
-git submodule update --remote
+  while (n_left_from &gt; 0)
+    {
+      u32 n_left_to_next;
 
-#if [ -z $1 ]; then
-#    echo &quot;Usage: $0 1.1.1&quot;
-#    exit 0
-#fi
+      /* to_next: next_index所指下一个节点的收包缓存的空闲位置首地址 */
+      /* n_left_to_next:下一个节点收包缓存的空闲位置总数 */
+      vlib_get_next_frame (vm, node, next_index, to_next, n_left_to_next);
 
-VERSION_INPUT=$(echo $1 | egrep &quot;^[1-9][0-9]*\.[0-9]+\.[0-9]+$&quot;)
-VERSION_BASE=$(cat epc-c/VERSION)
-VERSION=${VERSION_INPUT:-&quot;$VERSION_BASE&quot;}
-VERSION_TMP=$(cat VERSION)
-RELEASE=$(cat RELEASE)
-if [[ $VERSION == $VERSION_TMP ]];then
-	let RELEASE++
-	echo $RELEASE &gt; RELEASE
-else
-	let RELEASE=1
-	echo $VERSION &gt; VERSION
-	echo $RELEASE &gt; RELEASE
-fi
+      /* 一次性处理两个包 */
+      while (n_left_from &gt;= 4 &amp;&amp; n_left_to_next &gt;= 2)
+	{
+      /* next0和next1指明包的下一个节点索引值 */
+	  u32 next0 = SAMPLE_NEXT_INTERFACE_OUTPUT;
+	  u32 next1 = SAMPLE_NEXT_INTERFACE_OUTPUT;
+	  u32 sw_if_index0, sw_if_index1;
+	  u8 tmp0[6], tmp1[6];
+	  ethernet_header_t *en0, *en1;
+	  u32 bi0, bi1;
+	  vlib_buffer_t *b0, *b1;
 
-git add VERSION RELEASE
-git commit -m &quot;mod version,release&quot;
-expect -c &quot;set timeout 5;
-           spawn git push origin master;
-           expect \&quot;Username\&quot; {send \&quot;dongfeng\r\&quot;};
-           expect \&quot;Password\&quot; {send \&quot;baicells\r\&quot;};
-           send \&quot;quit\n\&quot;;
-expect eof&quot;
+	  /* Prefetch next iteration. */
+      /* from[2]和from[3]是第2和第3个buf的索引，如果这里有第2和第3报文进来
+         的话，就是放在from[2]和from[3]索引位置，所以这里对其做指令预取*/
+	  {
+	    vlib_buffer_t *p2, *p3;
 
-if [ -z ${VERSION} ]; then
-	echo &quot;Version $1 is incorrect&quot;
-	echo &quot;Syntax: ^[1-9][0-9]*\.[0-9]+\.[0-9]+$&quot;
-	exit 0
-fi
+	    p2 = vlib_get_buffer (vm, from[2]);
+	    p3 = vlib_get_buffer (vm, from[3]);
 
-rm -rf *.rpm &amp;&gt;/dev/null
+	    vlib_prefetch_buffer_header (p2, LOAD);
+	    vlib_prefetch_buffer_header (p3, LOAD);
 
-BASE_DIR=$(cd &quot;$(dirname &quot;$0&quot;)&quot;; pwd); cd ${BASE_DIR}
-#VERSION=${1:-&quot;1.0.0&quot;}
+	    CLIB_PREFETCH (p2-&gt;data, CLIB_CACHE_LINE_BYTES, STORE);
+	    CLIB_PREFETCH (p3-&gt;data, CLIB_CACHE_LINE_BYTES, STORE);
+	  }
 
-fpm -f -s dir -t rpm -n &quot;baicells-epc-c&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -C &quot;epc-c&quot; -p . \
-	--rpm-rpmbuild-define &quot;_build_id_links none&quot; \
-	epc.service=/usr/lib/systemd/system/ \
-	HssFailover=/usr/local/epc/ \
-	conf=/usr/local/epc/ \
-	watchdog=/usr/local/epc/ \
-	cg_app=/usr/local/epc/ \
-	config.txt=/usr/local/epc/ \
-	epc_watchdog.sh=/usr/local/epc/ \
-	hss_app=/usr/local/epc/ \
-	mme_app_1=/usr/local/epc/ \
-	mme_app_2=/usr/local/epc/ \
-	nwconfig.sh=/usr/local/epc/ \
-	pcrf_app=/usr/local/epc/ \
-	pgw_app_1=/usr/local/epc/ \
-	pgw_app_2=/usr/local/epc/ \
-	pgw_app_3=/usr/local/epc/ \
-	pgw_app_4=/usr/local/epc/ \
-	register=/usr/local/epc/ \
-	sgw_gtpc_app=/usr/local/epc/ \
-	sgw_gtpu_app=/usr/local/epc/ \
-	startAll.sh=/usr/local/epc/ \
-	startEPC.sh=/usr/local/epc/ \
-	start_tomcat.sh=/usr/local/epc/ \
-	stopEPC.sh=/usr/local/epc/ \
-	stop_tomcat.sh=/usr/local/epc/ \
-	tomcat_watchdog.sh=usr/local/epc/
+	  /* speculatively enqueue b0 and b1 to the current next frame */
+      /* from[0]和from[1]中保存的是本节点收到包的包索引值，
+         这里直接把from[0]和from[1]放到to_next[0]和to_next[1]里面了,
+         这里的意思是假设直接把报文放到next_index对应下一个节点的收包
+         缓存里面了，后面vlib_validate_buffer_enqueue_x2宏会对其做调整
+      */
+	  to_next[0] = bi0 = from[0];
+	  to_next[1] = bi1 = from[1];
+
+      /* 偏移from和to_next指针的位置，并减少n_left_from和n_left_to_next
+         这里n_left_from表示当前节点收到的报文总数
+         而n_left_to_next表示下一个节点收包缓存队列的最大数量
+      */
+	  from += 2;
+	  to_next += 2;
+	  n_left_from -= 2;
+	  n_left_to_next -= 2;
+
+      /* 根据buf index从当前node里面拿到对应的vlib_buffer_t */
+	  b0 = vlib_get_buffer (vm, bi0);
+	  b1 = vlib_get_buffer (vm, bi1);
+
+	  ASSERT (b0-&gt;current_data == 0);
+	  ASSERT (b1-&gt;current_data == 0);
+
+      /* 从vlib_buffer_t获取报文地址 */
+	  en0 = vlib_buffer_get_current (b0);
+	  en1 = vlib_buffer_get_current (b1);
+
+      /* 下面这一段只是交换以太网报文的mac地址 */
+	  /* This is not the fastest way to swap src + dst mac addresses */
+#define _(a) tmp0[a] = en0-&gt;src_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en0-&gt;src_address[a] = en0-&gt;dst_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en0-&gt;dst_address[a] = tmp0[a];
+	  foreach_mac_address_offset;
+#undef _
+
+#define _(a) tmp1[a] = en1-&gt;src_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en1-&gt;src_address[a] = en1-&gt;dst_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en1-&gt;dst_address[a] = tmp1[a];
+	  foreach_mac_address_offset;
+#undef _
+
+      /* 获取rx的if index后设置到tx if index里面 */
+	  sw_if_index0 = vnet_buffer (b0)-&gt;sw_if_index[VLIB_RX];
+	  sw_if_index1 = vnet_buffer (b1)-&gt;sw_if_index[VLIB_RX];
+
+	  /* Send pkt back out the RX interface */
+	  vnet_buffer (b0)-&gt;sw_if_index[VLIB_TX] = sw_if_index0;
+	  vnet_buffer (b1)-&gt;sw_if_index[VLIB_TX] = sw_if_index1;
+
+	  pkts_swapped += 2;
+
+	  if (PREDICT_FALSE ((node-&gt;flags &amp; VLIB_NODE_FLAG_TRACE)))
+	    {
+	      if (b0-&gt;flags &amp; VLIB_BUFFER_IS_TRACED)
+		{
+		  sample_trace_t *t =
+		    vlib_add_trace (vm, node, b0, sizeof (*t));
+		  t-&gt;sw_if_index = sw_if_index0;
+		  t-&gt;next_index = next0;
+		  clib_memcpy_fast (t-&gt;new_src_mac, en0-&gt;src_address,
+				    sizeof (t-&gt;new_src_mac));
+		  clib_memcpy_fast (t-&gt;new_dst_mac, en0-&gt;dst_address,
+				    sizeof (t-&gt;new_dst_mac));
+
+		}
+	      if (b1-&gt;flags &amp; VLIB_BUFFER_IS_TRACED)
+		{
+		  sample_trace_t *t =
+		    vlib_add_trace (vm, node, b1, sizeof (*t));
+		  t-&gt;sw_if_index = sw_if_index1;
+		  t-&gt;next_index = next1;
+		  clib_memcpy_fast (t-&gt;new_src_mac, en1-&gt;src_address,
+				    sizeof (t-&gt;new_src_mac));
+		  clib_memcpy_fast (t-&gt;new_dst_mac, en1-&gt;dst_address,
+				    sizeof (t-&gt;new_dst_mac));
+		}
+	    }
+
+	  /* verify speculative enqueues, maybe switch current next frame */
+      /* 
+        next_index:默认的下一结点的index
+        next0:实际的下一个结点的index
+        next0 == next_index则不需要做特别的处理，报文会自动进入下一个节点
+        next0 != next_index则需要对该数据包做调整，从之前next_index对应
+                           的frame中删除，添加到next0对应的frame中
+
+        next1的判断和next0一样
+      */
+	  vlib_validate_buffer_enqueue_x2 (vm, node, next_index,
+					   to_next, n_left_to_next,
+					   bi0, bi1, next0, next1);
+	}
+
+      /* 一次性处理一个包, 处理逻辑和上面一直 */
+      while (n_left_from &gt; 0 &amp;&amp; n_left_to_next &gt; 0)
+	{
+	  u32 bi0;
+	  vlib_buffer_t *b0;
+	  u32 next0 = SAMPLE_NEXT_INTERFACE_OUTPUT;
+	  u32 sw_if_index0;
+	  u8 tmp0[6];
+	  ethernet_header_t *en0;
+
+	  /* speculatively enqueue b0 to the current next frame */
+	  bi0 = from[0];
+	  to_next[0] = bi0;
+	  from += 1;
+	  to_next += 1;
+	  n_left_from -= 1;
+	  n_left_to_next -= 1;
+
+	  b0 = vlib_get_buffer (vm, bi0);
+	  /*
+	   * Direct from the driver, we should be at offset 0
+	   * aka at &amp;b0-&gt;data[0]
+	   */
+	  ASSERT (b0-&gt;current_data == 0);
+
+	  en0 = vlib_buffer_get_current (b0);
+
+	  /* This is not the fastest way to swap src + dst mac addresses */
+#define _(a) tmp0[a] = en0-&gt;src_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en0-&gt;src_address[a] = en0-&gt;dst_address[a];
+	  foreach_mac_address_offset;
+#undef _
+#define _(a) en0-&gt;dst_address[a] = tmp0[a];
+	  foreach_mac_address_offset;
+#undef _
+
+	  sw_if_index0 = vnet_buffer (b0)-&gt;sw_if_index[VLIB_RX];
+
+	  /* Send pkt back out the RX interface */
+	  vnet_buffer (b0)-&gt;sw_if_index[VLIB_TX] = sw_if_index0;
+
+	  if (PREDICT_FALSE ((node-&gt;flags &amp; VLIB_NODE_FLAG_TRACE)
+			     &amp;&amp; (b0-&gt;flags &amp; VLIB_BUFFER_IS_TRACED)))
+	    {
+	      sample_trace_t *t = vlib_add_trace (vm, node, b0, sizeof (*t));
+	      t-&gt;sw_if_index = sw_if_index0;
+	      t-&gt;next_index = next0;
+	      clib_memcpy_fast (t-&gt;new_src_mac, en0-&gt;src_address,
+				sizeof (t-&gt;new_src_mac));
+	      clib_memcpy_fast (t-&gt;new_dst_mac, en0-&gt;dst_address,
+				sizeof (t-&gt;new_dst_mac));
+	    }
+
+	  pkts_swapped += 1;
+
+	  /* verify speculative enqueue, maybe switch current next frame */
+	  vlib_validate_buffer_enqueue_x1 (vm, node, next_index,
+					   to_next, n_left_to_next,
+					   bi0, next0);
+	}
+
+      /* 所有流程都正确处理完毕后，下一结点的frame上已经有本结点处理过后的数据索引
+         执行该函数，将相关信息登记到vlib_pending_frame_t中，准备开始调度处理 
+      */
+      vlib_put_next_frame (vm, node, next_index, n_left_to_next);
+    }
+
+  vlib_node_increment_counter (vm, sample_node.index,
+			       SAMPLE_ERROR_SWAPPED, pkts_swapped);
+  return frame-&gt;n_vectors;
+}
+
+
 </code></pre>
 
                         </div>
@@ -230,15 +349,15 @@ fpm -f -s dir -t rpm -n &quot;baicells-epc-c&quot; -v &quot;$VERSION&quot; --ite
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/auto-epc/">AUTO-EPC</a></li>
+        <li><a href="/posts/vpp-sample-plugin/">vpp sample plugin</a></li>
         
-        <li><a href="/posts/drone/">使用docker-compose搭建drone服务器</a></li>
+        <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
         
-        <li><a href="/posts/jenkins/">搭建jenkins服务器</a></li>
+        <li><a href="/posts/kernel-dev/">kernel 字符设备驱动</a></li>
         
-        <li><a href="/posts/caddy/">使用caddy搭建文件服务器</a></li>
+        <li><a href="/posts/affinity/">cpu亲和性</a></li>
         
-        <li><a href="/posts/gogs/">使用gogs搭建git服务器</a></li>
+        <li><a href="/posts/kernel-module/">kernel module编程</a></li>
         
     </ul>
 </div>
@@ -248,13 +367,11 @@ fpm -f -s dir -t rpm -n &quot;baicells-epc-c&quot; -v &quot;$VERSION&quot; --ite
                             
                             <ul class="clearfix">
                                 
-                                <li><a href="https://workerwork.github.io/tags/epc">epc</a></li>
+                                <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
                                 
-                                <li><a href="https://workerwork.github.io/tags/ci/cd">CI/CD</a></li>
+                                <li><a href="https://workerwork.github.io/tags/plugin">plugin</a></li>
                                 
-                                <li><a href="https://workerwork.github.io/tags/fpm">fpm</a></li>
-                                
-                                <li><a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85">rpm打包</a></li>
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
                                 
                             </ul>
                             
