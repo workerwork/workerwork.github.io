@@ -150,6 +150,9 @@ VNET_FEATURE_ARC_INIT (ip4_unicast, static) =
 我们就可以在ip4-unicast的开始node和结束node之间添加我们自己的node节点，
 在测试时，关注的是结束node ip4-lookup
 
+在arc中指定的起始node中，必须调用vnet_feature_arc_start函数，
+才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature
+
 文件：vnet/ip/ip4_input.c
 
 /* *INDENT-OFF* */
