@@ -132,7 +132,7 @@
 
 <p>ip4-unicast arc</p>
 
-<pre><code class="language-c">文件：ip4_forward.c
+<pre><code class="language-c">文件：vnet/ip/ip4_forward.c
 
 /* Built-in ip4 unicast rx feature path definition */
 /* *INDENT-OFF* */
@@ -150,7 +150,7 @@ VNET_FEATURE_ARC_INIT (ip4_unicast, static) =
 我们就可以在ip4-unicast的开始node和结束node之间添加我们自己的node节点，
 在测试时，关注的是结束node ip4-lookup
 
-文件：ip4_input.c
+文件：vnet/ip/ip4_input.c
 
 /* *INDENT-OFF* */
 VLIB_REGISTER_NODE (ip4_input_node) = {
