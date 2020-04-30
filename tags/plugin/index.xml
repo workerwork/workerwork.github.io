@@ -6,10 +6,21 @@
     <description>Recent content in plugin on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 29 Apr 2020 16:04:24 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 30 Apr 2020 10:14:26 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/plugin/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>vpp node-graph编排过程</title>
+      <link>https://workerwork.github.io/posts/vpp-node-graph/</link>
+      <pubDate>Thu, 30 Apr 2020 10:14:26 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/vpp-node-graph/</guid>
+      <description>1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &amp;lt;&amp;lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.</description>
+    </item>
     
     <item>
       <title>vpp feature节点以及数据走向控制</title>

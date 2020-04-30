@@ -1,0 +1,2083 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>vpp node-graph编排过程 | WorkSpace</title>
+    <meta property="og:title" content="vpp node-graph编排过程 - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-04-30T10:14:26&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-04-30T10:14:26&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="vpp node-graph编排过程">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/vpp-node-graph/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">vpp node-graph编排过程</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年4月30日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-vpp-node-graph">1. vpp node graph</h2>
+
+<p>VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)</p>
+
+<p><img src="/vpp-node-graph/img/001.png" alt="" /></p>
+
+<h2 id="2-数据结构">2. 数据结构</h2>
+
+<h3 id="静态数据结构">静态数据结构</h3>
+
+<p>节点全局管理结构vlib_node_main_t</p>
+
+<pre><code class="language-c">typedef struct
+{
+    /* Public nodes. */
+    /* 节点指针数组，使用下标作为索引 */
+    vlib_node_t **nodes;
+
+    /* Node index hashed by node name. */
+    /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 
+     * 只有main线程才会委会该hash表
+     */
+    uword *node_by_name;
+
+    u32 flags;
+/* 该标志表示Runtime信息已经被初始化过了 */    
+#define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &lt;&lt; 0)
+
+    /* Nodes segregated by type for cache locality.
+       Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */
+    vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE];
+
+    /* Node runtime indices for input nodes with pending interrupts. */
+    u32 *pending_interrupt_node_runtime_indices;
+    clib_spinlock_t pending_interrupt_lock;
+
+    /* Input nodes are switched from/to interrupt to/from polling mode
+       when average vector length goes above/below polling/interrupt
+       thresholds.
+     * 输入节点在中断模式和轮询模式之间进行切换，当向量的平均长度高于轮询长度阈值时
+     * 将会从中断模式切换到轮询模式(这种情况说明报文非常多)，当长度低于中断阈值时，从
+     * 轮询模式切换到中断模式(压力变小了)
+     */
+    u32 polling_threshold_vector_length;
+    u32 interrupt_threshold_vector_length;
+
+    /* Vector of next frames. */
+    /* 帧数组，由内部节点组成,其中n1是节点的下一跳个节点的个数，元素是节点运行索引
+     * node_runtime_index与帧数据索引构成的帧。
+     */
+    /* |----node 1的n1个元素|----node 2的n2个元素|......| ----node n的n个元素|  */
+    /* 只针对内部节点 */
+    vlib_next_frame_t *next_frames;
+
+    /* Vector of internal node's frames waiting to be called.
+     * 等待被调用的内部节点，通常是上一个节点的报文处理后指向的下一个节点
+     */
+    vlib_pending_frame_t *pending_frames;
+
+    /* Timing wheel for scheduling time-based node dispatch. */
+    void *timing_wheel;
+
+    vlib_signal_timed_event_data_t *signal_timed_event_data_pool;
+
+    /* Opaque data vector added via timing_wheel_advance. */
+    u32 *data_from_advancing_timing_wheel;
+
+    /* CPU time of next process to be ready on timing wheel. */
+    f64 time_next_process_ready;
+
+    /* Vector of process nodes.
+       One for each node of type VLIB_NODE_TYPE_PROCESS. */
+    vlib_process_t **processes;
+
+    /* Current running process or ~0 if no process running. */
+    u32 current_process_index;
+
+    /* Pool of pending process frames. */
+    vlib_pending_frame_t *suspended_process_frames;
+
+    /* Vector of event data vectors pending recycle. */
+    void **recycled_event_data_vectors;
+
+    /* Current counts of nodes in each state. */
+    u32 input_node_counts_by_state[VLIB_N_NODE_STATE];
+
+    /* Hash of (scalar_size,vector_size) to frame_sizes index. */
+    uword *frame_size_hash;
+
+    /* Per-size frame allocation information. */
+    /* 不同大小的帧的分配信息，是一个数组，与上面的hash表是两种索引方式 */
+    vlib_frame_size_t *frame_sizes;
+
+    /* Time of last node runtime stats clear. */
+    f64 time_last_runtime_stats_clear;
+
+    /* Node registrations added by constructors */
+    vlib_node_registration_t *node_registrations;
+} vlib_node_main_t;
+
+</code></pre>
+
+<p>节点类型</p>
+
+<pre><code class="language-c">typedef enum
+{
+  /* An internal node on the call graph (could be output). */
+  VLIB_NODE_TYPE_INTERNAL,
+
+  /* Nodes which input data into the processing graph.
+     Input nodes are called for each iteration of main loop. 
+     输入节点，报文流转入口 */
+  VLIB_NODE_TYPE_INPUT,
+
+  /* Nodes to be called before all input nodes.
+     Used, for example, to clean out driver TX rings before
+     processing input. 
+     输入节点之前处理的节点，用于处理一些在处理输入报文之前的任务。
+     比如清除发送缓冲区(好像没有注册该功能的节点)。目前只注册了两个该
+     类型的节点：epoll和session */
+  VLIB_NODE_TYPE_PRE_INPUT,
+
+  /* &quot;Process&quot; nodes which can be suspended and later resumed. */
+  /* vpp的协程节点，用于处理可以挂起的任务，比如命令行，api等业务 */
+  VLIB_NODE_TYPE_PROCESS,
+
+  VLIB_N_NODE_TYPE,
+} vlib_node_type_t;
+
+</code></pre>
+
+<p>节点功能函数描述结构</p>
+
+<pre><code class="language-c">typedef struct _vlib_node_fn_registration
+{
+  vlib_node_function_t *function; /* 功能函数 */
+  int priority; /* 优先级，同一节点可以注册多个处理函数，选择优先级最高的，值越大优先级越高 */
+  struct _vlib_node_fn_registration *next_registration;/* 形成链表 */
+  char *name;/* 名字，必须要和其所属的节点一致，否则注册会失败 */
+} vlib_node_fn_registration_t;
+
+</code></pre>
+
+<p>注册节点描述结构，用于表示一个注册节点</p>
+
+<pre><code class="language-c">  /* State for input nodes. */
+  u8 state;
+
+  /* Node flags. */
+  u16 flags;
+
+  /* protocol at b-&gt;data[b-&gt;current_data] upon entry to the dispatch fn */
+  u8 protocol_hint;
+
+  /* Size of scalar and vector arguments in bytes. */
+  u16 scalar_size, vector_size;
+
+  /* Number of error codes used by this node. */
+  u16 n_errors;
+
+  /* Number of next node names that follow. 该节点指向的下一个节点个数 */
+  u16 n_next_nodes;
+
+  /* Constructor link-list, don't ask... 所有节点通过该成员形成链表 */
+  struct _vlib_node_registration *next_registration;
+
+  /* Names of next nodes which this node feeds into. 下一个节点数组，存储的是名字、 */
+  char *next_nodes[];
+
+} vlib_node_registration_t;
+
+</code></pre>
+
+<p>节点注册相关的宏</p>
+
+<pre><code class="language-c">#ifndef CLIB_MARCH_VARIANT
+#define VLIB_REGISTER_NODE(x,...)                                       \
+    __VA_ARGS__ vlib_node_registration_t x;                             \  //声明一个需要注册的节点
+static void __vlib_add_node_registration_##x (void)                     \  //声明一个静态的添加一个节点的函数，有constructor属性，在main函数之前执行
+    __attribute__((__constructor__)) ;                                  \
+static void __vlib_add_node_registration_##x (void)                     \
+{                                                                       \  //定义添加节点函数，即将节点x链接到vm-&gt;node_main.node_registrations链表中
+    vlib_main_t * vm = vlib_get_main();                                 \
+    x.next_registration = vm-&gt;node_main.node_registrations;             \
+    vm-&gt;node_main.node_registrations = &amp;x;                              \
+}                                                                       \
+static void __vlib_rm_node_registration_##x (void)                      \  //从链表中移除节点
+    __attribute__((__destructor__)) ;                                   \
+static void __vlib_rm_node_registration_##x (void)                      \
+{                                                                       \
+    vlib_main_t * vm = vlib_get_main();                                 \
+    VLIB_REMOVE_FROM_LINKED_LIST (vm-&gt;node_main.node_registrations,     \
+                                  &amp;x, next_registration);               \
+}                                                                       \
+__VA_ARGS__ vlib_node_registration_t x          // 定义一个需要注册的节点，这里没有分号，是因为使用这个宏的时候有分号，并且初始化该变量。
+#else
+#define VLIB_REGISTER_NODE(x,...)                                       \
+static __clib_unused vlib_node_registration_t __clib_unused_##x
+#endif
+
+</code></pre>
+
+<p>VPP定义的节点样例</p>
+
+<p>我们以DPDK类型的输入节点来进行分析</p>
+
+<pre><code class="language-c">/* *INDENT-OFF* */
+VLIB_REGISTER_NODE (dpdk_input_node) = {
+  .type = VLIB_NODE_TYPE_INPUT,
+  .name = &quot;dpdk-input&quot;,
+  .sibling_of = &quot;device-input&quot;,
+
+  /* Will be enabled if/when hardware is detected. */
+  .state = VLIB_NODE_STATE_DISABLED,
+
+  .format_buffer = format_ethernet_header_with_length,
+  .format_trace = format_dpdk_rx_trace,
+
+  .n_errors = DPDK_N_ERROR,
+  .error_strings = dpdk_error_strings,
+};
+
+</code></pre>
+
+<p>节点处理函数</p>
+
+<p>节点处理函数宏</p>
+
+<pre><code class="language-c">#define VLIB_NODE_FN(node)                        \
+uword CLIB_MARCH_SFX (node##_fn)();                    \
+static vlib_node_fn_registration_t                    \
+  CLIB_MARCH_SFX(node##_fn_registration) =                \
+  { .function = &amp;CLIB_MARCH_SFX (node##_fn), };                \
+                                    \
+static void __clib_constructor                        \
+CLIB_MARCH_SFX (node##_multiarch_register) (void)            \
+{                                    \
+  extern vlib_node_registration_t node;                    \ //这里引用了一个node节点，其名字为宏的输入参数，说明在定义节点和其处理函数的时候要求它们有一样的名字。
+  vlib_node_fn_registration_t *r;                    \
+  r = &amp; CLIB_MARCH_SFX (node##_fn_registration);            \
+  r-&gt;priority = CLIB_MARCH_FN_PRIORITY();                \//处理函数优先级，根据优先级选择最高优先级的处理函数
+  r-&gt;name = CLIB_MARCH_VARIANT_STR;                    \
+  r-&gt;next_registration = node.node_fn_registrations;            \//将函数添加到其对应的节点链表中，从这里可以看出一个节点可以有多个处理函数，在函数register_node中会选择一个优先级最高的函数作为节点的最终处理函数。
+  node.node_fn_registrations = r;                    \
+}                                    \
+uword CLIB_CPU_OPTIMIZED CLIB_MARCH_SFX (node##_fn)
+
+</code></pre>
+
+<p>节点处理函数示例</p>
+
+<p>我们以DPDK输入节点为例</p>
+
+<pre><code class="language-c">VLIB_NODE_FN (dpdk_input_node) (vlib_main_t * vm, vlib_node_runtime_t * node,
+                vlib_frame_t * f)
+{
+  dpdk_main_t *dm = &amp;dpdk_main;
+  dpdk_device_t *xd;
+  uword n_rx_packets = 0;
+  /* 获取输入节点的运行信息，其中的devices_and_queues包含了该线程在该输入节点需要处理的队列信息，动态增加该类设备时，会在修改其中的信息 */
+  vnet_device_input_runtime_t *rt = (void *) node-&gt;runtime_data;
+  vnet_device_and_queue_t *dq;/*  */
+  u32 thread_index = node-&gt;thread_index;
+
+  /*
+   * Poll all devices on this cpu for input/interrupts.
+   */
+  /* *INDENT-OFF* 遍历该线程接管的每一个设备的每一个队列 */
+  foreach_device_and_queue (dq, rt-&gt;devices_and_queues)
+    {
+      xd = vec_elt_at_index(dm-&gt;devices, dq-&gt;dev_instance);
+      if (PREDICT_FALSE (xd-&gt;flags &amp; DPDK_DEVICE_FLAG_BOND_SLAVE))
+    continue;    /* Do not poll slave to a bonded interface */
+      n_rx_packets += dpdk_device_input (vm, dm, xd, node, thread_index,
+                     dq-&gt;queue_id);
+    }
+  /* *INDENT-ON* */
+  return n_rx_packets;
+}
+
+</code></pre>
+
+<h3 id="运行数据">运行数据</h3>
+
+<p>vlib_node_runtime_t</p>
+
+<pre><code class="language-c">/* 运行时帧索引，这些帧根据节点类型进行分类的 */
+typedef struct vlib_node_runtime_t
+{
+    CLIB_CACHE_LINE_ALIGN_MARK (cacheline0);    /**&lt; cacheline mark */
+    /* 运行函数 */
+    vlib_node_function_t *function;    /**&lt; Node function to call. */
+
+    vlib_error_t *errors;            /**&lt; Vector of errors for this node. */
+
+#if __SIZEOF_POINTER__ == 4
+    u8 pad[8];
+#endif
+
+    u32 clocks_since_last_overflow;    /**&lt; Number of clock cycles. */
+
+    u32 max_clock;            /**&lt; Maximum clock cycle for an
+                      invocation. */
+
+    u32 max_clock_n;            /**&lt; Number of vectors in the recorded
+                      max_clock. */
+
+    u32 calls_since_last_overflow;    /**&lt; Number of calls. */
+
+    u32 vectors_since_last_overflow;    /**&lt; Number of vector elements
+                      processed by this node. */
+
+    u32 perf_counter0_ticks_since_last_overflow; /**&lt; Perf counter 0 ticks */
+    u32 perf_counter1_ticks_since_last_overflow; /**&lt; Perf counter 1 ticks */
+    u32 perf_counter_vectors_since_last_overflow;    /**&lt; Perf counter vectors */
+    /* 起始的下一帧索引 */
+    u32 next_frame_index;            /**&lt; Start of next frames for this
+                      node. */
+    /* 节点索引 */
+    u32 node_index;            /**&lt; Node index. */
+
+    u32 input_main_loops_per_call;    /**&lt; For input nodes: decremented
+                      on each main loop interation until
+                      it reaches zero and function is
+                      called.  Allows some input nodes to
+                      be called more than others. */
+
+    u32 main_loop_count_last_dispatch;    /**&lt; Saved main loop counter of last
+                                         ** dispatch of this node.
+                                         ** 上一次进入该节点时，主循环调用次数
+                                         */
+
+    u32 main_loop_vector_stats[2];/* 分组报文统计数组，两个元素交替统计 */
+
+    u16 flags;                /**&lt; Copy of main node flags. */
+
+    u16 state;                /**&lt; Input node state. */
+    /* 运行时下一个节点的个数 */
+    u16 n_next_nodes;/* 多少个下一个节点 */
+    /* 该节点上一次使用的下一个帧的索引编号，缓存的用于加速 */
+    u16 cached_next_index;        /**&lt; Next frame index that vector
+                      arguments were last enqueued to
+                      last time this node ran. Set to
+                      zero before first run of this
+                      node. */
+    /* 节点所属线程 */
+    u16 thread_index;            /**&lt; thread this node runs on */
+
+    u8 runtime_data[0];            /**&lt; Function dependent
+                      node-runtime data. This data is
+                      thread local, and it is not
+                      cloned from main thread. It needs
+                      to be initialized for each thread
+                      before it is used unless
+                      runtime_data template exists in
+                      vlib_node_t. */
+} vlib_node_runtime_t; /* 运行时节点描述结构体 */
+
+</code></pre>
+
+<p>vlib_next_frame_t</p>
+
+<pre><code class="language-c">typedef struct
+{
+    /* Frame index. */
+    /*  帧数据索引*/
+    u32 frame_index;
+
+    /* Node runtime for this next. */
+    /* 运行节点索引 */
+    u32 node_runtime_index;
+
+    /* Next frame flags. */
+    u32 flags;
+
+    /* Reflects node frame-used flag for this next. */
+#define VLIB_FRAME_NO_FREE_AFTER_DISPATCH \
+  VLIB_NODE_FLAG_FRAME_NO_FREE_AFTER_DISPATCH
+
+    /* Don't append this frame */
+#define VLIB_FRAME_NO_APPEND (1 &lt;&lt; 14)
+
+    /* This next frame owns enqueue to node
+       corresponding to node_runtime_index. */
+#define VLIB_FRAME_OWNER (1 &lt;&lt; 15)
+
+    /* Set when frame has been allocated for this next. */
+#define VLIB_FRAME_IS_ALLOCATED    VLIB_NODE_FLAG_IS_OUTPUT
+
+    /* Set when frame has been added to pending vector. */
+#define VLIB_FRAME_PENDING VLIB_NODE_FLAG_IS_DROP
+
+    /* Set when frame is to be freed after dispatch. */
+#define VLIB_FRAME_FREE_AFTER_DISPATCH VLIB_NODE_FLAG_IS_PUNT
+
+    /* Set when frame has traced packets. */
+#define VLIB_FRAME_TRACE VLIB_NODE_FLAG_TRACE
+
+    /* Number of vectors enqueue to this next since last overflow. */
+    u32 vectors_since_last_overflow;
+} vlib_next_frame_t;
+
+</code></pre>
+
+<p>vlib_pending_frame_t</p>
+
+<pre><code class="language-c">/* A frame pending dispatch by main loop. */
+typedef struct
+{
+    /* Node and runtime for this frame. */
+    /* 可以通过该索引在帧数组中找到对应的vlib_node_runtime_t结构 */
+    u32 node_runtime_index;
+
+    /* Frame index (in the heap). */
+    u32 frame_index;
+
+    /* Start of next frames for this node. */
+    u32 next_frame_index;
+
+    /* Special value for next_frame_index when there is no next frame. */
+#define VLIB_PENDING_FRAME_NO_NEXT_FRAME ((u32) ~0)
+} vlib_pending_frame_t;
+
+</code></pre>
+
+<p>vlib_frame_t</p>
+
+<pre><code class="language-c">/* Max number of vector elements to process at once per node. */
+#define VLIB_FRAME_SIZE 256
+#define VLIB_FRAME_ALIGN CLIB_CACHE_LINE_BYTES
+
+/* Calling frame (think stack frame) for a node.
+ * 一个节点的调用栈帧
+ */
+typedef struct vlib_frame_t
+{
+    /* Frame flags. */
+    u16 frame_flags;
+
+    /* User flags. Used for sending hints to the next node. */
+    u16 flags;
+
+    /* 数组arguments中的标量字节数Number of scalar bytes in arguments. */
+    u8 scalar_size;
+
+    /* Number of bytes per vector argument. */
+    u8 vector_size;
+
+    /* Number of vector elements currently in frame. */
+    /* 在该帧中的向量元素的个数 */
+    u16 n_vectors;
+
+    /* Scalar and vector arguments to next node. */
+    u8 arguments[0];
+} vlib_frame_t;
+
+</code></pre>
+
+<h2 id="3-在vlib-main-or-worker-loop函数运行前添加的节点编排过程">3. 在vlib_main_or_worker_loop函数运行前添加的节点编排过程</h2>
+
+<p>vpp节点有两种注册方式，第一种是采用上面的宏进行定义。
+这些宏带有<strong>constructor</strong>属性，都是在main函数自动执行的，形成相应的链表。
+还可以动态定义，然后进行加工。
+下面我们分析一下节点的加工过程。</p>
+
+<p>vlib_main</p>
+
+<p>vlib_main函数调用vlib_node_main_init函数进行node初始化</p>
+
+<pre><code class="language-c">/* Main function. */
+int
+vlib_main (vlib_main_t * volatile vm, unformat_input_t * input)
+{
+    clib_error_t *volatile error;
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+
+    ......
+    
+    /* Register static nodes so that init functions may use them. */
+    /* 注册所有静态节点 */
+    vlib_register_all_static_nodes (vm);
+
+    ......
+
+    /* Initialize node graph. */
+    /* 初始化节点图 */
+    if ((error = vlib_node_main_init (vm)))
+    {
+        /* Arrange for graph hook up error to not be fatal when debugging. */
+        if (CLIB_DEBUG &gt; 0)
+            clib_error_report (error);
+        else
+            goto done;
+    }
+    ......
+    
+    vlib_main_loop (vm);
+    ......
+}
+
+</code></pre>
+
+<p>vlib_register_all_static_nodes</p>
+
+<pre><code class="language-c">void
+vlib_register_all_static_nodes (vlib_main_t * vm)
+{
+    vlib_node_registration_t *r;
+
+    static char *null_node_error_strings[] =
+    {
+        &quot;blackholed packets&quot;,
+    };
+    /* 定义一个null节点，作为第一个节点，其编号为0 */
+    static vlib_node_registration_t null_node_reg =
+    {
+        .function = null_node_fn,
+        .vector_size = sizeof (u32),
+        .name = &quot;null-node&quot;,
+        .n_errors = 1,
+        .error_strings = null_node_error_strings,
+    };
+
+    /* make sure that node index 0 is not used by
+       real node */
+    register_node (vm, &amp;null_node_reg);
+    /* 遍历所有的静态节点，进行注册 */
+    r = vm-&gt;node_main.node_registrations;
+    while (r)
+    {
+        register_node (vm, r);
+        r = r-&gt;next_registration;
+    }
+}
+
+</code></pre>
+
+<p>register_node</p>
+
+<p>该函数分配一个vlib_node_t结构，用vlib_node_registration_t信息对其进行初始化，
+让后将其添加到vm-&gt;node_main-&gt;nodes指针数组中，其在数组中的下标为其节点索引n-&gt;index</p>
+
+<pre><code class="language-c">static void
+register_node (vlib_main_t * vm, vlib_node_registration_t * r)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    vlib_node_t *n;
+    u32 page_size = clib_mem_get_page_size ();
+    int i;
+
+    if (CLIB_DEBUG &gt; 0)
+    {
+        /* Default (0) type should match INTERNAL. */
+        vlib_node_t zero = { 0 };
+        ASSERT (VLIB_NODE_TYPE_INTERNAL == zero.type);
+    }
+    /* 从节点的多个函数中选择一个最高的优先级的函数作为节点的最终处理函数 */
+    if (r-&gt;node_fn_registrations)
+    {
+        vlib_node_fn_registration_t *fnr = r-&gt;node_fn_registrations;
+        int priority = -1;
+
+        /* to avoid confusion, please remove &quot;.function &quot; statiement from
+           CLIB_NODE_REGISTRATION() if using function function candidates */
+        ASSERT (r-&gt;function == 0);
+
+        while (fnr)
+        {
+            if (fnr-&gt;priority &gt; priority)
+            {
+                priority = fnr-&gt;priority;
+                r-&gt;function = fnr-&gt;function;
+            }
+            fnr = fnr-&gt;next_registration;
+        }
+    }
+
+    ASSERT (r-&gt;function != 0);
+    /* 分配节点内存 */
+    n = clib_mem_alloc_no_fail (sizeof (n[0]));
+    clib_memset (n, 0, sizeof (n[0]));
+    /* 设置索引 */
+    n-&gt;index = vec_len (nm-&gt;nodes);
+    n-&gt;node_fn_registrations = r-&gt;node_fn_registrations;
+    n-&gt;protocol_hint = r-&gt;protocol_hint;
+    /* 将节点地址添加到数组中 */
+    vec_add1 (nm-&gt;nodes, n);
+
+    /* Name is always a vector so it can be formatted with %v. */
+    if (clib_mem_is_heap_object (vec_header (r-&gt;name, 0)))
+        n-&gt;name = vec_dup ((u8 *) r-&gt;name);
+    else
+        n-&gt;name = format (0, &quot;%s&quot;, r-&gt;name);
+    /* 构建节点名字与节点索引hash表 */
+    if (!nm-&gt;node_by_name)
+        nm-&gt;node_by_name = hash_create_vec ( /* size */ 32,
+                           sizeof (n-&gt;name[0]), sizeof (uword));
+
+    /* Node names must be unique. */
+    {
+        vlib_node_t *o = vlib_get_node_by_name (vm, n-&gt;name);
+        if (o)
+            clib_error (&quot;more than one node named `%v'&quot;, n-&gt;name);
+    }
+
+    hash_set (nm-&gt;node_by_name, n-&gt;name, n-&gt;index);
+
+    r-&gt;index = n-&gt;index;        /* save index in registration */
+    n-&gt;function = r-&gt;function;
+
+    /* Node index of next sibling will be filled in by vlib_node_main_init. */
+    n-&gt;sibling_of = r-&gt;sibling_of;
+    if (r-&gt;sibling_of &amp;&amp; r-&gt;n_next_nodes &gt; 0)
+        clib_error (&quot;sibling node should not have any next nodes `%v'&quot;, n-&gt;name);
+
+    if (r-&gt;type == VLIB_NODE_TYPE_INTERNAL)
+        ASSERT (r-&gt;vector_size &gt; 0);
+
+#define _(f) n-&gt;f = r-&gt;f
+
+    _(type);
+    _(flags);
+    _(state);
+    _(scalar_size);
+    _(vector_size);
+    _(format_buffer);
+    _(unformat_buffer);
+    _(format_trace);
+    _(validate_frame);
+
+    /* Register error counters. */
+    vlib_register_errors (vm, n-&gt;index, r-&gt;n_errors, r-&gt;error_strings);
+    node_elog_init (vm, n-&gt;index);
+
+    _(runtime_data_bytes);
+    if (r-&gt;runtime_data_bytes &gt; 0)
+    {
+        vec_resize (n-&gt;runtime_data, r-&gt;runtime_data_bytes);
+        if (r-&gt;runtime_data)
+            clib_memcpy (n-&gt;runtime_data, r-&gt;runtime_data, r-&gt;runtime_data_bytes);
+    }
+    /* 初始化节点的下一跳数组 */
+    vec_resize (n-&gt;next_node_names, r-&gt;n_next_nodes);
+    for (i = 0; i &lt; r-&gt;n_next_nodes; i++)
+        n-&gt;next_node_names[i] = r-&gt;next_nodes[i];
+
+    vec_validate_init_empty (n-&gt;next_nodes, r-&gt;n_next_nodes - 1, ~0);
+    vec_validate (n-&gt;n_vectors_by_next_node, r-&gt;n_next_nodes - 1);
+
+    n-&gt;owner_node_index = n-&gt;owner_next_index = ~0;
+
+    /* Initialize node runtime. */
+    /* 初始化节点运行数据，主要是对节点按类型进行分类 */
+    {
+        vlib_node_runtime_t *rt;
+        u32 i;
+        
+        if (n-&gt;type == VLIB_NODE_TYPE_PROCESS)
+        {
+            vlib_process_t *p;
+            uword log2_n_stack_bytes;
+
+            log2_n_stack_bytes = clib_max (r-&gt;process_log2_n_stack_bytes, 15);
+
+#ifdef CLIB_UNIX
+            /*
+             * Bump the stack size if running over a kernel with a large page size,
+             * and the stack isn't any too big to begin with. Otherwise, we'll
+             * trip over the stack guard page for sure.
+             */
+            if ((page_size &gt; (4 &lt;&lt; 10)) &amp;&amp; log2_n_stack_bytes &lt; 19)
+            {
+                if ((1 &lt;&lt; log2_n_stack_bytes) &lt;= page_size)
+                    log2_n_stack_bytes = min_log2 (page_size) + 1;
+                else
+                    log2_n_stack_bytes++;
+            }
+#endif
+
+            p = clib_mem_alloc_aligned_at_offset
+                (sizeof (p[0]) + (1 &lt;&lt; log2_n_stack_bytes),
+                 STACK_ALIGN, STRUCT_OFFSET_OF (vlib_process_t, stack),
+                 0 /* no, don't call os_out_of_memory */ );
+            if (p == 0)
+                clib_panic (&quot;failed to allocate process stack (%d bytes)&quot;,
+                            1 &lt;&lt; log2_n_stack_bytes);
+
+            clib_memset (p, 0, sizeof (p[0]));
+            p-&gt;log2_n_stack_bytes = log2_n_stack_bytes;
+
+            /* Process node's runtime index is really index into process
+               pointer vector. */
+            n-&gt;runtime_index = vec_len (nm-&gt;processes);
+
+            vec_add1 (nm-&gt;processes, p);
+
+            /* Paint first stack word with magic number so we can at least
+               detect process stack overruns. */
+            p-&gt;stack[0] = VLIB_PROCESS_STACK_MAGIC;
+
+            /* Node runtime is stored inside of process. */
+            rt = &amp;p-&gt;node_runtime;
+
+#ifdef CLIB_UNIX
+            /*
+             * Disallow writes to the bottom page of the stack, to
+             * catch stack overflows.
+             */
+            if (mprotect (p-&gt;stack, page_size, PROT_READ) &lt; 0)
+                clib_unix_warning (&quot;process stack&quot;);
+#endif
+
+        }
+        else
+        {
+            /* 根据类型进行分类 */
+            vec_add2_aligned (nm-&gt;nodes_by_type[n-&gt;type], rt, 1,
+                              /* align */ CLIB_CACHE_LINE_BYTES);
+            n-&gt;runtime_index = rt - nm-&gt;nodes_by_type[n-&gt;type];
+        }
+        /* 统计输入节点状态个数 */
+        if (n-&gt;type == VLIB_NODE_TYPE_INPUT)
+            nm-&gt;input_node_counts_by_state[n-&gt;state] += 1;
+
+        rt-&gt;function = n-&gt;function;
+        rt-&gt;flags = n-&gt;flags;
+        rt-&gt;state = n-&gt;state;
+        rt-&gt;node_index = n-&gt;index;
+
+        rt-&gt;n_next_nodes = r-&gt;n_next_nodes;
+        rt-&gt;next_frame_index = vec_len (nm-&gt;next_frames);
+        /* 为该节点在nm-&gt;next_frames中申请一块rt-&gt;n_next_nodes元素的内存
+         * 该内存用于存储该节点运行的下一帧
+         */
+        vec_resize (nm-&gt;next_frames, rt-&gt;n_next_nodes);
+        for (i = 0; i &lt; rt-&gt;n_next_nodes; i++)
+            vlib_next_frame_init (nm-&gt;next_frames + rt-&gt;next_frame_index + i);
+
+        vec_resize (rt-&gt;errors, r-&gt;n_errors);
+        for (i = 0; i &lt; vec_len (rt-&gt;errors); i++)
+            rt-&gt;errors[i] = vlib_error_set (n-&gt;index, i);
+
+        STATIC_ASSERT_SIZEOF (vlib_node_runtime_t, 128);
+        ASSERT (vec_len (n-&gt;runtime_data) &lt;= VLIB_NODE_RUNTIME_DATA_SIZE);
+
+        if (vec_len (n-&gt;runtime_data) &gt; 0)
+            clib_memcpy (rt-&gt;runtime_data, n-&gt;runtime_data,
+                         vec_len (n-&gt;runtime_data));
+
+        vec_free (n-&gt;runtime_data);
+    }
+}
+
+</code></pre>
+
+<p>vlib_node_main_init</p>
+
+<pre><code class="language-c">clib_error_t *
+vlib_node_main_init (vlib_main_t * vm)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    clib_error_t *error = 0;
+    vlib_node_t *n;
+    uword ni;
+    /* 创建frame内存分配器 */
+    nm-&gt;frame_sizes = vec_new (vlib_frame_size_t, 1);
+#ifdef VLIB_SUPPORTS_ARBITRARY_SCALAR_SIZES
+    nm-&gt;frame_size_hash = hash_create (0, sizeof (uword));
+#endif
+    /* 设置已经初始化标志 */
+    nm-&gt;flags |= VLIB_NODE_MAIN_RUNTIME_STARTED;
+
+    /* Generate sibling relationships */
+    /* 处理所有节点的兄弟关系，比如不同类型的输入节点大多是兄弟节点，他们会指向相同的
+     * 下一跳节点。比如dpdk-input节点与af-packet-input几点就是互为兄弟节点。兄弟的兄弟
+     * 也是我兄弟
+     */
+    {
+        vlib_node_t *n, *sib;
+        uword si;
+        /* 遍历每一个节点 */
+        for (ni = 0; ni &lt; vec_len (nm-&gt;nodes); ni++)
+        {
+            n = vec_elt (nm-&gt;nodes, ni);
+
+            if (!n-&gt;sibling_of)
+                continue;
+            /* 获取兄弟名字 */
+            sib = vlib_get_node_by_name (vm, (u8 *) n-&gt;sibling_of);
+            if (!sib)
+            {
+                error = clib_error_create (&quot;sibling `%s' not found for node `%v'&quot;,
+                                           n-&gt;sibling_of, n-&gt;name);
+                goto done;
+            }
+
+            /* *INDENT-OFF* */
+            /* 遍历兄弟节点的每一个兄弟掩码，它的兄弟都是我的兄弟 */
+            clib_bitmap_foreach (si, sib-&gt;sibling_bitmap, (
+            {
+                /* 获取兄弟的兄弟节点 */
+                vlib_node_t * m = vec_elt (nm-&gt;nodes, si);
+
+                /* Connect all of sibling's siblings to us. */
+                /* 加本节点加入到兄弟的兄的的兄弟掩码图中 */
+                m-&gt;sibling_bitmap = clib_bitmap_ori (m-&gt;sibling_bitmap, n-&gt;index);
+
+                /* Connect us to all of sibling's siblings. */
+                /* 将兄弟的兄弟加入到自己的掩码图中 */
+                n-&gt;sibling_bitmap = clib_bitmap_ori (n-&gt;sibling_bitmap, si);
+            }));
+            /* *INDENT-ON* */
+
+            /* Connect sibling to us. */
+            sib-&gt;sibling_bitmap = clib_bitmap_ori (sib-&gt;sibling_bitmap, n-&gt;index);
+
+            /* Connect us to sibling. */
+            /* 将兄弟设置到自己的掩码图中 */
+            n-&gt;sibling_bitmap = clib_bitmap_ori (n-&gt;sibling_bitmap, sib-&gt;index);
+        }
+    }
+
+    /* Resolve next names into next indices. */
+    /* 根据下一跳名字数组构建下一跳掩码数组 */
+    for (ni = 0; ni &lt; vec_len (nm-&gt;nodes); ni++)
+    {
+        uword i;
+
+        n = vec_elt (nm-&gt;nodes, ni);
+
+        for (i = 0; i &lt; vec_len (n-&gt;next_node_names); i++)
+        {
+            char *a = n-&gt;next_node_names[i];
+
+            if (!a)
+                continue;
+            /* 构建下一跳索引数组 */
+            if (~0 == vlib_node_add_named_next_with_slot (vm, n-&gt;index, a, i))
+            {
+                error = clib_error_create
+                        (&quot;node `%v' refers to unknown node `%s'&quot;, n-&gt;name, a);
+                goto done;
+            }
+        }
+
+        vec_free (n-&gt;next_node_names);
+    }
+
+    /* Set previous node pointers. */
+    /* 将下一跳节点指向自己，即构建前驱关系 */
+    for (ni = 0; ni &lt; vec_len (nm-&gt;nodes); ni++)
+    {
+        vlib_node_t *n_next;
+        uword i;
+
+        n = vec_elt (nm-&gt;nodes, ni);
+
+        for (i = 0; i &lt; vec_len (n-&gt;next_nodes); i++)
+        {
+            if (n-&gt;next_nodes[i] &gt;= vec_len (nm-&gt;nodes))
+                continue;
+
+            n_next = vec_elt (nm-&gt;nodes, n-&gt;next_nodes[i]);
+            n_next-&gt;prev_node_bitmap =
+                clib_bitmap_ori (n_next-&gt;prev_node_bitmap, n-&gt;index);
+        }
+    }
+    /* 初始化每一个内部节点，构建起下一跳节点的运行信息 */
+    {
+        vlib_next_frame_t *nf;
+        vlib_node_runtime_t *r;
+        vlib_node_t *next;
+        uword i;
+
+        vec_foreach (r, nm-&gt;nodes_by_type[VLIB_NODE_TYPE_INTERNAL])
+        {
+            if (r-&gt;n_next_nodes == 0)
+                continue;
+
+            n = vlib_get_node (vm, r-&gt;node_index);
+            /* 根据运行索引获取其在next_frames的起始地址 */
+            nf = vec_elt_at_index (nm-&gt;next_frames, r-&gt;next_frame_index);
+            /* 遍历每一个下一跳 */
+            for (i = 0; i &lt; vec_len (n-&gt;next_nodes); i++)
+            {
+                next = vlib_get_node (vm, n-&gt;next_nodes[i]);
+
+                /* Validate node runtime indices are correctly initialized. */
+                ASSERT (nf[i].node_runtime_index == next-&gt;runtime_index);
+
+                nf[i].flags = 0;
+                if (next-&gt;flags &amp; VLIB_NODE_FLAG_FRAME_NO_FREE_AFTER_DISPATCH)
+                    nf[i].flags |= VLIB_FRAME_NO_FREE_AFTER_DISPATCH;
+            }
+        }
+    }
+
+done:
+    return error;
+}
+
+</code></pre>
+
+<p>vlib_node_add_named_next_with_slot</p>
+
+<pre><code class="language-c">/* Add named next node to given node in given slot. */
+/* 添加一个命名的下一跳到节点node指定的slot中，如果slot没有指定，
+ * 则分配。
+ */                              
+uword
+vlib_node_add_named_next_with_slot (vlib_main_t * vm,
+                                    uword node, char *name, uword slot)
+{
+    vlib_node_main_t *nm;
+    vlib_node_t *n, *n_next;
+
+    nm = &amp;vm-&gt;node_main;
+    n = vlib_get_node (vm, node);
+
+    n_next = vlib_get_node_by_name (vm, (u8 *) name);
+    if (!n_next)
+    {
+        if (nm-&gt;flags &amp; VLIB_NODE_MAIN_RUNTIME_STARTED)
+            return ~0;
+
+        if (slot == ~0)
+            slot = clib_max (vec_len (n-&gt;next_node_names),
+                             vec_len (n-&gt;next_nodes));
+        vec_validate (n-&gt;next_node_names, slot);
+        n-&gt;next_node_names[slot] = name;
+        return slot;
+    }
+
+    return vlib_node_add_next_with_slot (vm, node, n_next-&gt;index, slot);
+}
+
+</code></pre>
+
+<p>vlib_node_add_next_with_slot</p>
+
+<pre><code class="language-c">/* Add next node to given node in given slot. */
+uword
+vlib_node_add_next_with_slot (vlib_main_t * vm,
+                              uword node_index,
+                              uword next_node_index, uword slot)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    vlib_node_t *node, *next;
+    uword *p;
+
+    node = vec_elt (nm-&gt;nodes, node_index);
+    next = vec_elt (nm-&gt;nodes, next_node_index);
+
+    /* Runtime has to be initialized. */
+    ASSERT (nm-&gt;flags &amp; VLIB_NODE_MAIN_RUNTIME_STARTED);
+    /* 根据下一跳节点索引快速判断该节点是否在本节点的下一跳数组中 */
+    if ((p = hash_get (node-&gt;next_slot_by_node, next_node_index)))
+    {
+        /* Next already exists: slot must match. */
+        /* 已经存在，返回该slot */
+        if (slot != ~0)
+            ASSERT (slot == p[0]);
+        return p[0];
+    }
+
+    /* 不存在的话，将下一个可用位置分给该next_node_index节点 */
+    if (slot == ~0)
+        slot = vec_len (node-&gt;next_nodes);
+
+    vec_validate_init_empty (node-&gt;next_nodes, slot, ~0);
+    vec_validate (node-&gt;n_vectors_by_next_node, slot);
+    /* 添加一个下一跳索引 */
+    node-&gt;next_nodes[slot] = next_node_index;
+    hash_set (node-&gt;next_slot_by_node, next_node_index, slot);
+    /* 构建运行信息 */
+    vlib_node_runtime_update (vm, node_index, slot);
+
+    /* 建立反向关系，设置next_node_index节点的位数组prev_node_bitmap中node_index为1 */
+    next-&gt;prev_node_bitmap = clib_bitmap_ori (next-&gt;prev_node_bitmap,
+                             node_index);
+
+    /* Siblings all get same node structure. */
+    /* 处理本节点的兄弟节点，兄弟节点都指向该next_node_index节点 
+     * 存在深度的递归调用该函数。最差情况下，一个兄弟节点递归一次。
+     */
+    {
+        uword sib_node_index, sib_slot;
+        vlib_node_t *sib_node;
+        /* *INDENT-OFF* */
+        clib_bitmap_foreach (sib_node_index, node-&gt;sibling_bitmap, (
+        {
+            sib_node = vec_elt (nm-&gt;nodes, sib_node_index);
+            if (sib_node != node)
+            {
+                sib_slot = vlib_node_add_next_with_slot (vm, sib_node_index, next_node_index, slot);
+                ASSERT (sib_slot == slot);
+            }
+        }));
+        /* *INDENT-ON* */
+    }
+
+    return slot;
+}
+
+</code></pre>
+
+<p>vlib_node_runtime_update</p>
+
+<pre><code class="language-c">/* 增加了节点，需要更新运行时数据，next_index不是节点索引，而是槽位号slot */
+static void
+vlib_node_runtime_update (vlib_main_t * vm, u32 node_index, u32 next_index)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    vlib_node_runtime_t *r, *s;
+    vlib_node_t *node, *next_node;
+    vlib_next_frame_t *nf;
+    vlib_pending_frame_t *pf;
+    i32 i, j, n_insert;
+
+    ASSERT (vlib_get_thread_index () == 0);
+    /* 开启sync过程 */
+    vlib_worker_thread_barrier_sync (vm);
+
+    node = vec_elt (nm-&gt;nodes, node_index);
+    r = vlib_node_get_runtime (vm, node_index);
+    /* 新增多少个下一跳节点 */
+    n_insert = vec_len (node-&gt;next_nodes) - r-&gt;n_next_nodes;
+    if (n_insert &gt; 0)
+    {
+        i = r-&gt;next_frame_index + r-&gt;n_next_nodes;
+        /* 在数组中间插入n_insert个节点 */
+        vec_insert (nm-&gt;next_frames, n_insert, i);
+
+        /* Initialize newly inserted next frames. */
+        for (j = 0; j &lt; n_insert; j++)
+            vlib_next_frame_init (nm-&gt;next_frames + i + j);
+
+        /* Relocate other next frames at higher indices. */
+        for (j = 0; j &lt; vec_len (nm-&gt;nodes); j++)
+        {
+            s = vlib_node_get_runtime (vm, j);
+            if (j != node_index &amp;&amp; s-&gt;next_frame_index &gt;= i)
+                s-&gt;next_frame_index += n_insert;
+        }
+
+        /* Pending frames may need to be relocated also. */
+        /* 修改正在运行的帧的索引 */
+        vec_foreach (pf, nm-&gt;pending_frames)
+        {
+            if (pf-&gt;next_frame_index != VLIB_PENDING_FRAME_NO_NEXT_FRAME
+                    &amp;&amp; pf-&gt;next_frame_index &gt;= i)
+                pf-&gt;next_frame_index += n_insert;
+        }
+        /* *INDENT-OFF* */
+        pool_foreach (pf, nm-&gt;suspended_process_frames, (
+        {
+            if (pf-&gt;next_frame_index != ~0 &amp;&amp; pf-&gt;next_frame_index &gt;= i)
+                pf-&gt;next_frame_index += n_insert;
+        }));
+        /* *INDENT-ON* */
+
+        r-&gt;n_next_nodes = vec_len (node-&gt;next_nodes);
+    }
+
+    /* Set frame's node runtime index. */
+    /* 设置节点的运行时索引，next_index是槽位号，不是索引 */
+    next_node = vlib_get_node (vm, node-&gt;next_nodes[next_index]);
+    nf = nm-&gt;next_frames + r-&gt;next_frame_index + next_index;
+    nf-&gt;node_runtime_index = next_node-&gt;runtime_index;
+
+    vlib_worker_thread_node_runtime_update ();
+
+    vlib_worker_thread_barrier_release (vm);
+}
+
+</code></pre>
+
+<h2 id="4-在vlib-main-or-worker-loop函数运行后添加节点">4. 在vlib_main_or_worker_loop函数运行后添加节点</h2>
+
+<p>除了使用node注册宏进行节点的注册外，还可以使用如下函数按需注册，
+注册一个新的VLIB_NODE_TYPE_INTERNAL节点后需要调用vlib_worker_thread_node_runtime_update
+或者vlib_node_add_next_with_slot开启一轮新的节点编排工作，所有的线程都要进行。
+注册VLIB_NODE_TYPE_PROCESS节点后，需要调用vlib_start_process函数启动协程。</p>
+
+<p>vlib_register_node</p>
+
+<pre><code class="language-c">/* Register new packet processing node. */
+/* 动态注册一个新的节点 */
+u32
+vlib_register_node (vlib_main_t * vm, vlib_node_registration_t * r)
+{
+    register_node (vm, r);
+    return r-&gt;index;
+}
+
+</code></pre>
+
+<p>vlib_node_add_next_with_slot</p>
+
+<p>该函数会更新node graph以及runtime 信息，还会通知其它线程进行sync同步来完成消息的变更</p>
+
+<pre><code class="language-c">/* Add next node to given node in given slot. */
+uword
+vlib_node_add_next_with_slot (vlib_main_t * vm,
+                              uword node_index,
+                              uword next_node_index, uword slot)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    vlib_node_t *node, *next;
+    uword *p;
+
+    node = vec_elt (nm-&gt;nodes, node_index);
+    next = vec_elt (nm-&gt;nodes, next_node_index);
+
+    /* Runtime has to be initialized. */
+    ASSERT (nm-&gt;flags &amp; VLIB_NODE_MAIN_RUNTIME_STARTED);
+    /* 根据下一跳节点索引快速判断该节点是否在本节点的下一跳数组中 */
+    if ((p = hash_get (node-&gt;next_slot_by_node, next_node_index)))
+    {
+        /* Next already exists: slot must match. */
+        /* 已经存在，返回该slot */
+        if (slot != ~0)
+            ASSERT (slot == p[0]);
+        return p[0];
+    }
+
+    /* 不存在的话，将下一个可用位置分给该next_node_index节点 */
+    if (slot == ~0)
+        slot = vec_len (node-&gt;next_nodes);
+
+    vec_validate_init_empty (node-&gt;next_nodes, slot, ~0);
+    vec_validate (node-&gt;n_vectors_by_next_node, slot);
+    /* 添加一个下一跳索引 */
+    node-&gt;next_nodes[slot] = next_node_index;
+    hash_set (node-&gt;next_slot_by_node, next_node_index, slot);
+    /* 通知其它线程开始进行运行状态重建 */
+    vlib_node_runtime_update (vm, node_index, slot);
+
+    /* 建立反向关系，设置next_node_index节点的位数组prev_node_bitmap中node_index为1 */
+    next-&gt;prev_node_bitmap = clib_bitmap_ori (next-&gt;prev_node_bitmap,
+                             node_index);
+
+    /* Siblings all get same node structure. */
+    /* 处理本节点的兄弟节点，兄弟节点都指向该next_node_index节点 
+     * 存在深度的递归调用该函数。最差情况下，一个兄弟节点递归一次。
+     */
+    {
+        uword sib_node_index, sib_slot;
+        vlib_node_t *sib_node;
+        /* *INDENT-OFF* */
+        clib_bitmap_foreach (sib_node_index, node-&gt;sibling_bitmap, (
+        {
+            sib_node = vec_elt (nm-&gt;nodes, sib_node_index);
+            if (sib_node != node)
+            {
+                sib_slot = vlib_node_add_next_with_slot (vm, sib_node_index, next_node_index, slot);
+                ASSERT (sib_slot == slot);
+            }
+        }));
+        /* *INDENT-ON* */
+    }
+
+    return slot;
+}
+
+</code></pre>
+
+<p>vlib_node_runtime_update</p>
+
+<pre><code class="language-c">/* 增加了节点，需要更新运行时数据，next_index不是节点索引，而是槽位号slot */
+static void
+vlib_node_runtime_update (vlib_main_t * vm, u32 node_index, u32 next_index)
+{
+    vlib_node_main_t *nm = &amp;vm-&gt;node_main;
+    vlib_node_runtime_t *r, *s;
+    vlib_node_t *node, *next_node;
+    vlib_next_frame_t *nf;
+    vlib_pending_frame_t *pf;
+    i32 i, j, n_insert;
+
+    ASSERT (vlib_get_thread_index () == 0);
+    /* 开启sync过程 */
+    vlib_worker_thread_barrier_sync (vm);
+
+    node = vec_elt (nm-&gt;nodes, node_index);
+    r = vlib_node_get_runtime (vm, node_index);
+    /* 新增多少个下一跳节点 */
+    n_insert = vec_len (node-&gt;next_nodes) - r-&gt;n_next_nodes;
+    if (n_insert &gt; 0)
+    {
+        i = r-&gt;next_frame_index + r-&gt;n_next_nodes;
+        /* 在数组中间插入n_insert个节点 */
+        vec_insert (nm-&gt;next_frames, n_insert, i);
+
+        /* Initialize newly inserted next frames. */
+        for (j = 0; j &lt; n_insert; j++)
+            vlib_next_frame_init (nm-&gt;next_frames + i + j);
+
+        /* Relocate other next frames at higher indices. */
+        for (j = 0; j &lt; vec_len (nm-&gt;nodes); j++)
+        {
+            s = vlib_node_get_runtime (vm, j);
+            if (j != node_index &amp;&amp; s-&gt;next_frame_index &gt;= i)
+                s-&gt;next_frame_index += n_insert;
+        }
+
+        /* Pending frames may need to be relocated also. */
+        /* 修改正在运行的帧的索引 */
+        vec_foreach (pf, nm-&gt;pending_frames)
+        {
+            if (pf-&gt;next_frame_index != VLIB_PENDING_FRAME_NO_NEXT_FRAME
+                    &amp;&amp; pf-&gt;next_frame_index &gt;= i)
+                pf-&gt;next_frame_index += n_insert;
+        }
+        /* *INDENT-OFF* */
+        pool_foreach (pf, nm-&gt;suspended_process_frames, (
+        {
+            if (pf-&gt;next_frame_index != ~0 &amp;&amp; pf-&gt;next_frame_index &gt;= i)
+                pf-&gt;next_frame_index += n_insert;
+        }));
+        /* *INDENT-ON* */
+
+        r-&gt;n_next_nodes = vec_len (node-&gt;next_nodes);
+    }
+
+    /* Set frame's node runtime index. */
+    /* 设置节点的运行时索引，next_index是槽位号，不是索引 */
+    next_node = vlib_get_node (vm, node-&gt;next_nodes[next_index]);
+    nf = nm-&gt;next_frames + r-&gt;next_frame_index + next_index;
+    nf-&gt;node_runtime_index = next_node-&gt;runtime_index;
+
+    vlib_worker_thread_node_runtime_update ();
+
+    vlib_worker_thread_barrier_release (vm);
+}
+
+</code></pre>
+
+<p>vlib_worker_thread_node_runtime_update</p>
+
+<pre><code class="language-c">/* 当有新的节点添加时，需要通知worker线程进行重建运行环境 */
+void
+vlib_worker_thread_node_runtime_update (void)
+{
+    /*
+     * Make a note that we need to do a node runtime update
+     * prior to releasing the barrier.
+     */
+    vlib_global_main.need_vlib_worker_thread_node_runtime_update = 1;
+}
+
+</code></pre>
+
+<h2 id="5-sync过程中处理节点信息变化同步">5. sync过程中处理节点信息变化同步</h2>
+
+<p>node信息发生变化后，main线程会通知其它线程进入sync状态，
+need_vlib_worker_thread_node_runtime_update标志被设置后，会进行runtime信息重建</p>
+
+<p>vlib_worker_thread_barrier_release</p>
+
+<pre><code class="language-c">/* sync过程结束函数*/
+void
+vlib_worker_thread_barrier_release (vlib_main_t * vm)
+{
+    f64 deadline;
+    f64 now;
+    f64 minimum_open;
+    f64 t_entry;
+    f64 t_closed_total;
+    f64 t_update_main = 0.0;
+    int refork_needed = 0;
+
+    if (vec_len (vlib_mains) &lt; 2)
+        return;
+
+    ASSERT (vlib_get_thread_index () == 0);
+
+
+    now = vlib_time_now (vm);
+    /* 一对sync与release调用时间段 */
+    t_entry = now - vm-&gt;barrier_epoch;
+    /* 减少递归深度，如果大于0表示sync还没结束 */
+    if (--vlib_worker_threads[0].recursion_level &gt; 0)
+    {
+        barrier_trace_release_rec (t_entry);
+        return;
+    }
+
+    /* Update (all) node runtimes before releasing the barrier, if needed */
+    /* 设置了运行数据统计收集标志，将worker线程的运行信息同步到main线程中,同时通知worker线程进行重建 */
+    if (vm-&gt;need_vlib_worker_thread_node_runtime_update)
+    {
+        /*
+         * Lock stat segment here, so we's safe when
+         * rebuilding the stat segment node clones from the
+         * stat thread...
+         */
+        vlib_stat_segment_lock ();
+
+        /* Do stats elements on main thread */
+        /* 在mian线程中进行统计信息同步 */
+        worker_thread_node_runtime_update_internal ();
+        vm-&gt;need_vlib_worker_thread_node_runtime_update = 0;
+
+        /* Do per thread rebuilds in parallel */
+        refork_needed = 1;
+        /* 设置vlib_worker_threads-&gt;node_reforks_required通知 worker线程进行runtime信息重建 */
+        clib_atomic_fetch_add (vlib_worker_threads-&gt;node_reforks_required,
+                               (vec_len (vlib_mains) - 1));
+        now = vlib_time_now (vm);
+        t_update_main = now - vm-&gt;barrier_epoch;
+    }
+
+    ......
+
+    /* Wait for reforks before continuing */
+    /* 等待worker线程重建 */
+    if (refork_needed)
+    {
+        now = vlib_time_now (vm);
+
+        deadline = now + BARRIER_SYNC_TIMEOUT;
+
+        while (*vlib_worker_threads-&gt;node_reforks_required &gt; 0)
+        {
+            if ((now = vlib_time_now (vm)) &gt; deadline)
+            {
+                fformat (stderr, &quot;%s: worker thread refork deadlock\n&quot;,
+                         __FUNCTION__);
+                os_panic ();
+            }
+        }
+        vlib_stat_segment_unlock ();
+    }
+    ......
+}
+
+</code></pre>
+
+<p>vlib_worker_thread_barrier_check</p>
+
+<p>worker线程调用函数在sync期间进行runtime信息重建</p>
+
+<pre><code class="language-c">static inline void
+vlib_worker_thread_barrier_check (void)
+{
+    /* 如果main线程已经启动了sync过程，则本线程需要进入sync状态 */
+    if (PREDICT_FALSE (*vlib_worker_threads-&gt;wait_at_barrier))
+    {
+        ......
+
+        if (PREDICT_FALSE (*vlib_worker_threads-&gt;node_reforks_required))
+        {
+            ......
+            /* 进行本线程runtime信息重建 */
+            vlib_worker_thread_node_refork ();
+            clib_atomic_fetch_add (vlib_worker_threads-&gt;node_reforks_required,-1);
+            while (*vlib_worker_threads-&gt;node_reforks_required);
+        }
+        ......
+    }
+}
+
+</code></pre>
+
+<p>vlib_worker_thread_node_refork</p>
+
+<pre><code class="language-c">/* 重建所有的worker线程运行信息 */
+void
+vlib_worker_thread_node_refork (void)
+{
+    vlib_main_t *vm, *vm_clone;
+    vlib_node_main_t *nm, *nm_clone;
+    vlib_node_t **old_nodes_clone;
+    vlib_node_runtime_t *rt, *old_rt;
+
+    vlib_node_t *new_n_clone;
+
+    int j;
+
+    vm = vlib_mains[0];
+    nm = &amp;vm-&gt;node_main;
+    vm_clone = vlib_get_main ();
+    nm_clone = &amp;vm_clone-&gt;node_main;
+
+    /* Re-clone error heap */
+    u64 *old_counters = vm_clone-&gt;error_main.counters;
+    u64 *old_counters_all_clear = vm_clone-&gt;error_main.counters_last_clear;
+
+    clib_memcpy_fast (&amp;vm_clone-&gt;error_main, &amp;vm-&gt;error_main,
+                      sizeof (vm-&gt;error_main));
+    j = vec_len (vm-&gt;error_main.counters) - 1;
+    vec_validate_aligned (old_counters, j, CLIB_CACHE_LINE_BYTES);
+    vec_validate_aligned (old_counters_all_clear, j, CLIB_CACHE_LINE_BYTES);
+    vm_clone-&gt;error_main.counters = old_counters;
+    vm_clone-&gt;error_main.counters_last_clear = old_counters_all_clear;
+
+    nm_clone = &amp;vm_clone-&gt;node_main;
+    /* 删除所有等待运行的帧，重建，一般来说，该向量为空，因为只有处理完所有的帧之后才会进入临界区 */
+    vec_free (nm_clone-&gt;next_frames);
+    nm_clone-&gt;next_frames = vec_dup_aligned (nm-&gt;next_frames,
+                            CLIB_CACHE_LINE_BYTES);
+
+    for (j = 0; j &lt; vec_len (nm_clone-&gt;next_frames); j++)
+    {
+        vlib_next_frame_t *nf = &amp;nm_clone-&gt;next_frames[j];
+        u32 save_node_runtime_index;
+        u32 save_flags;
+
+        save_node_runtime_index = nf-&gt;node_runtime_index;
+        save_flags = nf-&gt;flags &amp; VLIB_FRAME_NO_FREE_AFTER_DISPATCH;
+        vlib_next_frame_init (nf);
+        nf-&gt;node_runtime_index = save_node_runtime_index;
+        nf-&gt;flags = save_flags;
+    }
+
+    old_nodes_clone = nm_clone-&gt;nodes;
+    nm_clone-&gt;nodes = 0;
+
+    /* re-fork nodes */
+
+    /* Allocate all nodes in single block for speed */
+    new_n_clone =
+        clib_mem_alloc_no_fail (vec_len (nm-&gt;nodes) * sizeof (*new_n_clone));
+    for (j = 0; j &lt; vec_len (nm-&gt;nodes); j++)
+    {
+        vlib_node_t *old_n_clone;
+        vlib_node_t *new_n;
+
+        new_n = nm-&gt;nodes[j];
+        old_n_clone = old_nodes_clone[j];
+
+        clib_memcpy_fast (new_n_clone, new_n, sizeof (*new_n));
+        /* none of the copied nodes have enqueue rights given out */
+        new_n_clone-&gt;owner_node_index = VLIB_INVALID_NODE_INDEX;
+
+        if (j &gt;= vec_len (old_nodes_clone))
+        {
+            /* new node, set to zero */
+            clib_memset (&amp;new_n_clone-&gt;stats_total, 0,
+                         sizeof (new_n_clone-&gt;stats_total));
+            clib_memset (&amp;new_n_clone-&gt;stats_last_clear, 0,
+                         sizeof (new_n_clone-&gt;stats_last_clear));
+        }
+        else
+        {
+            /* Copy stats if the old data is valid */
+            clib_memcpy_fast (&amp;new_n_clone-&gt;stats_total,
+                              &amp;old_n_clone-&gt;stats_total,
+                              sizeof (new_n_clone-&gt;stats_total));
+            clib_memcpy_fast (&amp;new_n_clone-&gt;stats_last_clear,
+                              &amp;old_n_clone-&gt;stats_last_clear,
+                              sizeof (new_n_clone-&gt;stats_last_clear));
+
+            /* keep previous node state */
+            new_n_clone-&gt;state = old_n_clone-&gt;state;
+        }
+        vec_add1 (nm_clone-&gt;nodes, new_n_clone);
+        new_n_clone++;
+    }
+    /* Free the old node clones */
+    clib_mem_free (old_nodes_clone[0]);
+
+    vec_free (old_nodes_clone);
+
+
+    /* re-clone internal nodes */
+    old_rt = nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INTERNAL];
+    nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INTERNAL] =
+        vec_dup_aligned (nm-&gt;nodes_by_type[VLIB_NODE_TYPE_INTERNAL],
+                         CLIB_CACHE_LINE_BYTES);
+
+    vec_foreach (rt, nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INTERNAL])
+    {
+        vlib_node_t *n = vlib_get_node (vm, rt-&gt;node_index);
+        rt-&gt;thread_index = vm_clone-&gt;thread_index;
+        /* copy runtime_data, will be overwritten later for existing rt */
+        if (n-&gt;runtime_data &amp;&amp; n-&gt;runtime_data_bytes &gt; 0)
+            clib_memcpy_fast (rt-&gt;runtime_data, n-&gt;runtime_data,
+                              clib_min (VLIB_NODE_RUNTIME_DATA_SIZE,
+                                        n-&gt;runtime_data_bytes));
+    }
+
+    for (j = 0; j &lt; vec_len (old_rt); j++)
+    {
+        rt = vlib_node_get_runtime (vm_clone, old_rt[j].node_index);
+        rt-&gt;state = old_rt[j].state;
+        clib_memcpy_fast (rt-&gt;runtime_data, old_rt[j].runtime_data,
+                          VLIB_NODE_RUNTIME_DATA_SIZE);
+    }
+
+    vec_free (old_rt);
+
+    /* re-clone input nodes */
+    old_rt = nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INPUT];
+    nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INPUT] =
+        vec_dup_aligned (nm-&gt;nodes_by_type[VLIB_NODE_TYPE_INPUT],
+                         CLIB_CACHE_LINE_BYTES);
+
+    vec_foreach (rt, nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_INPUT])
+    {
+        vlib_node_t *n = vlib_get_node (vm, rt-&gt;node_index);
+        rt-&gt;thread_index = vm_clone-&gt;thread_index;
+        /* copy runtime_data, will be overwritten later for existing rt */
+        if (n-&gt;runtime_data &amp;&amp; n-&gt;runtime_data_bytes &gt; 0)
+            clib_memcpy_fast (rt-&gt;runtime_data, n-&gt;runtime_data,
+                              clib_min (VLIB_NODE_RUNTIME_DATA_SIZE,
+                                        n-&gt;runtime_data_bytes));
+    }
+
+    for (j = 0; j &lt; vec_len (old_rt); j++)
+    {
+        rt = vlib_node_get_runtime (vm_clone, old_rt[j].node_index);
+        rt-&gt;state = old_rt[j].state;
+        clib_memcpy_fast (rt-&gt;runtime_data, old_rt[j].runtime_data,
+                          VLIB_NODE_RUNTIME_DATA_SIZE);
+    }
+
+    vec_free (old_rt);
+
+    /* re-clone pre-input nodes */
+    old_rt = nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_PRE_INPUT];
+    nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_PRE_INPUT] =
+        vec_dup_aligned (nm-&gt;nodes_by_type[VLIB_NODE_TYPE_PRE_INPUT],
+                         CLIB_CACHE_LINE_BYTES);
+
+    vec_foreach (rt, nm_clone-&gt;nodes_by_type[VLIB_NODE_TYPE_PRE_INPUT])
+    {
+        vlib_node_t *n = vlib_get_node (vm, rt-&gt;node_index);
+        rt-&gt;thread_index = vm_clone-&gt;thread_index;
+        /* copy runtime_data, will be overwritten later for existing rt */
+        if (n-&gt;runtime_data &amp;&amp; n-&gt;runtime_data_bytes &gt; 0)
+            clib_memcpy_fast (rt-&gt;runtime_data, n-&gt;runtime_data,
+                              clib_min (VLIB_NODE_RUNTIME_DATA_SIZE,
+                                        n-&gt;runtime_data_bytes));
+    }
+
+    for (j = 0; j &lt; vec_len (old_rt); j++)
+    {
+        rt = vlib_node_get_runtime (vm_clone, old_rt[j].node_index);
+        rt-&gt;state = old_rt[j].state;
+        clib_memcpy_fast (rt-&gt;runtime_data, old_rt[j].runtime_data,
+                          VLIB_NODE_RUNTIME_DATA_SIZE);
+    }
+
+    vec_free (old_rt);
+
+    nm_clone-&gt;processes = vec_dup_aligned (nm-&gt;processes,
+                                           CLIB_CACHE_LINE_BYTES);
+}
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/vpp-feature/">vpp feature节点以及数据走向控制</a></li>
+        
+        <li><a href="/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a></li>
+        
+        <li><a href="/posts/vpp-sample-plugin/">vpp sample plugin</a></li>
+        
+        <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
+        
+        <li><a href="/posts/kernel-dev/">kernel 字符设备驱动</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/plugin">plugin</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析">vpp 节点报文处理流程分析</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin">vpp sample plugin</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install">WCG-deps-install</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-dev/" title="kernel 字符设备驱动">kernel 字符设备驱动</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/affinity/" title="cpu亲和性">cpu亲和性</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制">linux内核定制</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.google.com/" title="google搜索">google搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.mdeditor.com/" title="Markdown在线编辑器">MdEditor</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust教程">rust教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>
