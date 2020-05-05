@@ -6,10 +6,24 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 30 Apr 2020 10:14:26 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 05 May 2020 16:17:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>github加速</title>
+      <link>https://workerwork.github.io/posts/github-fast/</link>
+      <pubDate>Tue, 05 May 2020 16:17:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/github-fast/</guid>
+      <description>1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL(https://github.com/jiangxufeng/v2rayL)和ghelper
+使用 https 的时候，就是使用 https 协议复制仓库的时候
+git config --global http.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global https.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global http.proxy &#39;vmess://127.0.0.1:1081&#39; git config --global https.proxy &#39;vmess://127.0.0.1:1081&#39;  也可以直接修改用户主目录下的 .gitconfig 文件
+[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
+git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
+git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时</description>
+    </item>
     
     <item>
       <title>vpp node-graph编排过程</title>
