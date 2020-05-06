@@ -91,7 +91,7 @@
                         <div class="post-content">
                             
 
-<h2 id="1-安装ubuntu16-04-18-04-并更新">1. 安装ubuntu16.04(18.04)并更新</h2>
+<h2 id="1-安装ubuntu16-04-18-04-并更新依赖">1. 安装ubuntu16.04(18.04)并更新依赖</h2>
 
 <pre><code class="language-shell"># sudo apt update
 
@@ -102,9 +102,9 @@
  
 # sudo apt-get install cmake g++ git automake libtool libgc-dev bison flex libfl-dev \
                        libgmp-dev libboost-dev libboost-iostreams-dev libboost-graph-dev \
-                       llvm pkg-config python python-scapy python-ipaddr python-ply tcpdump curl  -y
+                       llvm pkg-config python python-scapy python-ipaddr python-ply tcpdump curl -y
  
-# sudo apt-get install libreadline6 libreadline6-dev  python-pip  -y 
+# sudo apt-get install libreadline6 libreadline6-dev  python-pip python-scapy -y 
  
 # sudo pip install psutil
 # sudo pip install crcmod
