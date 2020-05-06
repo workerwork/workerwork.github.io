@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>p4 on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/p4/</link>
+    <description>Recent content in p4 on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 06 May 2020 18:00:52 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/p4/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>P4环境搭建</title>
+      <link>https://workerwork.github.io/posts/p4/</link>
+      <pubDate>Wed, 06 May 2020 18:00:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/p4/</guid>
+      <description>1. 安装ubuntu16.04(18.04)并更新 # sudo apt update  2. 执行安装脚本 #!/bin/bash ############################################################## # author : P4 Lang # modified by: SEU Hox Zheng ############################################################## # 打印脚本命令. set -x # 在有错误输出时停止. set -e # 设置相关路径和版本变量 P4_HOME=$HOME/work/P4 BMV2_COMMIT=&amp;quot;7e25eeb19d01eee1a8e982dc7ee90ee438c10a05&amp;quot; PI_COMMIT=&amp;quot;219b3d67299ec09b49f433d7341049256ab5f512&amp;quot; P4C_COMMIT=&amp;quot;48a57a6ae4f96961b74bd13f6bdeac5add7bb815&amp;quot; PROTOBUF_COMMIT=&amp;quot;v3.2.0&amp;quot; GRPC_COMMIT=&amp;quot;v1.3.2&amp;quot; #获得cpu核数，与某些软件的编译选项相关 NUM_CORES=`grep -c ^processor /proc/cpuinfo` cd $P4_HOME # 安装Mininet git clone https://github.com/mininet/mininet mininet cd mininet sudo ./util/install.sh -nwv cd .. # 安装Protobuf git clone https://github.com/google/protobuf.git cd protobuf git checkout ${PROTOBUF_COMMIT} export CFLAGS=&amp;quot;-Os&amp;quot; export CXXFLAGS=&amp;quot;-Os&amp;quot; export LDFLAGS=&amp;quot;-Wl,-s&amp;quot; .</description>
+    </item>
+    
+  </channel>
+</rss>

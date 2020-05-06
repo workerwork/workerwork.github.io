@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/p4/" title="P4环境搭建" >P4环境搭建</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月6日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/p4">p4</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装ubuntu16.04(18.04)并更新 # sudo apt update  2. 执行安装脚本 #!/bin/bash ############################################################## # author : P4 Lang # modified by: SEU Hox Zheng ############################################################## # 打印脚本命令. set -x # 在有错误输出时停止. set -e # 设置相关路径和版本变量 P4_HOME=$HOME/work/P4 BMV2_COMMIT=&quot;7e25eeb19d01eee1a8e982dc7ee90ee438c10a05&quot; PI_COMMIT=&quot;219b3d67299ec09b49f433d7341049256ab5f512&quot; P4C_COMMIT=&quot;48a57a6ae4f96961b74bd13f6bdeac5add7bb815&quot; PROTOBUF_COMMIT=&quot;v3.2.0&quot; GRPC_COMMIT=&quot;v1.3.2&quot; #获得cpu核数，与某些软件的编译选项相关 NUM_CORES=`grep -c ^processor /proc/cpuinfo` cd $P4_HOME # 安装Mininet git clone https://github.com/mininet/mininet mininet cd mininet sudo ./util/install.sh -nwv cd .. # 安装Protobuf git clone https://github.com/google/protobuf.git cd protobuf git checkout ${PROTOBUF_COMMIT} export CFLAGS=&quot;-Os&quot; export CXXFLAGS=&quot;-Os&quot; export LDFLAGS=&quot;-Wl,-s&quot; .……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/p4/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/github-fast/" title="github加速" >github加速</a>
                                 </h1>
                             </header>
@@ -308,29 +331,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-module/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机" >kvm虚拟机</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月15日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96">虚拟化</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 检查CPU是否支持kvm # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes!&quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo　//epel源 # yum clean all　//清空yum缓存  3. 安装虚拟机管理工具和依赖 # yum -y install qemu-kvm //KVM主程序，KVM虚拟化模块 # yum -y install virt-install //安装虚拟机的工具 # 这个包主要安装了virt-install、virt-clone和virt-xml命令，分别用于安装虚拟机系统、克隆虚拟机和编辑虚拟机的xml配置文件。 # yum -y install virt-manager //KVM图形化管理工具 # yum -y install libvirt //虚拟化服务库 # libvirt是用于管理虚拟化平台的开源的API（libvirt API），后台程序（libvirtd进程）和管理工具（virsh工具集）。 # 它可以用于管理KVM、Xen、VMware ESX，QEMU和其他虚拟化技术。这些API在云计算的解决方案中广泛使用。 # libvirtd进程主要实现远程代理、本地环境初始化、根据环境注册各种Driver（qemu、xen、storage）的实现。 # virsh工具集主要用于管理、操作虚拟主机。 # yum -y install libguestfs-tools //虚拟机的系统管理工具 # libguestfs -tools是一组Linux下的C语言的API，用来访问虚拟机的磁盘映像文件。 # 该工具包内包含的工具有virt-cat、virt-df、virt-list、virt-copy-in、virt-copy-out、 # virt-edit、guestfs、guestmount、virt-list-filesystems、virt-list-partitions等工具。 # 该工具可以在不启动KVM guest主机的情况下，直接查看guest主机内的文内容，也可以直接向img镜像中写入文件和复制文件到外面的物理机， # 也可以将guest的镜像文件挂载，功能相当强大 # yum -y install libvirt-python //python调用libvirt虚拟化服务的api接口库文件  4.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/kvm/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -383,6 +383,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/p4/" title="P4环境搭建">P4环境搭建</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
     </li>
     
@@ -418,10 +422,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
         <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -449,6 +449,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <li>
         <a href="https://workerwork.github.io/categories/linux/">linux(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
     </li>
     
     <li>
@@ -541,6 +545,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
     
     <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
     

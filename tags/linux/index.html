@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/p4/">P4环境搭建</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月6日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/p4">p4</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装ubuntu16.04(18.04)并更新 # sudo apt update  2. 执行安装脚本 #!/bin/bash ############################################################## # author : P4 Lang # modified by: SEU Hox Zheng ############################################################## # 打印脚本命令. set -x # 在有错误输出时停止. set -e # 设置相关路径和版本变量 P4_HOME=$HOME/work/P4 BMV2_COMMIT=&quot;7e25eeb19d01eee1a8e982dc7ee90ee438c10a05&quot; PI_COMMIT=&quot;219b3d67299ec09b49f433d7341049256ab5f512&quot; P4C_COMMIT=&quot;48a57a6ae4f96961b74bd13f6bdeac5add7bb815&quot; PROTOBUF_COMMIT=&quot;v3.2.0&quot; GRPC_COMMIT=&quot;v1.3.2&quot; #获得cpu核数，与某些软件的编译选项相关 NUM_CORES=`grep -c ^processor /proc/cpuinfo` cd $P4_HOME # 安装Mininet git clone https://github.com/mininet/mininet mininet cd mininet sudo ./util/install.sh -nwv cd .. # 安装Protobuf git clone https://github.com/google/protobuf.git cd protobuf git checkout ${PROTOBUF_COMMIT} export CFLAGS=&quot;-Os&quot; export CXXFLAGS=&quot;-Os&quot; export LDFLAGS=&quot;-Wl,-s&quot; .……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/p4/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/github-fast/">github加速</a>
                                 </h1>
                             </header>
@@ -318,30 +341,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/self-kernel/">linux内核定制</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月14日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.config文件，这个文件也可以从/boot路径下拷贝 #Y是该选项能够构建到内核内部 #M是构建模块  4. 构建内核 # make clean //这一步最好执行一下 # make -j2  5. 打包成rpm # make rpm  6. 安装并引导内核 # make modules_install //安装模块 # make install //安装内核 #这时，系统会自动在你的启动菜单中加入启动新内核的菜单,如 [root@localhost linux-2.6.27.62]# cat /boot/grub/menu.lst default=1 timeout=5 splashimage=(hd0,0)/grub/splash.xpm.gz hiddenmenu title Red Hat Enterprise Linux AS (2.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/self-kernel/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -386,6 +385,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/p4/" title="P4环境搭建">P4环境搭建</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
     </li>
     
@@ -421,10 +424,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
         <a href="https://workerwork.github.io/posts/kernel-module/" title="kernel module编程">kernel module编程</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机">kvm虚拟机</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -452,6 +451,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <li>
         <a href="https://workerwork.github.io/categories/linux/">linux(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
     </li>
     
     <li>
@@ -544,6 +547,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
     
     <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
     
