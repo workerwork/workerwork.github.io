@@ -246,6 +246,97 @@ git clone https://github.com/p4lang/tutorials
 
 </code></pre>
 
+<h2 id="4-说明">4. 说明</h2>
+
+<p>目录结构</p>
+
+<pre><code class="language-shell">P4
+├── behavioral-model  ## BMv2 软件交换机
+├── grpc              ## 作为BMv2的依赖
+├── mininet           ## mininet 网络仿真
+├── p4c			      ## p4c 编译器
+├── PI                ## PI P4 runtime库
+├── protobuf          ## 作为依赖
+└── tutorials         #### 教程目录，以及以后主要的学习，实验
+
+</code></pre>
+
+<p>我们主要的工作目录时tutorials，其余的都是被使用的工具组件。细看tutorials:</p>
+
+<pre><code class="language-shell">tutorials/
+├── exercises   # 存放各种练习
+├── utils       # 工具脚本目录
+└── vm          # 用于vagrant构建虚拟机的目录，可以无视
+
+</code></pre>
+
+<p>其中utils里面存放了一些用于调用各个组件(mininet, bmv2, PI, p4c)的脚本，
+有了这些脚本，我们可以专注于p4代码的开发，控制面的编写，以及拓扑的构建，
+而不需要费神去了解bmv2的启动命令，p4c的调用选项等等。
+具体如何使用，也是非常的简单，我们进入一个具体的例子查看:</p>
+
+<pre><code class="language-shell"># 我们切换进入 exercises/basic 这个例子
+basic
+├── basic.p4   # 要编写的p4代码
+├── build      # 生成文件的目录
+├── logs       # 日志文件， 在调试的时候真的非常重要！
+├── Makefile   ### 通过Makefile 来调用utils下的脚本!
+├── pcaps      # 生成的pcap包，可以使用wireshark等工具来分析
+├── README.md  # 详细的指导
+├── receive.py ## 利用scapy写的抓取和分析数据包的工具
+├── s1-runtime.json  #
+├── s2-runtime.json  # 在运行同时加载入交换机的控制面代码，这里有争议，稍后再谈
+├── s3-runtime.json  #
+├── send.py    ## 利用scapy写的构建和发送数据包的工具
+├── solution   # 这里有这个例子的示例代码（答案）
+└── topology.json  # 描述拓扑的json文件
+
+</code></pre>
+
+<p>可以看到，通过Makefile，我们可以调用utils下的脚本，让我们的p4代码跑起来:</p>
+
+<pre><code class="language-shell">make run  # 启动命令
+### ...启动过程中的输出
+
+mininet&gt;  # mininet 命令行
+### ... 你的一些实验操作
+mininet&gt; exit  # 退出mininet 命令行
+make clean # 清理上次运行留下的缓存文件和遗留的进程，重要，否则下次运行会可能使用旧的代码。
+
+</code></pre>
+
+<p>调用make run，我们可以运行当前目录下（以basic目录为例）的代码，它将执行以下几个步骤:</p>
+
+<ul>
+<li>编译basic.p4 代码，生成basic.json</li>
+<li>解析topology.json， 并且构建相应的mininet仿真拓扑，按照该拓扑启动一台或者多台BMv2交换机，以及一些host</li>
+<li>启动BMv2的同时会将p4代码编译产生的json文件导入</li>
+<li>启动BMv2后会解析 sN-runtime.json 文件，将其载入 交换机sN流表之中</li>
+<li>进入mininet命令行，同时开始记录log以及搜集pcap文件</li>
+</ul>
+
+<p>在新版本的tutorials中，载入静态流表项时采用了runtime方法，而非之前的CLI方法，我们查看一下s1-runtime.json的部分</p>
+
+<pre><code class="language-json">...
+{
+      &quot;table&quot;: &quot;MyIngress.ipv4_lpm&quot;,
+      &quot;match&quot;: {
+        &quot;hdr.ipv4.dstAddr&quot;: [&quot;10.0.1.1&quot;, 32]
+      },
+      &quot;action_name&quot;: &quot;MyIngress.ipv4_forward&quot;,
+      &quot;action_params&quot;: {
+        &quot;dstAddr&quot;: &quot;00:00:00:00:01:01&quot;,
+        &quot;port&quot;: 1
+      }
+}
+...
+
+</code></pre>
+
+<p>这是一个json文件，可以看到，其作用是定义一个个具体的流表项，
+标明了流表项所处的位置，匹配域，匹配模式，动作名，以及动作参数。
+这些字段都依赖于我们P4代码中所自定义的流表，匹配域和动作。</p>
+
                         </div>
 						<br>
 						<br>
