@@ -7,20 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Wcg Install | WorkSpace</title>
-    <meta property="og:title" content="Wcg Install - WorkSpace">
+    <title>frp内网穿透 | WorkSpace</title>
+    <meta property="og:title" content="frp内网穿透 - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2019-01-21T16:46:44&#43;08:00">
+    <meta property="article:published_time" content="2020-05-14T13:41:52&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2019-01-21T16:46:44&#43;08:00">
+    <meta property="article:modified_time" content="2020-05-14T13:41:52&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="Wcg Install">
+    <meta name="description" content="frp内网穿透">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/posts/wcg-install/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/frp/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
@@ -74,16 +74,16 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">Wcg Install</h1>
+                            <h1 class="post-title">frp内网穿透</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2019年1月21日
+                            2020年5月14日
                         </date>
                         
                         <div class="post-meta">
                             <span>|</span>
                             
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
                             
                         </div>
                         
@@ -91,87 +91,135 @@
                         <div class="post-content">
                             
 
-<h1 id="1-前言">1 前言</h1>
+<h2 id="1-正常情况一个内网主机与外网服务器的交互">1. 正常情况一个内网主机与外网服务器的交互</h2>
 
-<h2 id="1-1-术语">1.1 术语</h2>
+<p>以访问google为例</p>
 
-<table>
-<thead>
-<tr>
-<th>英文缩写</th>
-<th>英文全称</th>
-<th>中文全称</th>
-</tr>
-</thead>
+<pre><code class="language-shell">假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP),
+google 服务器 IP 为74.125.204.101。
 
-<tbody>
-<tr>
-<td>eGW</td>
-<td>enterprise gateway</td>
-<td>企业网关</td>
-</tr>
+1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000
+2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1
+3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&gt;192.168.0.10:5000．
+  WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口
+4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去
+5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500
+6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000，
+  所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机
+7.主机收到数据包，完成一次通信
 
-<tr>
-<td>OMC</td>
-<td>operation and maintenance center</td>
-<td>操作管理中心</td>
-</tr>
-</tbody>
-</table>
+</code></pre>
 
-<h2 id="1-2-目的">1.2 目的</h2>
+<h2 id="2-内网穿透实现">2. 内网穿透实现</h2>
 
-<p>本文档用来指导安装部署业务网关</p>
+<p>测试服务器没有公网IP，想要让外网直接调用内网的服务，就需要用到内网穿透.</p>
 
-<h1 id="2-安装指导">2 安装指导</h1>
+<p>和使用路由器与外网交互类似，需要有一个第三方拥有公网IP的服务器进行路由的中转，代替路由器的角色.</p>
 
-<h2 id="2-1-安装系统">2.1 安装系统</h2>
+<p>由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了</p>
 
-<p>系统版本要求：centos7.2</p>
+<p>当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。</p>
 
-<p>安装步骤：
-1. 在服务器上插入U盘/光盘安装盘
-2. 服务器启动进入bios，设置从U盘/光盘启动
-3. 服务器进入安装引导界面，选择安装centos7.2
-4. 磁盘分区：
- * boot 2G
- * swap 16G
- * 余下空间给&rdquo;/&rdquo;
-5. 选择gnome典型安装</p>
+<p>从而实现在外网请求内网服务的需求</p>
 
-<h2 id="2-2-更换内核">2.2 更换内核</h2>
+<h2 id="3-公网服务器设置">3. 公网服务器设置</h2>
 
-<ol>
-<li>进入内核包所在路径</li>
-<li>执行<code>yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm</code>替换为eGW专用内核</li>
-<li>如果是efi启动执行：<code>grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg</code></li>
-<li>执行<code>reboot</code>重启系统</li>
-<li>系统启动成功后，<code>uname -a</code>确认当前系统内核版本是否成功升级到514</li>
-</ol>
+<pre><code class="language-shell"># wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz
+# sudo tar zxf frp_0.14.1_linux_amd64.tar.gz
+# cd frp_0.14.1_linux_amd64/
+# sudo vim frps.ini
+#
+[common]
+bind_port = 8989        # frp服务的端口
+vhost_http_port = 8889  # frp的http服务的端口
 
-<h2 id="2-3-设置网络">2.3 设置网络</h2>
+# 启动服务
+# ./frps -c frps.ini      # 前台直接启动，测试看日志方便
+# nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp;   # 后台运行
+</code></pre>
 
-<ol>
-<li>配置静态ip地址</li>
-<li>设置DNS</li>
-<li>通过<code>ping www.baidu.com</code> 来确认网络是否正常</li>
-</ol>
+<h2 id="4-内网客户端设置">4. 内网客户端设置</h2>
 
-<h2 id="2-4-安装yum源">2.4 安装yum源</h2>
+<pre><code class="language-shell"># wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz
+# sudo tar zxf frp_0.14.1_linux_amd64.tar.gz
+# cd frp_0.14.1_linux_amd64/
+# sudo vim frpc.ini
+#
+[common]
+server_addr = 47.95.199.112     # 公网服务器IP
+server_port = 8989              # 公网服务器的bind_port
 
-<p>执行<code>yum install -y epel-release</code></p>
+[ssh]
+type = tcp                      # 协议格式
+local_ip = 127.0.0.1
+local_port = 22                 # 本地ssh服务端口
+remote_port = 7878              # 远程连接时使用的端口
 
-<h2 id="2-5-升级openssh">2.5 升级openssh</h2>
+[web]
+type = http                     # 协议格式
+local_ip = 127.0.0.1
+local_port = 7006               # 本地服务端口
+custom_domains = frp.qiuluo.xin # 域名
 
-<p>执行<code>yum update -y openssh</code></p>
+# 启动服务
+# ./frpc -c ./frpc.ini    # 前台直接启动，测试看日志方便
+# nohup ./frpc -c ./frpc.ini &gt; /dev/null 2&gt;&amp;1 &amp; # 后台运行
+</code></pre>
 
-<h2 id="2-6-安装业务网关">2.6 安装业务网关</h2>
+<h2 id="5-测试">5. 测试</h2>
 
-<ol>
-<li>把eGW安装包拷贝到待安装机器上</li>
-<li>执行<code>yum install ***.rpm</code></li>
-<li>执行<code>rpm -qa | grep WCG</code>查看网关是否安装成功</li>
-</ol>
+<p>配置了ssh，所以可以在远程连接本地服务器</p>
+
+<p>使用下面的命令远程进行连接，成功的话输入密码即可进入系统</p>
+
+<pre><code class="language-shell">ssh 用户名@IP或域名 -p 之前配置的remote_port端口号
+例：ssh wenjijie@47.95.199.112 -p 7878
+</code></pre>
+
+<p>在内网服务器启动一个http服务，这里使用一个7006端口的后端服务</p>
+
+<p>在浏览器使用之前配置的域名和端口进行访问</p>
+
+<pre><code class="language-shell">http://frp.qiuluo.xin:8889/
+</code></pre>
+
+<p>页面成功显示内网服务返回的内容</p>
+
+<p>现在已经实现了内网映射，但是需要在域名后增加端口号，不符合日常需求</p>
+
+<p>公网服务器上，使用nginx进行映射</p>
+
+<pre><code class="language-shell"># sudo vim /etc/nginx/nginx.conf
+# 
+server {
+    listen 80;
+    server_name frp.qiuluo.xin;
+
+    location / {
+            proxy_pass http://127.0.0.1:8889/;
+    }
+}
+
+</code></pre>
+
+<p>但是转发后frp收到的域名不再是frp.qiuluo.xin，所以需要在内网frp配置文件custom_domains后增加127.0.0.1</p>
+
+<pre><code class="language-shell">[common]
+server_addr = 47.95.199.112
+server_port = 8989
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 7878
+
+[web]
+type = http
+local_ip = 127.0.0.1
+local_port = 7006
+custom_domains = frp.qiuluo.xin,127.0.0.1
+</code></pre>
 
                         </div>
 						<br>
@@ -182,9 +230,15 @@
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/my-first-post/">My First Post</a></li>
+        <li><a href="/posts/p4/">p4实践环境</a></li>
         
-        <li><a href="/archives/">归档</a></li>
+        <li><a href="/posts/github-fast/">github加速</a></li>
+        
+        <li><a href="/posts/vpp-node-graph/">vpp node-graph编排过程</a></li>
+        
+        <li><a href="/posts/vpp-feature/">vpp feature节点以及数据走向控制</a></li>
+        
+        <li><a href="/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a></li>
         
     </ul>
 </div>
@@ -194,7 +248,9 @@
                             
                             <ul class="clearfix">
                                 
-                                <li><a href="https://workerwork.github.io/tags/wcg">wcg</a></li>
+                                <li><a href="https://workerwork.github.io/tags/frp">frp</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
                                 
                             </ul>
                             
