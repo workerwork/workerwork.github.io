@@ -250,6 +250,8 @@ bins-distribute:
     - mkdir /home/$author || true
     - cp -rf amf/bin/x86_64-ubuntu/amf /home/$author/amf-$commit-$date
     - cp -rf smf/bin/x86_64-ubuntu/smf /home/$author/smf-$commit-$date
+    - chown $author:$author /home/$author/amf-$commit-$date
+    - chown $author:$author /home/$author/smf-$commit-$date
   #when: manual
 
 </code></pre>
@@ -258,6 +260,18 @@ bins-distribute:
 
 <pre><code class="language-shell">git push -o ci.skip
 
+</code></pre>
+
+<h2 id="9-gitlab-runner安装">9. gitlab-runner安装</h2>
+
+<p><a href="https://docs.gitlab.com/runner/">https://docs.gitlab.com/runner/</a></p>
+
+<pre><code class="language-shell"># sudo curl -L --output /usr/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+# sudo chmod +x /usr/bin/gitlab-runner
+# sudo gitlab-runner install --user=root --working-directory=/root/gitlab-runner
+# sudo gitlab-runner start
+# sudo gitlab-runner register
+# 选用shell
 </code></pre>
 
                         </div>
