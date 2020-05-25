@@ -91,12 +91,14 @@
                         <div class="post-content">
                             
 
-<h1 id="1-安装工具">1. 安装工具</h1>
+<h2 id="1-安装工具">1. 安装工具</h2>
 
-<pre><code class="language-shell"> apt-get install dpkg-dev
+<pre><code class="language-shell">#apt-get install dpkg-dev #这个比较全
+apt-get install gnupg
+apt-get install rng-tools
 </code></pre>
 
-<h1 id="2-搜集软件和依赖">2. 搜集软件和依赖</h1>
+<h2 id="2-搜集软件和依赖">2. 搜集软件和依赖</h2>
 
 <pre><code class="language-shell"># 查询依赖关系
 root@localhost:~/df/packages# apt-cache depends nginx
@@ -116,19 +118,34 @@ nginx
 # root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`
 </code></pre>
 
-<h1 id="3-生成包依赖关系">3. 生成包依赖关系</h1>
+<h2 id="3-生成包索引文件和release文件">3. 生成包索引文件和Release文件</h2>
 
-<pre><code class="language-shell"># mv *.deb /opt
-# dpkg-scanpackages .  /dev/null | gzip&gt; debs/Packages.gz
+<pre><code class="language-shell">mkdir -p /opt/repository
+cd /opt/repository
+cp -rf /path/to/*.deb /opt/repository
+apt-ftparchive packages . &gt; Packages
+gzip -c Packages &gt; Packages.gz
+apt-ftparchive release . &gt; Release
 </code></pre>
 
-<h1 id="4-更新apt源sources-list">4. 更新apt源sources.list</h1>
+<h2 id="4-生成签名">4. 生成签名</h2>
+
+<pre><code class="language-shell">1. gpg --gen-key #gpg --list-keys查看
+2. gpg -a --export pub_id | apt-key add -  #apt客户端导入公钥
+#gpg -a --export username &gt; username.pub  #导出公钥
+#apt-key add username.pub #导入公钥
+#gpg -a --export 5789843F6B61B0B4 | apt-key add -     #其中pub key可用gpg --list-keys查到
+gpg --clearsign -o InRelease Release #gpg生成一个明文签名
+gpg -abs -o Release.gpg Release　　#gpg生成一个分离签名
+</code></pre>
+
+<h2 id="5-更新apt源sources-list">5. 更新apt源sources.list</h2>
 
 <pre><code class="language-shell"># vim /etc/apt/sources.list
-# 添加 deb file:///opt debs
+# 添加 deb file:/opt repository/
 </code></pre>
 
-<h1 id="5-客户端更新元数据">5. 客户端更新元数据</h1>
+<h2 id="6-客户端更新元数据">6. 客户端更新元数据</h2>
 
 <pre><code class="language-shell"># apt-get update
 </code></pre>
