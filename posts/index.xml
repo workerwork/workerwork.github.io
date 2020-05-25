@@ -6,10 +6,19 @@
     <description>Recent content in Posts on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 14 May 2020 13:41:52 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2020 14:34:21 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>搭建本地apt仓库</title>
+      <link>https://workerwork.github.io/posts/local-apt/</link>
+      <pubDate>Mon, 25 May 2020 14:34:21 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/local-apt/</guid>
+      <description>1. 安装工具 apt-get install dpkg-dev  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 # sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 # sudo apt-get -d install &amp;lt;包名&amp;gt; # root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;` # root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;`  3.</description>
+    </item>
     
     <item>
       <title>frp内网穿透</title>

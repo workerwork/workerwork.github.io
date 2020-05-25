@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/local-apt/">搭建本地apt仓库</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月25日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装工具 apt-get install dpkg-dev  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 # sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 # sudo apt-get -d install &lt;包名&gt; # root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;` # root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`  3.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/local-apt/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/frp/">frp内网穿透</a>
                                 </h1>
                             </header>
@@ -291,6 +314,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
     </li>
     
@@ -326,10 +353,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
         <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install">WCG-deps-install</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/kernel-dev/" title="kernel 字符设备驱动">kernel 字符设备驱动</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -356,7 +379,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(7)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(8)</a>
     </li>
     
     <li>
@@ -400,6 +423,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
     
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
@@ -409,6 +434,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
     
     <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
     

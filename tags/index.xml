@@ -6,10 +6,28 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 14 May 2020 13:41:52 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2020 14:34:21 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>apt</title>
+      <link>https://workerwork.github.io/tags/apt/</link>
+      <pubDate>Mon, 25 May 2020 14:34:21 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/apt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>deb</title>
+      <link>https://workerwork.github.io/tags/deb/</link>
+      <pubDate>Mon, 25 May 2020 14:34:21 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/deb/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>frp</title>
