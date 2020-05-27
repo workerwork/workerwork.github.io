@@ -112,10 +112,10 @@ nginx
  |Depends: nginx-light
   Depends: nginx-extras
 # 下载
-# sudo rm -rf /var/cache/apt/archives/*  # 清空缓存目录，这一步也可以不做
-# sudo apt-get -d install &lt;包名&gt;
-# root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`
-# root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`
+sudo rm -rf /var/cache/apt/archives/*  # 清空缓存目录，这一步也可以不做
+sudo apt-get -d install &lt;包名&gt;
+root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`
+root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`
 </code></pre>
 
 <h2 id="3-生成包索引文件和release文件">3. 生成包索引文件和Release文件</h2>
@@ -130,24 +130,26 @@ apt-ftparchive release . &gt; Release
 
 <h2 id="4-生成签名">4. 生成签名</h2>
 
+<p>在ubuntu下做，在centos下做会有问题</p>
+
 <pre><code class="language-shell">1. gpg --gen-key #gpg --list-keys查看
 2. gpg -a --export pub_id | apt-key add -  #apt客户端导入公钥
-#gpg -a --export username &gt; username.pub  #导出公钥
-#apt-key add username.pub #导入公钥
-#gpg -a --export 5789843F6B61B0B4 | apt-key add -     #其中pub key可用gpg --list-keys查到
+gpg -a --export username &gt; username.pub  #导出公钥
+apt-key add username.pub #导入公钥
+gpg -a --export 5789843F6B61B0B4 | apt-key add -     #其中pub key可用gpg --list-keys查到
 gpg --clearsign -o InRelease Release #gpg生成一个明文签名
 gpg -abs -o Release.gpg Release　　#gpg生成一个分离签名
 </code></pre>
 
 <h2 id="5-更新apt源sources-list">5. 更新apt源sources.list</h2>
 
-<pre><code class="language-shell"># vim /etc/apt/sources.list
-# 添加 deb file:/opt repository/
+<pre><code class="language-shell">vim /etc/apt/sources.list
+添加 deb file:/opt/repository /
 </code></pre>
 
 <h2 id="6-客户端更新元数据">6. 客户端更新元数据</h2>
 
-<pre><code class="language-shell"># apt-get update
+<pre><code class="language-shell">apt-get update
 </code></pre>
 
                         </div>
