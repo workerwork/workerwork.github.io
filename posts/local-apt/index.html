@@ -124,7 +124,6 @@ root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | g
 cd /opt/repository
 cp -rf /path/to/*.deb /opt/repository
 apt-ftparchive packages . &gt; Packages
-gzip -c Packages &gt; Packages.gz
 apt-ftparchive release . &gt; Release
 </code></pre>
 
