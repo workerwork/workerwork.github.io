@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言SDL2库写游戏" >使用rust语言SDL2库写游戏</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月8日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/rust">rust</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库" >搭建本地apt仓库</a>
                                 </h1>
                             </header>
@@ -298,29 +321,6 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install" >WCG-deps-install</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月28日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.sh # version:1.0 # update:20181120 ########################################################## DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -373,6 +373,10 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言SDL2库写游戏">使用rust语言SDL2库写游戏</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
     </li>
     
@@ -406,10 +410,6 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin">vpp sample plugin</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install">WCG-deps-install</a>
     </li>
     
 </ul>
@@ -447,6 +447,10 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
     
     <li>
         <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
     </li>
     
     <li>
@@ -518,6 +522,8 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
     
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
     
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
     <a href="https://workerwork.github.io/tags/git/">git</a>
     
     <a href="https://workerwork.github.io/tags/github/">github</a>
@@ -559,6 +565,10 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
     <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
     
     <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
     

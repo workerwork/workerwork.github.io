@@ -6,10 +6,19 @@
     <description>Recent content in Categories on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 25 May 2020 14:34:21 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 08 Jun 2020 15:57:52 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>rust</title>
+      <link>https://workerwork.github.io/categories/rust/</link>
+      <pubDate>Mon, 08 Jun 2020 15:57:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/rust/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>linux</title>
@@ -75,7 +84,7 @@
     </item>
     
     <item>
-      <title>devops</title>
+      <title>DEVOPS</title>
       <link>https://workerwork.github.io/categories/devops/</link>
       <pubDate>Wed, 01 Apr 2020 15:57:51 +0800</pubDate>
       
