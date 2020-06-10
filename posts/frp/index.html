@@ -221,6 +221,56 @@ local_port = 7006
 custom_domains = frp.qiuluo.xin,127.0.0.1
 </code></pre>
 
+<h2 id="6-例子-frp-0-33-0">6. 例子(frp-0.33.0)</h2>
+
+<p>frps.ini</p>
+
+<pre><code class="language-shell">[common]
+privilege_mode = true
+privilege_token = 20200606
+bind_port = 9898
+vhost_http_port = 7788
+dashboard_port = 7500
+# dashboard's username and password are both optional，if not set, default is admin.
+dashboard_user = root
+dashboard_pwd = root@admin
+#subdomain_host = p2pnet.club
+#subdomain_host = free.com
+</code></pre>
+
+<p>frpc.ini</p>
+
+<pre><code class="language-shell">[common]
+privilege_token = 2020060611
+server_addr = x.x.x.x
+server_port = 9898
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 6000
+
+[http]
+#type = tcp
+type = http
+local_ip = 192.168.9.105
+local_port = 60080
+remote_port = 7788
+custom_domains = www.workerwork.com #修改/etc/hosts文件
+http_user = root
+http_pwd = baicells
+#subdomain = home
+
+[RDP]
+privilege_mode = true
+type = tcp
+local_ip = 127.0.0.1
+local_port = 3389
+remote_port = 6001
+
+</code></pre>
+
                         </div>
 						<br>
 						<br>
