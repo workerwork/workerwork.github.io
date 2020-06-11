@@ -17,7 +17,7 @@
       <pubDate>Mon, 08 Jun 2020 15:57:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/rust-game/</guid>
-      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &amp;quot;https://github.com/rust-lang/crates.io-index&amp;quot; replace-with = &#39;ustc&#39; [source.ustc] registry = &amp;quot;git://mirrors.ustc.edu.cn/crates.io-index&amp;quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &amp;quot;testsdl&amp;quot; version = &amp;quot;0.</description>
+      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2.</description>
     </item>
     
   </channel>

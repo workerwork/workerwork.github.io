@@ -18,8 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/vpp-node-graph/</guid>
       <description>1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
-typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &amp;lt;&amp;lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.</description>
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t</description>
     </item>
     
     <item>
@@ -31,12 +30,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
       <description>1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
-通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
-如果选择按照feature机制来加入结点的话需要注意以下几点：
-VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
-1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  ip4-unicast arc
-文件：vnet/ip/ip4_forward.c /* Built-in ip4 unicast rx feature path definition */ /* *INDENT-OFF* */ VNET_FEATURE_ARC_INIT (ip4_unicast, static) = { .arc_name = &amp;quot;ip4-unicast&amp;quot;, /*arc 类 名字*/ .start_nodes = VNET_FEATURES (&amp;quot;ip4-input&amp;quot;, &amp;quot;ip4-input-no-checksum&amp;quot;), /*开始node*/ .</description>
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能</description>
     </item>
     
     <item>
@@ -45,7 +39,7 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
       <pubDate>Wed, 29 Apr 2020 11:14:24 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/vpp-node-fw/</guid>
-      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.c -rw-rw-r-- 1 ych ych 712 Apr 1 17:34 sample_all_api_h.h -rw-rw-r-- 1 ych ych 1068 Apr 1 17:34 sample.api -rw-rw-r-- 1 ych ych 6569 Apr 1 17:34 sample.c -rw-rw-r-- 1 ych ych 1135 Apr 1 17:34 sample.h -rw-rw-r-- 1 ych ych 960 Apr 1 17:34 sample_msg_enum.h -rw-rw-r-- 1 ych ych 5512 Apr 1 17:34 sample_test.</description>
+      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.</description>
     </item>
     
     <item>
@@ -55,7 +49,7 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
       
       <guid>https://workerwork.github.io/posts/vpp-sample-plugin/</guid>
       <description>1. plugin_sample.c 在此文件中定义feature和cli
-#include &amp;lt;vnet/plugin/plugin.h&amp;gt; #include &amp;lt;plugin_sample/plugin_sample.h&amp;gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&amp;gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&amp;gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&amp;quot;ip4-unicast&amp;quot;, //挂载节点 &amp;quot;plugin_sample&amp;quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !</description>
+#include &amp;lt;vnet/plugin/plugin.h&amp;gt; #include &amp;lt;plugin_sample/plugin_sample.h&amp;gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong?</description>
     </item>
     
   </channel>

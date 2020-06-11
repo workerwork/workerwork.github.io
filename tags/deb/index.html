@@ -95,7 +95,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 sudo apt-get -d install &lt;包名&gt; root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;` root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`  3.……
+                                1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/local-apt/">阅读全文</a></p>
                             </div>
                         </article>

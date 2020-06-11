@@ -17,9 +17,7 @@
       <pubDate>Sun, 10 May 2020 16:25:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/pypi/</guid>
-      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件
-setup.py
-#!/usr/bin/env python # -*- coding:utf-8 -*- # Author: workerwork(workerwork@qq.com) # Description: from setuptools import setup, find_packages setup( name = &#39;workerwork&#39;, version = &#39;0.0.1&#39;, keywords=&#39;wow&#39;, description = &#39;a library for wow Developer&#39;, license = &#39;MIT License&#39;, url = &#39;&#39;, author = &#39;workerwork&#39;, author_email = &#39;workerwork@qq.com&#39;, packages = find_packages(), include_package_data = True, platforms = &#39;any&#39;, install_requires = [ &#39;requests&amp;gt;=2.</description>
+      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.</description>
     </item>
     
   </channel>

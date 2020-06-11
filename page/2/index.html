@@ -86,7 +86,7 @@
                             
                             <div class="post-content">
                                 1. plugin_sample.c 在此文件中定义feature和cli
-#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点 &quot;plugin_sample&quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !……
+#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong?……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
                         </article>
@@ -109,7 +109,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.sh # version:1.0 # update:20181120 ########################################################## DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
+                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
                         </article>
@@ -134,12 +134,7 @@
                             <div class="post-content">
                                 1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
-int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
-struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
-  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
- 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
-static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.……
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
                         </article>
@@ -162,16 +157,7 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
                             </div>
                             
                             <div class="post-content">
-                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
-软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
-硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
-解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
-cpus_allowed用于控制进程可以在哪里处理器上运行
-sched_set_affinity() （用来修改位掩码）
-sched_get_affinity() （用来查看当前的位掩码）
-2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
-在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
-SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &lt;sched.……
+                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/affinity/">阅读全文</a></p>
                         </article>
@@ -194,9 +180,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                             
                             <div class="post-content">
-                                1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
-如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
-2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--. 1 root root 728 4月 17 10:28 hello.c -rw-r--r--. 1 root root 229 4月 17 10:24 Makefile -rw-r--r--. 1 root root 190 4月 17 10:26 mymax.c -rw-r--r--. 1 root root 70 4月 17 10:17 mymax.h  [root@localhost test]# cat hello.c #include &lt;linux/init.h&gt;	/* Needed for the module-macros */ #include &lt;linux/module.……
+                                1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-module/">阅读全文</a></p>
                         </article>
@@ -219,7 +203,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                             
                             <div class="post-content">
-                                1. 检查CPU是否支持kvm # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes!&quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo　//epel源 # yum clean all　//清空yum缓存  3. 安装虚拟机管理工具和依赖 # yum -y install qemu-kvm //KVM主程序，KVM虚拟化模块 # yum -y install virt-install //安装虚拟机的工具 # 这个包主要安装了virt-install、virt-clone和virt-xml命令，分别用于安装虚拟机系统、克隆虚拟机和编辑虚拟机的xml配置文件。 # yum -y install virt-manager //KVM图形化管理工具 # yum -y install libvirt //虚拟化服务库 # libvirt是用于管理虚拟化平台的开源的API（libvirt API），后台程序（libvirtd进程）和管理工具（virsh工具集）。 # 它可以用于管理KVM、Xen、VMware ESX，QEMU和其他虚拟化技术。这些API在云计算的解决方案中广泛使用。 # libvirtd进程主要实现远程代理、本地环境初始化、根据环境注册各种Driver（qemu、xen、storage）的实现。 # virsh工具集主要用于管理、操作虚拟主机。 # yum -y install libguestfs-tools //虚拟机的系统管理工具 # libguestfs -tools是一组Linux下的C语言的API，用来访问虚拟机的磁盘映像文件。 # 该工具包内包含的工具有virt-cat、virt-df、virt-list、virt-copy-in、virt-copy-out、 # virt-edit、guestfs、guestmount、virt-list-filesystems、virt-list-partitions等工具。 # 该工具可以在不启动KVM guest主机的情况下，直接查看guest主机内的文内容，也可以直接向img镜像中写入文件和复制文件到外面的物理机， # 也可以将guest的镜像文件挂载，功能相当强大 # yum -y install libvirt-python //python调用libvirt虚拟化服务的api接口库文件  4.……
+                                1. 检查CPU是否支持kvm # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes!……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kvm/">阅读全文</a></p>
                         </article>
@@ -243,7 +227,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             
                             <div class="post-content">
                                 1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.config文件，这个文件也可以从/boot路径下拷贝 #Y是该选项能够构建到内核内部 #M是构建模块  4. 构建内核 # make clean //这一步最好执行一下 # make -j2  5. 打包成rpm # make rpm  6. 安装并引导内核 # make modules_install //安装模块 # make install //安装内核 #这时，系统会自动在你的启动菜单中加入启动新内核的菜单,如 [root@localhost linux-2.6.27.62]# cat /boot/grub/menu.lst default=1 timeout=5 splashimage=(hd0,0)/grub/splash.xpm.gz hiddenmenu title Red Hat Enterprise Linux AS (2.……
+2. 解压内核 # bzip2 -d linux-2.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/self-kernel/">阅读全文</a></p>
                         </article>
@@ -267,8 +251,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             
                             <div class="post-content">
                                 1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
-3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.……
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
                         </article>
@@ -291,8 +274,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                             
                             <div class="post-content">
-                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2. 构建目录结构  tree文件
-root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ └── amf │ ├── config │ │ ├── amf.conf │ │ └── asn.log.properties │ ├── context │ │ └── SystemVersionDB │ ├── data │ │ └── statistics │ ├── licensefile -&gt; .……
+                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
                         </article>
@@ -317,7 +299,7 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
                             </div>
                             
                             <div class="post-content">
-                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list RUN apt-get update -yqq \ &amp;&amp; apt-get install -yq apt-utils \ &amp;&amp; apt-get install -yq curl \ &amp;&amp; apt-get install -yq git \ &amp;&amp; apt-get install -yq unzip zip tar \ &amp;&amp; apt-get install -yq ca-certificates \ &amp;&amp; apt-get install -yq bash-completion \ &amp;&amp; apt-get install -yq iproute2 iputils-ping \ &amp;&amp; apt-get install -yq systemd systemd-sysv \ &amp;&amp; apt-get clean \ &amp;&amp; apt-get autoclean \ &amp;&amp; apt-get autoremove \ &amp;&amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.……
+                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
                         </article>

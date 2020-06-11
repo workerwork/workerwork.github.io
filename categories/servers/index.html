@@ -97,7 +97,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list RUN apt-get update -yqq \ &amp;&amp; apt-get install -yq apt-utils \ &amp;&amp; apt-get install -yq curl \ &amp;&amp; apt-get install -yq git \ &amp;&amp; apt-get install -yq unzip zip tar \ &amp;&amp; apt-get install -yq ca-certificates \ &amp;&amp; apt-get install -yq bash-completion \ &amp;&amp; apt-get install -yq iproute2 iputils-ping \ &amp;&amp; apt-get install -yq systemd systemd-sysv \ &amp;&amp; apt-get clean \ &amp;&amp; apt-get autoclean \ &amp;&amp; apt-get autoremove \ &amp;&amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.……
+                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
                             </div>
                         </article>
@@ -122,7 +122,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m dongfeng echo &quot;root:baicells&quot; | chpasswd echo &quot;dongfeng:baicells&quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &gt;&gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;&amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.……
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
                             </div>
                         </article>
@@ -147,7 +147,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #添加docker仓库 sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot; sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/docker/daemon.json，添加 { &quot;registry-mirrors&quot;: [&quot;https://9w1hl6qt.mirror.aliyuncs.com&quot;] }  2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #或者二进制安装 curl -L https://github.……
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                             </div>
                         </article>
@@ -172,7 +172,7 @@
                             <div class="post-content">
                                 1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.log errors errors.log } 192.168.9.105:80 { proxy / http://192.168.103.147:80 } 192.168.9.105:5566 { gzip root test }  5. 运行caddy caddy &amp;  6.……
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
                             </div>
                         </article>
@@ -199,7 +199,7 @@
                             <div class="post-content">
                                 1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
 drone文档：https://docs.drone.io/
-2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: '2' services: #gogs: #image: gogs/gogs:latest #ports: # - &quot;10022:22&quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.……
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/drone/">阅读全文</a></p>
                             </div>
                         </article>

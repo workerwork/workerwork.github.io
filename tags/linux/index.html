@@ -96,7 +96,7 @@
                             
                             <div class="post-content">
                                 1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.04 and later # Date : May 2019 # written by : Griffon # Web Site :http://www.c-nergy.be - http://www.c-nergy.be/blog # Version : 3.0 # History : 3.0 - Added support for Ubuntu 19.04 # - New code for Look'n feel using xsessionrc method # - New code for enabling Sound Redirection - compiling from source # - Removed -g parameter # : 2.……
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/remote-desktop/">阅读全文</a></p>
                             </div>
                         </article>
@@ -119,7 +119,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
+                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
                             </div>
                         </article>
@@ -143,12 +143,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             
                             <div class="post-content">
                                 1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2. 内网穿透实现 测试服务器没有公网IP，想要让外网直接调用内网的服务，就需要用到内网穿透.
-和使用路由器与外网交互类似，需要有一个第三方拥有公网IP的服务器进行路由的中转，代替路由器的角色.
-由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了
-当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。
-从而实现在外网请求内网服务的需求
-3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # ./frps -c frps.ini # 前台直接启动，测试看日志方便 # nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp; # 后台运行  4.……
+假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
                             </div>
                         </article>
@@ -195,11 +190,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             
                             <div class="post-content">
                                 1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候
-git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.proxy 'socks5://127.0.0.1:1080' git config --global http.proxy 'vmess://127.0.0.1:1081' git config --global https.proxy 'vmess://127.0.0.1:1081'  也可以直接修改用户主目录下的 .gitconfig 文件
-[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
-git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
-git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时……
+使用 https 的时候，就是使用 https 协议复制仓库的时候……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
                             </div>
                         </article>
@@ -223,8 +214,7 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
                             
                             <div class="post-content">
                                 1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
-typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &lt;&lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.……
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
                             </div>
                         </article>
@@ -250,12 +240,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                                 1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
-通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
-如果选择按照feature机制来加入结点的话需要注意以下几点：
-VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
-1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  ip4-unicast arc
-文件：vnet/ip/ip4_forward.c /* Built-in ip4 unicast rx feature path definition */ /* *INDENT-OFF* */ VNET_FEATURE_ARC_INIT (ip4_unicast, static) = { .arc_name = &quot;ip4-unicast&quot;, /*arc 类 名字*/ .start_nodes = VNET_FEATURES (&quot;ip4-input&quot;, &quot;ip4-input-no-checksum&quot;), /*开始node*/ .……
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
                             </div>
                         </article>
@@ -278,7 +263,7 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
                             </div>
                             
                             <div class="post-content">
-                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.c -rw-rw-r-- 1 ych ych 712 Apr 1 17:34 sample_all_api_h.h -rw-rw-r-- 1 ych ych 1068 Apr 1 17:34 sample.api -rw-rw-r-- 1 ych ych 6569 Apr 1 17:34 sample.c -rw-rw-r-- 1 ych ych 1135 Apr 1 17:34 sample.h -rw-rw-r-- 1 ych ych 960 Apr 1 17:34 sample_msg_enum.h -rw-rw-r-- 1 ych ych 5512 Apr 1 17:34 sample_test.……
+                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
                             </div>
                         </article>
@@ -302,7 +287,7 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
                             
                             <div class="post-content">
                                 1. plugin_sample.c 在此文件中定义feature和cli
-#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点 &quot;plugin_sample&quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !……
+#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong?……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
                             </div>
                         </article>
@@ -325,7 +310,7 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
                             </div>
                             
                             <div class="post-content">
-                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.sh # version:1.0 # update:20181120 ########################################################## DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
+                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
                             </div>
                         </article>

@@ -18,8 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/wcg-kernel/</guid>
       <description>1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
-3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;amp;&amp;amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;amp;&amp;amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.</description>
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.</description>
     </item>
     
     <item>
@@ -29,7 +28,7 @@
       
       <guid>https://workerwork.github.io/posts/epc-cicd/</guid>
       <description>1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&amp;quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&amp;quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm &#39;{print $1}&#39;) - rpm_newname=&amp;quot;$rpm_rename&amp;quot;_&amp;quot;$(date &#39;+%Y%m%d&#39;)&amp;quot;_&amp;quot;$git_rev&amp;quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &amp;quot;$TEST_SERVER&amp;quot;:&amp;quot;$RUN_PATH&amp;quot;/&amp;quot;$rpm_newname&amp;quot; - ssh &amp;quot;$TEST_SERVER&amp;quot; &amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;lt;&amp;lt; eeooff - cd /root/df/caddy/yum.</description>
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.</description>
     </item>
     
   </channel>

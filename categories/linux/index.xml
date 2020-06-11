@@ -17,7 +17,7 @@
       <pubDate>Mon, 25 May 2020 14:34:21 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/local-apt/</guid>
-      <description>1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 sudo apt-get -d install &amp;lt;包名&amp;gt; root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;` root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;`  3.</description>
+      <description>1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2.</description>
     </item>
     
     <item>
@@ -27,12 +27,7 @@
       
       <guid>https://workerwork.github.io/posts/frp/</guid>
       <description>1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&amp;gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2. 内网穿透实现 测试服务器没有公网IP，想要让外网直接调用内网的服务，就需要用到内网穿透.
-和使用路由器与外网交互类似，需要有一个第三方拥有公网IP的服务器进行路由的中转，代替路由器的角色.
-由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了
-当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。
-从而实现在外网请求内网服务的需求
-3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # ./frps -c frps.ini # 前台直接启动，测试看日志方便 # nohup ./frps -c ./frps.ini &amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;amp; # 后台运行  4.</description>
+假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.</description>
     </item>
     
     <item>
@@ -42,11 +37,7 @@
       
       <guid>https://workerwork.github.io/posts/github-fast/</guid>
       <description>1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候
-git config --global http.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global https.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global http.proxy &#39;vmess://127.0.0.1:1081&#39; git config --global https.proxy &#39;vmess://127.0.0.1:1081&#39;  也可以直接修改用户主目录下的 .gitconfig 文件
-[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
-git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
-git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时</description>
+使用 https 的时候，就是使用 https 协议复制仓库的时候</description>
     </item>
     
     <item>
@@ -55,16 +46,7 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
       <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/affinity/</guid>
-      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
-软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
-硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
-解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
-cpus_allowed用于控制进程可以在哪里处理器上运行
-sched_set_affinity() （用来修改位掩码）
-sched_get_affinity() （用来查看当前的位掩码）
-2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
-在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
-SCHED_SETAFFINITY(2) Linux Programmer&#39;s Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process&#39;s CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &amp;lt;sched.</description>
+      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。</description>
     </item>
     
     <item>
@@ -73,7 +55,7 @@ SCHED_SETAFFINITY(2) Linux Programmer&#39;s Manual SCHED_SETAFFINITY(2) NAME sch
       <pubDate>Fri, 30 Aug 2019 14:03:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/centos-good/</guid>
-      <description>1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# cat /etc/resolv.conf #查看修改后的DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# systemctl restart network #重启网卡，生效  2.</description>
+      <description>1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.</description>
     </item>
     
     <item>
@@ -83,9 +65,7 @@ SCHED_SETAFFINITY(2) Linux Programmer&#39;s Manual SCHED_SETAFFINITY(2) NAME sch
       
       <guid>https://workerwork.github.io/posts/security/</guid>
       <description>1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
-#删除不必要的账号 userdel &amp;lt;用户名&amp;gt; #锁定不必要的账号 passwd -l &amp;lt;用户名&amp;gt; #解锁必要的账号 passwd -u &amp;lt;用户名&amp;gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
-#查看空口令账号 awk -F: &#39;($2==&amp;quot;&amp;quot;)&#39; /etc/shadow #为空口令账号设定密码 passwd &amp;lt;用户名&amp;gt; #查看UID为零的账号，确认只有root账号 awk -F: &#39;($3==0)&#39; /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
-vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &amp;lt;用户名&amp;gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.d/common-auth 修改配置文件，添加 auth required pam_tally.so onerr=fail deny=3 unlock_time=300  4 ）限制用户su 限制能su到root的用户</description>
+#删除不必要的账号 userdel &amp;lt;用户名&amp;gt; #锁定不必要的账号 passwd -l &amp;lt;用户名&amp;gt; #解锁必要的账号 passwd -u &amp;lt;用户名&amp;gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号</description>
     </item>
     
     <item>
@@ -94,9 +74,7 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
       <pubDate>Wed, 28 Aug 2019 16:37:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/centos-iso/</guid>
-      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
-#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
-cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard &#39;us&#39; # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.</description>
+      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.</description>
     </item>
     
     <item>
@@ -105,7 +83,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
       <pubDate>Wed, 28 Aug 2019 15:00:21 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/local-yum/</guid>
-      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;!DOCTYPE comps PUBLIC &amp;quot;-//CentOS//DTD Comps info//EN&amp;quot; &amp;quot;comps.dtd&amp;quot;&amp;gt; &amp;lt;comps&amp;gt; &amp;lt;group&amp;gt; &amp;lt;id&amp;gt;epc&amp;lt;/id&amp;gt; &amp;lt;name&amp;gt;epc&amp;lt;/name&amp;gt; &amp;lt;name xml:lang=&amp;quot;en_GB&amp;quot;&amp;gt;epc&amp;lt;/name&amp;gt; &amp;lt;description&amp;gt;epc installation.&amp;lt;/description&amp;gt; &amp;lt;default&amp;gt;false&amp;lt;/default&amp;gt; &amp;lt;uservisible&amp;gt;false&amp;lt;/uservisible&amp;gt; &amp;lt;packagelist&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-base&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-ui&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-ovs-rest&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-ovsdb-agent&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-signaltrace&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-gwsc&amp;lt;/packagereq&amp;gt; &amp;lt;packagereq type=&amp;quot;mandatory&amp;quot;&amp;gt;baicells-epc-openapi&amp;lt;/packagereq&amp;gt; &amp;lt;/packagelist&amp;gt; &amp;lt;/group&amp;gt; &amp;lt;/comps&amp;gt;  3. 创建仓库 createrepo -g comps.xml .  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5. 在客户端添加本地yum源 cat&amp;gt;&amp;gt;/etc/yum.repo.d/local.repo&amp;lt;&amp;lt;EOF [local] name=local for centos7 baseurl=file://192.</description>
+      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.</description>
     </item>
     
   </channel>

@@ -18,7 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/epc-cicd/</guid>
       <description>1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&amp;quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&amp;quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm &#39;{print $1}&#39;) - rpm_newname=&amp;quot;$rpm_rename&amp;quot;_&amp;quot;$(date &#39;+%Y%m%d&#39;)&amp;quot;_&amp;quot;$git_rev&amp;quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &amp;quot;$TEST_SERVER&amp;quot;:&amp;quot;$RUN_PATH&amp;quot;/&amp;quot;$rpm_newname&amp;quot; - ssh &amp;quot;$TEST_SERVER&amp;quot; &amp;gt; /dev/null 2&amp;gt;&amp;amp;1 &amp;lt;&amp;lt; eeooff - cd /root/df/caddy/yum.</description>
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.</description>
     </item>
     
     <item>
@@ -28,10 +28,7 @@
       
       <guid>https://workerwork.github.io/posts/auto-epc/</guid>
       <description>AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
-wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
-yum install [rpm包名]  如果是升级，执行
-yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
-EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.168.9.105:60080/baicells/ovs-rest ovsdb-config-agent库 http://192.168.9.105:60080/baicells/ovsdb-config-agent openapi库 http://192.168.9.105:60080/dongfeng/openapi signaltrace库 http://192.168.9.105:60080/dongfeng/signaltrace epc-c库 http://192.168.9.105:60080/dongfeng/epc-c ovs库 http://192.168.9.105:60080/dongfeng/ovs  RPM包构造方法  开发在git代码托管服务器http://192.168.9.105:60080 上提交更新代码 由web钩子触发后台drone自动使用fpm进行rpm打包 打包好的rpm包自动拷贝到文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 并自动更新本地yum仓库  RPM打包版本 版本说明 以baicells-epc-ui-3.</description>
+wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.</description>
     </item>
     
   </channel>

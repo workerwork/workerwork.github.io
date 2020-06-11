@@ -96,8 +96,7 @@
                             
                             <div class="post-content">
                                 1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
-3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.……
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
                             </div>
                         </article>
@@ -120,7 +119,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml .  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5. 在客户端添加本地yum源 cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF [local] name=local for centos7 baseurl=file://192.……
+                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
                             </div>
                         </article>

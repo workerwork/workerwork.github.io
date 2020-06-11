@@ -97,12 +97,7 @@
                             <div class="post-content">
                                 1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
-int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
-struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
-  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
- 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
-static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.……
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
                             </div>
                         </article>
@@ -125,16 +120,7 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
                             </div>
                             
                             <div class="post-content">
-                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
-软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
-硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
-解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
-cpus_allowed用于控制进程可以在哪里处理器上运行
-sched_set_affinity() （用来修改位掩码）
-sched_get_affinity() （用来查看当前的位掩码）
-2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
-在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
-SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &lt;sched.……
+                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/affinity/">阅读全文</a></p>
                             </div>
                         </article>
@@ -157,9 +143,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                             
                             <div class="post-content">
-                                1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
-如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
-2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--. 1 root root 728 4月 17 10:28 hello.c -rw-r--r--. 1 root root 229 4月 17 10:24 Makefile -rw-r--r--. 1 root root 190 4月 17 10:26 mymax.c -rw-r--r--. 1 root root 70 4月 17 10:17 mymax.h  [root@localhost test]# cat hello.c #include &lt;linux/init.h&gt;	/* Needed for the module-macros */ #include &lt;linux/module.……
+                                1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-module/">阅读全文</a></p>
                             </div>
                         </article>
@@ -183,7 +167,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             
                             <div class="post-content">
                                 1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.config文件，这个文件也可以从/boot路径下拷贝 #Y是该选项能够构建到内核内部 #M是构建模块  4. 构建内核 # make clean //这一步最好执行一下 # make -j2  5. 打包成rpm # make rpm  6. 安装并引导内核 # make modules_install //安装模块 # make install //安装内核 #这时，系统会自动在你的启动菜单中加入启动新内核的菜单,如 [root@localhost linux-2.6.27.62]# cat /boot/grub/menu.lst default=1 timeout=5 splashimage=(hd0,0)/grub/splash.xpm.gz hiddenmenu title Red Hat Enterprise Linux AS (2.……
+2. 解压内核 # bzip2 -d linux-2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/self-kernel/">阅读全文</a></p>
                             </div>
                         </article>
@@ -206,9 +190,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                             
                             <div class="post-content">
-                                1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
-#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
-cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard 'us' # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.……
+                                1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/centos-iso/">阅读全文</a></p>
                             </div>
                         </article>
