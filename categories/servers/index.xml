@@ -35,7 +35,7 @@
       <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/gitlab/</guid>
-      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #添加docker仓库 sudo add-apt-repository &amp;quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&amp;quot; sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/docker/daemon.</description>
+      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #添加docker仓库 sudo add-apt-repository &amp;quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&amp;quot; sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/docker/daemon.json，添加 { &amp;quot;registry-mirrors&amp;quot;: [&amp;quot;https://9w1hl6qt.mirror.aliyuncs.com&amp;quot;] }  2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #或者二进制安装 curl -L https://github.</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <guid>https://workerwork.github.io/posts/caddy/</guid>
       <description>1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.</description>
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.log errors errors.log } 192.168.9.105:80 { proxy / http://192.168.103.147:80 } 192.168.9.105:5566 { gzip root test }  5. 运行caddy caddy &amp;amp;  6.</description>
     </item>
     
     <item>

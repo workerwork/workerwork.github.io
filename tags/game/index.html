@@ -95,7 +95,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4.……
+                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
                             </div>
                         </article>

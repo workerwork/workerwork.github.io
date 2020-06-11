@@ -21,7 +21,7 @@
 kubeadm kubeadm是Kubernetes1.6开始官方推出的快速部署Kubernetes集群工具，其思路是将Kubernetes相关服务容器化(Kubernetes静态Pod)以简化部署
 custom solutions 最完整的方式，从零开始二进制搭建
 
-部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i &#39;s/enforcing/disabled/&#39; /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.conf: net.</description>
+部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i &#39;s/enforcing/disabled/&#39; /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.conf: net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-arptables = 1 # 设置主机名： # hostnamectl set-hostname master # 修改/etc/hosts文件: # cat /etc/hosts 127.</description>
     </item>
     
   </channel>

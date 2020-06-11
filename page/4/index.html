@@ -163,7 +163,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                             </div>
                             
                             <div class="post-content">
-                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3.……
+                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml .  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5. 在客户端添加本地yum源 cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF [local] name=local for centos7 baseurl=file://192.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
                         </article>
@@ -194,7 +194,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 更多的关于Hugo的介绍，请参考Hugo的官网 https://gohugo.io/ .
 2. 安装 hugo 从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。 github链接：https://github.com/gohugoio/hugo
 #加入环境变量和执行权限 cp hugo /usr/bin/hugo chmod +x /usr/bin/hugo  3. 使用hugo创建站点 hugo new site workerwork.github.io-site  github链接：https://github.com/workerwork/workerwork.github.io-site
-4. 给站点添加主题 cd workerwork.github.io-site git init git submodule add https://github.com/rujews/maupassant-hugo themes/maupassant # Edit your config.……
+4. 给站点添加主题 cd workerwork.github.io-site git init git submodule add https://github.com/rujews/maupassant-hugo themes/maupassant # Edit your config.toml configuration file # and add the maupassant theme. echo 'theme = &quot;maupassant&quot;' &gt;&gt; config.toml  5.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/workspace/">阅读全文</a></p>
                         </article>
@@ -221,7 +221,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 kubeadm kubeadm是Kubernetes1.6开始官方推出的快速部署Kubernetes集群工具，其思路是将Kubernetes相关服务容器化(Kubernetes静态Pod)以简化部署
 custom solutions 最完整的方式，从零开始二进制搭建
 
-部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i 's/enforcing/disabled/' /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.conf: net.……
+部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i 's/enforcing/disabled/' /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.conf: net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 net.bridge.bridge-nf-call-arptables = 1 # 设置主机名： # hostnamectl set-hostname master # 修改/etc/hosts文件: # cat /etc/hosts 127.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kubernetes-deploy/">阅读全文</a></p>
                         </article>
@@ -248,7 +248,7 @@ custom solutions 最完整的方式，从零开始二进制搭建
 wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
 yum install [rpm包名]  如果是升级，执行
 yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
-EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.……
+EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.168.9.105:60080/baicells/ovs-rest ovsdb-config-agent库 http://192.168.9.105:60080/baicells/ovsdb-config-agent openapi库 http://192.168.9.105:60080/dongfeng/openapi signaltrace库 http://192.168.9.105:60080/dongfeng/signaltrace epc-c库 http://192.168.9.105:60080/dongfeng/epc-c ovs库 http://192.168.9.105:60080/dongfeng/ovs  RPM包构造方法  开发在git代码托管服务器http://192.168.9.105:60080 上提交更新代码 由web钩子触发后台drone自动使用fpm进行rpm打包 打包好的rpm包自动拷贝到文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 并自动更新本地yum仓库  RPM打包版本 版本说明 以baicells-epc-ui-3.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
                         </article>
@@ -273,7 +273,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
                             <div class="post-content">
                                 1 前言 1.1 术语    英文缩写 英文全称 中文全称     eGW enterprise gateway 企业网关   OMC operation and maintenance center 操作管理中心    1.2 目的 本文档用来指导安装部署业务网关
 2 安装指导 2.1 安装系统 系统版本要求：centos7.2
-安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5.……
+安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
+2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
                         </article>

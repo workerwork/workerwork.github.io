@@ -101,7 +101,7 @@
 由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了
 当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。
 从而实现在外网请求内网服务的需求
-3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # .……
+3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # ./frps -c frps.ini # 前台直接启动，测试看日志方便 # nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp; # 后台运行  4.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
                             </div>
                         </article>
