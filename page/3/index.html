@@ -87,7 +87,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.……
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
                         </article>
@@ -112,7 +112,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.……
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                         </article>
@@ -136,7 +136,10 @@
                             
                             <div class="post-content">
                                 DPDK DPDK是什么 DPDK全称为Date plane development kit，是一个用来进行包数据处理加速的软件库。
-为什么DPDK 传统 Linux 内核网络数据流程：……
+为什么DPDK 传统 Linux 内核网络数据流程：
+硬件中断---&gt;取包分发至内核线程---&gt;软件中断---&gt;内核线程在协议栈中处理包---&gt;处理完毕通知用户层 用户层收包--&gt;网络层---&gt;逻辑层---&gt;业务层  基于传统 OS 内核的数据处理的弊端：
+ 中断处理。当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。
+ 内存拷贝。正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp/">阅读全文</a></p>
                         </article>
@@ -161,7 +164,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.……
+                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
                         </article>
@@ -211,7 +214,7 @@
                             
                             <div class="post-content">
                                 1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.……
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
                         </article>
@@ -236,7 +239,7 @@
                             <div class="post-content">
                                 1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4.……
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
                         </article>

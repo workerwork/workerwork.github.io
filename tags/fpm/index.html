@@ -95,7 +95,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.……
+                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
                             </div>
                         </article>
@@ -119,7 +119,7 @@
                             
                             <div class="post-content">
                                 1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.……
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
                             </div>
                         </article>

@@ -96,7 +96,7 @@
                             
                             <div class="post-content">
                                 1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.……
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/remote-desktop/">阅读全文</a></p>
                             </div>
                         </article>
@@ -119,7 +119,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2.……
+                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
                             </div>
                         </article>
@@ -143,7 +143,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             
                             <div class="post-content">
                                 1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.……
+假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
                             </div>
                         </article>
@@ -190,7 +190,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             
                             <div class="post-content">
                                 1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候……
+使用 https 的时候，就是使用 https 协议复制仓库的时候
+git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
                             </div>
                         </article>
@@ -214,7 +215,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             
                             <div class="post-content">
                                 1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t……
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
                             </div>
                         </article>
@@ -240,7 +242,11 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                                 1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能……
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
+通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
+如果选择按照feature机制来加入结点的话需要注意以下几点：
+VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
+1.nsh-output: 2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
                             </div>
                         </article>
@@ -263,7 +269,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.……
+                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
                             </div>
                         </article>
@@ -310,7 +316,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.……
+                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
                             </div>
                         </article>

@@ -17,7 +17,7 @@
       <pubDate>Tue, 24 Mar 2020 15:48:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/ubuntu-docker/</guid>
-      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.</description>
+      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.com&amp;gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i &#39;s/# deb/deb/g&#39; /etc/apt/sources.</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/debootstrap/</guid>
-      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.</description>
+      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.</description>
     </item>
     
     <item>
@@ -35,7 +35,7 @@
       <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/gitlab/</guid>
-      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.</description>
+      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <guid>https://workerwork.github.io/posts/caddy/</guid>
       <description>1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4.</description>
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.</description>
     </item>
     
     <item>

@@ -17,7 +17,7 @@
       <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/debootstrap/</guid>
-      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.</description>
+      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.</description>
     </item>
     
   </channel>

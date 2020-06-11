@@ -18,7 +18,8 @@
       
       <guid>https://workerwork.github.io/posts/wcg-kernel/</guid>
       <description>1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.</description>
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.</description>
     </item>
     
     <item>
@@ -27,7 +28,7 @@
       <pubDate>Wed, 28 Aug 2019 15:00:21 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/local-yum/</guid>
-      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.</description>
+      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;!DOCTYPE comps PUBLIC &amp;quot;-//CentOS//DTD Comps info//EN&amp;quot; &amp;quot;comps.</description>
     </item>
     
   </channel>

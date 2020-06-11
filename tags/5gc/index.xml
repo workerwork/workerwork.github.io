@@ -17,7 +17,7 @@
       <pubDate>Wed, 01 Apr 2020 15:57:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/5gc-c-build/</guid>
-      <description>1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.</description>
+      <description>1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2.</description>
     </item>
     
   </channel>

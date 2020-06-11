@@ -96,7 +96,7 @@
                             
                             <div class="post-content">
                                 1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.……
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/remote-desktop/">阅读全文</a></p>
                             </div>
                         </article>
@@ -121,7 +121,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.……
+                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
                             </div>
                         </article>
@@ -146,7 +146,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.……
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
                             </div>
                         </article>
@@ -171,7 +171,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                             
                             <div class="post-content">
-                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.……
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                             </div>
                         </article>

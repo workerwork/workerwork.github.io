@@ -18,7 +18,8 @@
       
       <guid>https://workerwork.github.io/posts/auto-epc/</guid>
       <description>AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
-wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.</description>
+wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
+yum install [rpm包名]  如果是升级，执行</description>
     </item>
     
   </channel>

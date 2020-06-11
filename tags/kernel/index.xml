@@ -19,7 +19,8 @@
       <guid>https://workerwork.github.io/posts/kernel-dev/</guid>
       <description>1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()</description>
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
     </item>
     
     <item>
@@ -28,7 +29,9 @@
       <pubDate>Fri, 17 Apr 2020 10:33:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/kernel-module/</guid>
-      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。</description>
+      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
+如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
+2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--.</description>
     </item>
     
     <item>
@@ -38,7 +41,7 @@
       
       <guid>https://workerwork.github.io/posts/self-kernel/</guid>
       <description>1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.</description>
+2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.</description>
     </item>
     
     <item>
@@ -48,7 +51,8 @@
       
       <guid>https://workerwork.github.io/posts/wcg-kernel/</guid>
       <description>1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.</description>
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.</description>
     </item>
     
   </channel>

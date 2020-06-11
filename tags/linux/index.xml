@@ -18,7 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/remote-desktop/</guid>
       <description>1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.</description>
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.</description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 08 Jun 2020 15:57:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/rust-game/</guid>
-      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2.</description>
+      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/frp/</guid>
       <description>1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.</description>
+假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&amp;gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2.</description>
     </item>
     
     <item>
@@ -56,7 +56,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/github-fast/</guid>
       <description>1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候</description>
+使用 https 的时候，就是使用 https 协议复制仓库的时候
+git config --global http.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global https.</description>
     </item>
     
     <item>
@@ -66,7 +67,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/vpp-node-graph/</guid>
       <description>1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t</description>
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name.</description>
     </item>
     
     <item>
@@ -78,7 +80,11 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <description>1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能</description>
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
+通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
+如果选择按照feature机制来加入结点的话需要注意以下几点：
+VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
+1.nsh-output: 2.</description>
     </item>
     
     <item>
@@ -87,7 +93,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Wed, 29 Apr 2020 11:14:24 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/vpp-node-fw/</guid>
-      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.</description>
+      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.</description>
     </item>
     
     <item>
@@ -106,7 +112,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Tue, 28 Apr 2020 09:45:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/wcg-deps/</guid>
-      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.</description>
+      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.</description>
     </item>
     
     <item>
@@ -117,7 +123,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <guid>https://workerwork.github.io/posts/kernel-dev/</guid>
       <description>1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()</description>
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
     </item>
     
     <item>
@@ -126,7 +133,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/affinity/</guid>
-      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。</description>
+      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
+软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
+硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
+解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.</description>
     </item>
     
     <item>
@@ -135,7 +145,9 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Fri, 17 Apr 2020 10:33:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/kernel-module/</guid>
-      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。</description>
+      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
+如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
+2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--.</description>
     </item>
     
     <item>
@@ -145,7 +157,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/self-kernel/</guid>
       <description>1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.</description>
+2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.</description>
     </item>
     
     <item>
@@ -154,7 +166,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Wed, 28 Aug 2019 16:37:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/centos-iso/</guid>
-      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.</description>
+      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
+#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.</description>
     </item>
     
   </channel>

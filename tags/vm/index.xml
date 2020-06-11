@@ -17,7 +17,7 @@
       <pubDate>Wed, 15 Apr 2020 09:45:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/kvm/</guid>
-      <description>1. 检查CPU是否支持kvm # egrep -q &amp;quot;(svm|vmx)&amp;quot; /proc/cpuinfo &amp;amp;&amp;amp; echo &amp;quot;yes!</description>
+      <description>1. 检查CPU是否支持kvm # egrep -q &amp;quot;(svm|vmx)&amp;quot; /proc/cpuinfo &amp;amp;&amp;amp; echo &amp;quot;yes!&amp;quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.</description>
     </item>
     
   </channel>

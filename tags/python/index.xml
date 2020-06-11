@@ -17,7 +17,7 @@
       <pubDate>Sun, 10 May 2020 16:25:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/pypi/</guid>
-      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.</description>
+      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件</description>
     </item>
     
   </channel>

@@ -96,7 +96,8 @@
                             
                             <div class="post-content">
                                 1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t……
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
                             </div>
                         </article>
@@ -122,7 +123,11 @@
                                 1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能……
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
+通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
+如果选择按照feature机制来加入结点的话需要注意以下几点：
+VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
+1.nsh-output: 2.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
                             </div>
                         </article>
@@ -145,7 +150,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.……
+                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
                             </div>
                         </article>

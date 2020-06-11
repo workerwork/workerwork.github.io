@@ -17,7 +17,7 @@
       <pubDate>Tue, 24 Mar 2020 15:48:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/ubuntu-docker/</guid>
-      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.</description>
+      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.com&amp;gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i &#39;s/# deb/deb/g&#39; /etc/apt/sources.</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/debootstrap/</guid>
-      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.</description>
+      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.</description>
     </item>
     
     <item>

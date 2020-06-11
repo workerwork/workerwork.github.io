@@ -18,7 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/epc-cicd/</guid>
       <description>1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.</description>
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.</description>
     </item>
     
     <item>
@@ -28,7 +28,8 @@
       
       <guid>https://workerwork.github.io/posts/auto-epc/</guid>
       <description>AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
-wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.</description>
+wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
+yum install [rpm包名]  如果是升级，执行</description>
     </item>
     
   </channel>

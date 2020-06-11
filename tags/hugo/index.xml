@@ -18,7 +18,10 @@
       
       <guid>https://workerwork.github.io/posts/workspace/</guid>
       <description>1. 什么是hugo 引用一下Hugo官网的描述
- The world’s fastest framework for building websites.</description>
+ The world’s fastest framework for building websites.
+ Hugo是一个非常受欢迎的、开源的静态网站生成工具，和Hexo类似。 它速度快，扩展性强.
+更多的关于Hugo的介绍，请参考Hugo的官网 https://gohugo.io/ .
+2. 安装 hugo 从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。 github链接：https://github.</description>
     </item>
     
     <item>

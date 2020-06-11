@@ -18,7 +18,7 @@
       
       <guid>https://workerwork.github.io/posts/remote-desktop/</guid>
       <description>1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.</description>
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.</description>
     </item>
     
     <item>
@@ -27,7 +27,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 08 Jun 2020 15:57:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/rust-game/</guid>
-      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2.</description>
+      <description>1. 安装rust curl --proto &#39;=https&#39; --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.</description>
     </item>
     
     <item>
@@ -36,7 +36,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 25 May 2020 14:34:21 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/local-apt/</guid>
-      <description>1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2.</description>
+      <description>1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 sudo apt-get -d install &amp;lt;包名&amp;gt; root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;` root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &amp;quot;&amp;lt;&amp;gt;&amp;quot;`  3.</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/frp/</guid>
       <description>1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.</description>
+假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&amp;gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2.</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Sun, 10 May 2020 16:25:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/pypi/</guid>
-      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.</description>
+      <description>1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件</description>
     </item>
     
     <item>
@@ -74,7 +74,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/github-fast/</guid>
       <description>1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候</description>
+使用 https 的时候，就是使用 https 协议复制仓库的时候
+git config --global http.proxy &#39;socks5://127.0.0.1:1080&#39; git config --global https.</description>
     </item>
     
     <item>
@@ -84,7 +85,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/vpp-node-graph/</guid>
       <description>1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t</description>
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name.</description>
     </item>
     
     <item>
@@ -96,7 +98,11 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <description>1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
 这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
 2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能</description>
+通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
+通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
+如果选择按照feature机制来加入结点的话需要注意以下几点：
+VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
+1.nsh-output: 2.</description>
     </item>
     
     <item>
@@ -105,7 +111,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Wed, 29 Apr 2020 11:14:24 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/vpp-node-fw/</guid>
-      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.</description>
+      <description>1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.</description>
     </item>
     
     <item>
@@ -124,7 +130,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Tue, 28 Apr 2020 09:45:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/wcg-deps/</guid>
-      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.</description>
+      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.</description>
     </item>
     
     <item>
@@ -135,7 +141,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <guid>https://workerwork.github.io/posts/kernel-dev/</guid>
       <description>1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()</description>
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
     </item>
     
     <item>
@@ -144,7 +151,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/affinity/</guid>
-      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。</description>
+      <description>1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
+软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
+硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
+解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.</description>
     </item>
     
     <item>
@@ -153,7 +163,9 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Fri, 17 Apr 2020 10:33:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/kernel-module/</guid>
-      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。</description>
+      <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
+如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
+2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--.</description>
     </item>
     
     <item>
@@ -162,7 +174,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Wed, 15 Apr 2020 09:45:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/kvm/</guid>
-      <description>1. 检查CPU是否支持kvm # egrep -q &amp;quot;(svm|vmx)&amp;quot; /proc/cpuinfo &amp;amp;&amp;amp; echo &amp;quot;yes!</description>
+      <description>1. 检查CPU是否支持kvm # egrep -q &amp;quot;(svm|vmx)&amp;quot; /proc/cpuinfo &amp;amp;&amp;amp; echo &amp;quot;yes!&amp;quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.</description>
     </item>
     
     <item>
@@ -172,7 +184,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/self-kernel/</guid>
       <description>1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.</description>
+2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.</description>
     </item>
     
     <item>
@@ -182,7 +194,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/wcg-kernel/</guid>
       <description>1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
-2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.</description>
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.</description>
     </item>
     
     <item>
@@ -191,7 +204,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Wed, 01 Apr 2020 15:57:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/5gc-c-build/</guid>
-      <description>1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.</description>
+      <description>1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2.</description>
     </item>
     
     <item>
@@ -200,7 +213,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Tue, 24 Mar 2020 15:48:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/ubuntu-docker/</guid>
-      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.</description>
+      <description>1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &amp;lt;dongfeng@baicells.com&amp;gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i &#39;s/# deb/deb/g&#39; /etc/apt/sources.</description>
     </item>
     
     <item>
@@ -218,7 +231,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Mon, 23 Mar 2020 22:09:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/debootstrap/</guid>
-      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2.</description>
+      <description>1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.</description>
     </item>
     
     <item>
@@ -227,7 +240,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       <pubDate>Sat, 21 Mar 2020 12:27:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/gitlab/</guid>
-      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.</description>
+      <description>1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.</description>
     </item>
     
     <item>
@@ -237,7 +250,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
       
       <guid>https://workerwork.github.io/posts/vpp/</guid>
       <description>DPDK DPDK是什么 DPDK全称为Date plane development kit，是一个用来进行包数据处理加速的软件库。
-为什么DPDK 传统 Linux 内核网络数据流程：</description>
+为什么DPDK 传统 Linux 内核网络数据流程：
+硬件中断---&amp;gt;取包分发至内核线程---&amp;gt;软件中断---&amp;gt;内核线程在协议栈中处理包---&amp;gt;处理完毕通知用户层 用户层收包--&amp;gt;网络层---&amp;gt;逻辑层---&amp;gt;业务层  基于传统 OS 内核的数据处理的弊端：
+ 中断处理。当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。
+ 内存拷贝。正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.</description>
     </item>
     
     <item>
@@ -258,7 +274,7 @@ github地址：https://github.com/workerwork
       <pubDate>Fri, 30 Aug 2019 14:03:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/centos-good/</guid>
-      <description>1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.</description>
+      <description>1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.</description>
     </item>
     
     <item>
@@ -278,7 +294,7 @@ github地址：https://github.com/workerwork
       
       <guid>https://workerwork.github.io/posts/epc-cicd/</guid>
       <description>1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.</description>
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.</description>
     </item>
     
     <item>
@@ -289,7 +305,7 @@ github地址：https://github.com/workerwork
       <guid>https://workerwork.github.io/posts/caddy/</guid>
       <description>1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4.</description>
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.</description>
     </item>
     
     <item>
@@ -330,7 +346,8 @@ drone文档：https://docs.drone.io/
       <pubDate>Wed, 28 Aug 2019 16:37:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/centos-iso/</guid>
-      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.</description>
+      <description>1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
+#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.</description>
     </item>
     
     <item>
@@ -339,7 +356,7 @@ drone文档：https://docs.drone.io/
       <pubDate>Wed, 28 Aug 2019 15:00:21 +0800</pubDate>
       
       <guid>https://workerwork.github.io/posts/local-yum/</guid>
-      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.</description>
+      <description>1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt; &amp;lt;!DOCTYPE comps PUBLIC &amp;quot;-//CentOS//DTD Comps info//EN&amp;quot; &amp;quot;comps.</description>
     </item>
     
     <item>
@@ -349,7 +366,10 @@ drone文档：https://docs.drone.io/
       
       <guid>https://workerwork.github.io/posts/workspace/</guid>
       <description>1. 什么是hugo 引用一下Hugo官网的描述
- The world’s fastest framework for building websites.</description>
+ The world’s fastest framework for building websites.
+ Hugo是一个非常受欢迎的、开源的静态网站生成工具，和Hexo类似。 它速度快，扩展性强.
+更多的关于Hugo的介绍，请参考Hugo的官网 https://gohugo.io/ .
+2. 安装 hugo 从Github Release页面下载对应的二进制文件,然后把它放在你的PATH目录里即可使用。支持任何平台，根据自己的平台选择相应的二进制包即可。 github链接：https://github.</description>
     </item>
     
     <item>
@@ -360,7 +380,9 @@ drone文档：https://docs.drone.io/
       <guid>https://workerwork.github.io/posts/kubernetes-deploy/</guid>
       <description>kubernetes Kubernetes官方提供三种部署方式： minikube minikube可以实现一种轻量级的Kubernetes集群，通过在本地计算机上创建虚拟机并部署只包含单个节点的简单集群。Minikube适用于Linux，MacOS和Windows系统。Minikube CLI提供集群管理的基本操作，包括 start、stop、status和delete
 kubeadm kubeadm是Kubernetes1.6开始官方推出的快速部署Kubernetes集群工具，其思路是将Kubernetes相关服务容器化(Kubernetes静态Pod)以简化部署
-custom solutions 最完整的方式，从零开始二进制搭建</description>
+custom solutions 最完整的方式，从零开始二进制搭建
+
+部署步骤 准备环境 # 关闭防火墙： # systemctl stop firewalld # systemctl disable firewalld # 关闭selinux： # sed -i &#39;s/enforcing/disabled/&#39; /etc/selinux/config # setenforce 0 # 关闭swap： # swapoff -a # 临时 # vim /etc/fstab # 永久 # vim /etc/sysctl.</description>
     </item>
     
     <item>
@@ -370,7 +392,8 @@ custom solutions 最完整的方式，从零开始二进制搭建</description>
       
       <guid>https://workerwork.github.io/posts/auto-epc/</guid>
       <description>AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
-wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.</description>
+wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
+yum install [rpm包名]  如果是升级，执行</description>
     </item>
     
     <item>
