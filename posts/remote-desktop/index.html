@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ubuntu18.04使用xrdp远程桌面 | WorkSpace</title>
+    <meta property="og:title" content="ubuntu18.04使用xrdp远程桌面 - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-06-11T09:01:52&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-06-11T09:01:52&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="ubuntu18.04使用xrdp远程桌面">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/remote-desktop/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">ubuntu18.04使用xrdp远程桌面</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年6月11日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/ubuntu">ubuntu</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-执行下面的脚本安装">1. 执行下面的脚本安装</h2>
+
+<p><a href="http://www.c-nergy.be/downloads/install-xrdp-3.0.zip">http://www.c-nergy.be/downloads/install-xrdp-3.0.zip</a></p>
+
+<pre><code class="language-shell">root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh 
+#!/bin/bash
+#####################################################################################################
+# Script_Name : install-xrdp-3.0.sh
+# Description : Perform a custom installation of xrdp
+# on ubuntu 18.04 and later
+# Date : May 2019
+# written by : Griffon
+# Web Site :http://www.c-nergy.be - http://www.c-nergy.be/blog
+# Version : 3.0
+# History : 3.0 - Added support for Ubuntu 19.04 
+#               - New code for Look'n feel using xsessionrc method
+#               - New code for enabling Sound Redirection - compiling from source 
+#               - Removed -g parameter   
+#         : 2.4 - Proper fix for U18.04.2 when xserver-xorg-core-hwe-18.04
+#                 changed code to detect whicht package in use and perform most appropriate compilation   
+#         : 2.3 - Quick Fix Ubuntu 18.04.2 issue when xserver-xorg-core-hwe-18.04 installed
+#         : 2.2 - Add Support for Ubuntu 18.10 and Yaru Theme
+#         : 2.1 - Add logic to enable sound redirection for U18.04
+#               - re-write code logic to include functions
+#               - Removed support for Ubuntu 17.10 as reached end of support
+#         : 2.0 - Initial Version for Ubuntu system with Gnome Desktop
+#         : 1.x - Script for Ubuntu 16.04 or later       
+# Disclaimer : Script provided AS IS. Use it at your own risk....
+####################################################################################################
+
+#---------------------------------------------------#
+#  Detecting if Parameters passed to script .... 
+#---------------------------------------------------#
+
+while getopts s: option 
+do 
+ case &quot;${option}&quot; 
+ in 
+ s) fixSound=${OPTARG};; 
+ esac 
+done 
+
+#---------------------------------------------------#
+# Script Version information Displayed              #
+#---------------------------------------------------#
+
+echo
+/bin/echo -e &quot;\e[1;36m   !-------------------------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m   !   Custom XRDP Installation Script  - Ver 3.0                !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m   !   Written by Griffon - May 2019 - www.c-nergy.be            !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m   !-------------------------------------------------------------!\e[0m&quot;
+echo
+
+#--------------------------------------------------------------------------#
+# -----------------------Function Section - DO NOT MODIFY -----------------#
+#--------------------------------------------------------------------------#
+
+#---------------------------------------------------#
+# Function 1 - Install Prereqs...
+#---------------------------------------------------#
+
+install_prereqs() {
+
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Installing PreReqs packages..Proceeding.  ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+/bin/echo -e &quot;\e[1;33m   |-| Detecting xserver-xorg-core package installed  \e[0m&quot;
+
+xorgver=$(dpkg-query -W -f ='${Status}\n' xserver-xorg-core | awk {'print $3'}) 
+
+if [[ &quot;$xorgver&quot; = *not-installed* ]];  
+then
+# - hwe 18.04 is installed
+/bin/echo -e &quot;\e[1;32m       |-| xorg package version: xserver-xorg-core-hwe-18.04 \e[0m&quot;
+echo
+sudo apt-get -y install libx11-dev libxfixes-dev libssl-dev libpam0g-dev libtool libjpeg-dev flex bison gettext autoconf libxml-parser-perl libfuse-dev xsltproc libxrandr-dev python-libxml2 nasm xserver-xorg-dev-hwe-18.04 fuse pkg-config git intltool xserver-xorg-core-hwe-18.04
+else
+# - hwe 18.04 not installed
+/bin/echo -e &quot;\e[1;32m       |-| xorg package version: xserver-xorg-core \e[0m&quot;
+echo
+sudo apt-get -y install libx11-dev libxfixes-dev libssl-dev libpam0g-dev libtool libjpeg-dev flex bison gettext autoconf libxml-parser-perl libfuse-dev xsltproc libxrandr-dev python-libxml2 nasm xserver-xorg-dev fuse pkg-config git intltool xserver-xorg-core
+fi
+
+}
+
+#---------------------------------------------------#
+# Function 2 - Download XRDP Binaries... 
+#---------------------------------------------------#
+get_binaries() { 
+
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Download xRDP Binaries.......Proceeding.  ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+mkdir ~/Downloads || true
+cd ~/Downloads
+
+## -- Download the xrdp latest files
+echo
+/bin/echo -e &quot;\e[1;32m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;32m   !  Preparing download xrdp package            !\e[0m&quot;
+/bin/echo -e &quot;\e[1;32m   !---------------------------------------------!\e[0m&quot;
+echo
+git clone https://github.com/neutrinolabs/xrdp.git
+echo
+/bin/echo -e &quot;\e[1;32m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;32m   !  Preparing download xorgxrdp package        !\e[0m&quot;
+/bin/echo -e &quot;\e[1;32m   !---------------------------------------------!\e[0m&quot;
+echo
+git clone https://github.com/neutrinolabs/xorgxrdp.git
+
+}
+
+#---------------------------------------------------#
+# Function 3 - compiling xrdp... 
+#---------------------------------------------------#
+
+compile_source() { 
+
+# -- Compiling xrdp package first 
+
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Compile xRDP packages .......Proceeding.  ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+cd ~/Downloads/xrdp
+sudo ./bootstrap
+sudo ./configure --enable-fuse --enable-jpeg --enable-rfxcodec
+sudo make
+
+#-- check if no error during compilation 
+
+if [ $? -eq 0 ]
+then 
+/bin/echo -e &quot;\e[1;33m   |-| Make Operation Completed successfully       \e[0m&quot;
+
+else 
+echo
+echo
+/bin/echo -e &quot;\e[1;31m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !   Error while Executing make                !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !   The Script is exiting....                 !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !---------------------------------------------!\e[0m&quot;
+exit
+fi
+sudo make install
+
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Compile xorgxrdp packages....Proceeding.  ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+cd ~/Downloads/xorgxrdp 
+sudo ./bootstrap 
+sudo ./configure 
+sudo make
+
+# check if no error during compilation 
+if [ $? -eq 0 ]
+then 
+echo
+/bin/echo -e &quot;\e[1;33m   |-| Make Operation Completed successfully       \e[0m&quot;
+echo
+else 
+echo
+/bin/echo -e &quot;\e[1;31m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !   Error while Executing make                !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !   The Script is exiting....                 !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m   !---------------------------------------------!\e[0m&quot;
+exit
+fi
+sudo make install
+
+}
+
+#---------------------------------------------------#
+# Function 5 - create services .... 
+#---------------------------------------------------# 
+
+enable_service() {
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Creating xRDP services.......Proceeding.  ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+sudo systemctl daemon-reload
+sudo systemctl enable xrdp.service
+sudo systemctl enable xrdp-sesman.service
+sudo systemctl start xrdp
+
+}
+
+#---------------------------------------------------#
+# Function 6 - Install Gnome Tweak Tool.... 
+#---------------------------------------------------#
+
+install_tweak() 
+{
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Installing Gnome Tweak...Proceeding...    ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+sudo apt-get install gnome-tweak-tool -y
+}
+
+#--------------------------------------------------------------------#
+# Fucntion 7 - Allow console Access ....
+#--------------------------------------------------------------------#
+
+allow_console() 
+{
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Granting Console Access...Proceeding...   ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+sudo sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config
+}
+
+#---------------------------------------------------#
+# Function 8 - create policies exceptions .... 
+#---------------------------------------------------#
+
+create_polkit()
+{
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Creating Polkit File...Proceeding...      ! \e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+sudo bash -c &quot;cat &gt;/etc/polkit-1/localauthority/50-local.d/45-allow.colord.pkla&quot; &lt;&lt;EOF
+[Allow Colord all Users]
+Identity=unix-user:*
+Action=org.freedesktop.color-manager.create-device;org.freedesktop.color-manager.create-profile;org.freedesktop.color-manager.delete-device;org.freedesktop.color-manager.delete-profile;org.freedesktop.color-manager.modify-device;org.freedesktop.color-manager.modify-profile
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+
+[Allow Package Management all Users]
+Identity=unix-user:*
+Action=org.debian.apt.*;io.snapcraft.*;org.freedesktop.packagekit.*;com.ubuntu.update-notifier.*
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+EOF
+
+}
+
+#---------------------------------------------------#
+# Function 9 - Fixing Theme and Extensions .... 
+#---------------------------------------------------#
+
+fix_theme()
+{
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Fix Theme and extensions...Proceeding...  !\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+sudo sed -i.bak &quot;4 a #Improved Look n Feel Method\ncat &lt;&lt;EOF &gt; ~/.xsessionrc\nexport GNOME_SHELL_SESSION_MODE=ubuntu\nexport XDG_CURRENT_DESKTOP=ubuntu:GNOME\nexport XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg\nEOF\n&quot; /etc/xrdp/startwm.sh
+echo
+}
+
+#---------------------------------------------------#
+# Function 10 - Enable Sound Redirection .... 
+#---------------------------------------------------#
+
+enable_sound()
+{
+echo
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !   Enabling Sound Redirection...             !\e[0m&quot;
+/bin/echo -e &quot;\e[1;33m   !---------------------------------------------!\e[0m&quot;
+echo
+
+# Step 1 - Enable Source Code Repository
+sudo apt-add-repository -s 'deb http://be.archive.ubuntu.com/ubuntu/ '$codename' main restricted'
+sudo apt-add-repository -s 'deb http://be.archive.ubuntu.com/ubuntu/ '$codename' restricted universe main multiverse'
+sudo apt-add-repository -s 'deb http://be.archive.ubuntu.com/ubuntu/ '$codename'-updates restricted universe main multiverse'
+sudo apt-add-repository -s 'deb http://be.archive.ubuntu.com/ubuntu/ '$codename'-backports main restricted universe multiverse'
+sudo apt-add-repository -s 'deb http://be.archive.ubuntu.com/ubuntu/ '$codename'-security main restricted universe main multiverse'
+sudo apt-get update
+
+# Step 2 - Install Some PreReqs
+sudo apt-get install git libpulse-dev autoconf m4 intltool build-essential dpkg-dev -y
+sudo apt build-dep pulseaudio -y
+
+# Step 3 -  Download pulseaudio source in /tmp directory - Do not forget to enable source repositories
+cd /tmp
+sudo apt source pulseaudio
+
+# Step 4 - Compile
+pulsever=$(pulseaudio --version | awk '{print $2}')
+cd /tmp/pulseaudio-$pulsever
+sudo ./configure
+
+# step 5 - Create xrdp sound modules
+sudo git clone https://github.com/neutrinolabs/pulseaudio-module-xrdp.git
+cd pulseaudio-module-xrdp
+sudo ./bootstrap 
+sudo ./configure PULSE_DIR=&quot;/tmp/pulseaudio-$pulsever&quot;
+sudo make
+
+#Step 6 copy files to correct location (as defined in /etc/xrdp/pulse/default.pa)
+cd /tmp/pulseaudio-$pulsever/pulseaudio-module-xrdp/src/.libs
+sudo install -t &quot;/var/lib/xrdp-pulseaudio-installer&quot; -D -m 644 *.so
+sudo install -t &quot;/usr/lib/pulse-$pulsever/modules&quot; -D -m 644 *.so
+echo
+
+}
+
+#--------------------------------------------------------------------------#
+# -----------------------END Function Section             -----------------#
+#--------------------------------------------------------------------------#
+
+#--------------------------------------------------------------------------#
+#------------                 MAIN SCRIPT SECTION       -------------------#  
+#--------------------------------------------------------------------------#
+
+
+
+#---------------------------------------------------#
+# Step 0 - Try to Detect Ubuntu Version.... 
+#---------------------------------------------------#
+
+version=$(lsb_release -sd) 
+codename=$(lsb_release -sc) 
+
+echo
+/bin/echo -e &quot;\e[1;33m   |-| Detecting Ubuntu version        \e[0m&quot;
+
+if  [[ &quot;$version&quot; = *&quot;Ubuntu 18.04&quot;* ]];
+then
+/bin/echo -e &quot;\e[1;32m       |-| Ubuntu Version : $version\e[0m&quot;
+echo
+elif [[ &quot;$version&quot; = *&quot;Ubuntu 18.10&quot;* ]];
+then
+/bin/echo -e &quot;\e[1;32m       |-| Ubuntu Version : $version\e[0m&quot;
+echo
+elif [[ &quot;$version&quot; = *&quot;Ubuntu 19.04&quot;* ]];
+then
+/bin/echo -e &quot;\e[1;32m       |-| Ubuntu Version : $version\e[0m&quot;
+echo
+else
+/bin/echo -e &quot;\e[1;31m  !------------------------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m  ! Your system is not running Ubuntu 18.04 Edition and later  !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m  ! The script has been tested only on Ubuntu 18.04 and later  !\e[0m&quot;
+/bin/echo -e &quot;\e[1;31m  ! The script is exiting...                                   !\e[0m&quot;              
+/bin/echo -e &quot;\e[1;31m  !------------------------------------------------------------!\e[0m&quot;
+echo
+exit
+fi
+
+/bin/echo -e &quot;\e[1;33m   |-| Detecting Parameters        \e[0m&quot;
+
+#Detect if argument passed
+if [ &quot;$fixSound&quot; = &quot;yes&quot; ]; 
+then 
+/bin/echo -e &quot;\e[1;32m       |-| Sound Redirection Option...: [YES]\e[0m&quot;
+else
+/bin/echo -e &quot;\e[1;32m       |-| Sound Redirection Option...: [NO]\e[0m&quot;
+fi
+
+#---------------------------------------------------------#
+# Step 1 - Executing the installation &amp; config tasks .... #
+#---------------------------------------------------------#
+
+echo
+/bin/echo -e &quot;\e[1;36m   !-------------------------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m   !   Installation Process starting....                         !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m   !-------------------------------------------------------------!\e[0m&quot;
+echo
+/bin/echo -e &quot;\e[1;33m   |-| Proceed with installation.....       \e[0m&quot;
+echo 
+
+install_prereqs
+get_binaries
+compile_source
+enable_service
+install_tweak
+allow_console
+create_polkit
+fix_theme
+
+
+if [ &quot;$fixSound&quot; = &quot;yes&quot; ]; 
+then 
+enable_sound
+fi
+
+#---------------------------------------------------#
+# Step 2 - Credits .... 
+#---------------------------------------------------#
+echo
+/bin/echo -e &quot;\e[1;36m !-----------------------------------------------------------------------!\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m ! Installation Completed                                                !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m ! Please test your xRDP configuration.A Reboot Might be required...     !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m ! Written by Griffon - April 2019 - 3.0 - Install-xrdp-3.0.sh           !\e[0m&quot;
+/bin/echo -e &quot;\e[1;36m !-----------------------------------------------------------------------!\e[0m&quot;
+echo
+
+</code></pre>
+
+<h2 id="2-安装完reboot">2. 安装完reboot</h2>
+
+<h2 id="3-使用mstsc或者remmina客户端连接">3. 使用mstsc或者Remmina客户端连接</h2>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/rust-game/">使用rust语言&#43;SDL2库写游戏</a></li>
+        
+        <li><a href="/posts/frp/">frp内网穿透</a></li>
+        
+        <li><a href="/posts/p4/">p4实践环境</a></li>
+        
+        <li><a href="/posts/github-fast/">github加速</a></li>
+        
+        <li><a href="/posts/vpp-node-graph/">vpp node-graph编排过程</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/ubuntu">ubuntu</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/remote-desktop">remote-desktop</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏">使用rust语言&#43;SDL2库写游戏</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析">vpp 节点报文处理流程分析</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ubuntu/">ubuntu(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/frp/">frp</a>
+    
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/github/">github</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
+    
+    <a href="https://workerwork.github.io/tags/pip/">pip</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
+    
+    <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BB%A3%E7%90%86/">代理</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.google.com/" title="google搜索">google搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cn.bing.com/" title="bing搜索">bing搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.baidu.com/" title="baidu搜索">baidu搜索</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.youtube.com/" title="youtube">youtube</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://vimeo.com/" title="vimeo">vimeo</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.wikipedia.org/" title="维基">维基</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thepiratebay.org/index.html" title="海盗湾">海盗湾</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thekickasstorrents.to/" title="KickassTorrents">KickassTorrents</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.reddit.com/" title="reddit">reddit</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.imdb.com/" title="IMDB">IMDB</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.quora.com/" title="quora">quora</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.c114.com.cn/" title="c114">c114</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://news.cnblogs.com/" title="博客园">博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.csdn.net/" title="csdn">csdn</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://leetcode-cn.com/" title="leetcode">leetcode</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.ted.com/" title="ted">ted</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.sdnlab.com/" title="sdnlab">sdnlab</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.v2ex.com/" title="v2ex">v2ex</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.pinterest.com/" title="pinterest">pinterest</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://d.serctl.com/" title="d.serctl">d.serctl</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://g.widora.cn/" title="github代理下载">github代理下载</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/p4lang/tutorials" title="P4教程">P4教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://fd.io/" title="FD.io">FD.io</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.opennetworking.org/" title="ONF">ONF</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.zsythink.net/" title="网络博客4">网络博客4</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.netcan666.com/" title="netcan666">netcan666</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust视频教程">rust视频教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://kaisery.github.io/trpl-zh-cn/" title="rust中文教程">rust中文教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustcc.com/" title="rust中文社区索引">rust中文社区索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://doc.rust-lang.org/std/" title="rust标准库">rust标准库</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://docs.rs/" title="docs.rs">docs.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://lib.rs/" title="lib.rs">lib.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitee.com/" title="gitee">gitee</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+
+
+
+</body>
+</html>

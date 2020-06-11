@@ -6,10 +6,20 @@
     <description>Recent content in ubuntu on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 24 Mar 2020 15:48:51 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 11 Jun 2020 09:01:52 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/ubuntu/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ubuntu18.04使用xrdp远程桌面</title>
+      <link>https://workerwork.github.io/posts/remote-desktop/</link>
+      <pubDate>Thu, 11 Jun 2020 09:01:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/remote-desktop/</guid>
+      <description>1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
+root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.04 and later # Date : May 2019 # written by : Griffon # Web Site :http://www.c-nergy.be - http://www.c-nergy.be/blog # Version : 3.0 # History : 3.0 - Added support for Ubuntu 19.04 # - New code for Look&#39;n feel using xsessionrc method # - New code for enabling Sound Redirection - compiling from source # - Removed -g parameter # : 2.</description>
+    </item>
     
     <item>
       <title>创建ubuntu docker镜像</title>
