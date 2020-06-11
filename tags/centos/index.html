@@ -97,7 +97,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.……
+                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
                             </div>
                         </article>
@@ -123,7 +123,9 @@
                             
                             <div class="post-content">
                                 1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
-#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号……
+#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
+#查看空口令账号 awk -F: '($2==&quot;&quot;)' /etc/shadow #为空口令账号设定密码 passwd &lt;用户名&gt; #查看UID为零的账号，确认只有root账号 awk -F: '($3==0)' /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
+vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &lt;用户名&gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/security/">阅读全文</a></p>
                             </div>
                         </article>

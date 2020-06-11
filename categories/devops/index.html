@@ -95,7 +95,8 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2.……
+                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2. 构建目录结构  tree文件
+root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ └── amf │ ├── config │ │ ├── amf.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
                             </div>
                         </article>
@@ -120,7 +121,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.……
+                                1. 创建Dockerfile [dongfeng@localhost test]$ cat Dockerfile FROM ubuntu:18.04 MAINTAINER The UbuntuOS Project &lt;dongfeng@baicells.com&gt; ENV container docker ENV LC_ALL C ENV DEBIAN_FRONTEND noninteractive RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list RUN apt-get update -yqq \ &amp;&amp; apt-get install -yq apt-utils \ &amp;&amp; apt-get install -yq curl \ &amp;&amp; apt-get install -yq git \ &amp;&amp; apt-get install -yq unzip zip tar \ &amp;&amp; apt-get install -yq ca-certificates \ &amp;&amp; apt-get install -yq bash-completion \ &amp;&amp; apt-get install -yq iproute2 iputils-ping \ &amp;&amp; apt-get install -yq systemd systemd-sysv \ &amp;&amp; apt-get clean \ &amp;&amp; apt-get autoclean \ &amp;&amp; apt-get autoremove \ &amp;&amp; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* RUN cd /lib/systemd/system/sysinit.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/ubuntu-docker/">阅读全文</a></p>
                             </div>
                         </article>
@@ -145,7 +146,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.……
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m dongfeng echo &quot;root:baicells&quot; | chpasswd echo &quot;dongfeng:baicells&quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &gt;&gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;&amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
                             </div>
                         </article>
@@ -170,7 +171,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.……
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #添加docker仓库 sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot; sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/docker/daemon.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                             </div>
                         </article>
@@ -194,7 +195,7 @@
                             
                             <div class="post-content">
                                 1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.……
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
                             </div>
                         </article>
@@ -221,7 +222,7 @@
                             <div class="post-content">
                                 1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
 drone文档：https://docs.drone.io/
-2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.……
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: '2' services: #gogs: #image: gogs/gogs:latest #ports: # - &quot;10022:22&quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/drone/">阅读全文</a></p>
                             </div>
                         </article>
@@ -299,7 +300,9 @@ drone文档：https://docs.drone.io/
                             <div class="post-content">
                                 AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
 wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
-yum install [rpm包名]  如果是升级，执行……
+yum install [rpm包名]  如果是升级，执行
+yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
+EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
                             </div>
                         </article>

@@ -97,7 +97,8 @@
                             <div class="post-content">
                                 1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
 使用 https 的时候，就是使用 https 协议复制仓库的时候
-git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.……
+git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.proxy 'socks5://127.0.0.1:1080' git config --global http.proxy 'vmess://127.0.0.1:1081' git config --global https.proxy 'vmess://127.0.0.1:1081'  也可以直接修改用户主目录下的 .gitconfig 文件
+[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
                             </div>
                         </article>

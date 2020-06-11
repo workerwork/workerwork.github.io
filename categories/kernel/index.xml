@@ -20,7 +20,10 @@
       <description>1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
 通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
 2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
-int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
+struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
+  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
+ 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下</description>
     </item>
     
     <item>
@@ -31,7 +34,7 @@ int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
       <guid>https://workerwork.github.io/posts/kernel-module/</guid>
       <description>1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
 如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
-2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--.</description>
+2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--. 1 root root 728 4月 17 10:28 hello.c -rw-r--r--. 1 root root 229 4月 17 10:24 Makefile -rw-r--r--. 1 root root 190 4月 17 10:26 mymax.</description>
     </item>
     
     <item>
@@ -41,7 +44,7 @@ int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
       
       <guid>https://workerwork.github.io/posts/self-kernel/</guid>
       <description>1. 下载内核源代码 从 http://www.kernel.org 下载内核源代码RPM包 例如linux-2.6.27.62.tar.bz2
-2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.</description>
+2. 解压内核 # bzip2 -d linux-2.6.27.62.tar.bz2 # tar -xvf linux-2.6.27.62.tar  3. 定制内核 #定制内核有很多种方法：make config(最基本方法),make defconfig（默认的方法) # make config # make defconfig # make menuconfig #会生成.config文件，这个文件也可以从/boot路径下拷贝 #Y是该选项能够构建到内核内部 #M是构建模块  4. 构建内核 # make clean //这一步最好执行一下 # make -j2  5. 打包成rpm # make rpm  6.</description>
     </item>
     
     <item>
@@ -52,7 +55,7 @@ int mknod(const char *pathname, mode_t mode, dev_t dev);   3.</description>
       <guid>https://workerwork.github.io/posts/wcg-kernel/</guid>
       <description>1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
 2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
-3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.</description>
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;amp;&amp;amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd .</description>
     </item>
     
   </channel>

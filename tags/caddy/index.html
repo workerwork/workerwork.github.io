@@ -97,7 +97,7 @@
                             <div class="post-content">
                                 1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.……
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.……
                                 <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
                             </div>
                         </article>

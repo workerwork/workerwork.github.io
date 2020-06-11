@@ -87,7 +87,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3.……
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m dongfeng echo &quot;root:baicells&quot; | chpasswd echo &quot;dongfeng:baicells&quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &gt;&gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;&amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
                         </article>
@@ -112,7 +112,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.……
+                                1. 安装docker替换国内镜像源 #卸载之前的docker版本 sudo apt-get remove docker docker-engine docker-ce docker.io #apt元数据更新 sudo apt-get update #安装以下包，以使apt可以通过https来使用repository sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common #添加docker官方GPG秘钥并更新元数据 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - sudo apt-get update #添加docker仓库 sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot; sudo apt-get update #列出docker可用版本，选择一个安装 sudo apt-cache madison docker-ce sudo apt-get install docker-ce= #替换docker镜像源 sudo vim /etc/docker/daemon.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/gitlab/">阅读全文</a></p>
                         </article>
@@ -139,7 +139,10 @@
 为什么DPDK 传统 Linux 内核网络数据流程：
 硬件中断---&gt;取包分发至内核线程---&gt;软件中断---&gt;内核线程在协议栈中处理包---&gt;处理完毕通知用户层 用户层收包--&gt;网络层---&gt;逻辑层---&gt;业务层  基于传统 OS 内核的数据处理的弊端：
  中断处理。当网络中大量数据包到来时，会产生频繁的硬件中断请求，这些硬件中断可以打断之前较低优先级的软中断或者系统调用的执行过程，如果这种打断频繁的话，将会产生较高的性能开销。
- 内存拷贝。正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.……
+ 内存拷贝。正常情况下，一个网络数据包从网卡到应用程序需要经过如下的过程：数据从网卡通过 DMA 等方式传到内核开辟的缓冲区，然后从内核空间拷贝到用户态空间，在 Linux 内核协议栈中，这个耗时操作甚至占到了数据包整个处理流程的 57.1%。
+ 上下文切换。频繁到达的硬件中断和软中断都可能随时抢占系统调用的运行，这会产生大量的上下文切换开销。另外，在基于多线程的服务器设计框架中，线程间的调度也会产生频繁的上下文切换开销，同样，锁竞争的耗能也是一个非常严重的问题。
+ 局部性失效。如今主流的处理器都是多个核心的，这意味着一个数据包的处理可能跨多个 CPU 核心，比如一个数据包可能中断在 cpu0，内核态处理在 cpu1，用户态处理在 cpu2，这样跨多个核心，容易造成 CPU 缓存失效，造成局部性失效。如果是 NUMA 架构，更会造成跨 NUMA 访问内存，性能受到很大影响。
+ 内存管理。传统服务器内存页为 4K，为了提高内存的访问速度，避免 cache miss，可以增加 cache 中映射表的条目，但这又会影响 CPU 的检索效率。……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp/">阅读全文</a></p>
                         </article>
@@ -164,7 +167,7 @@
                             </div>
                             
                             <div class="post-content">
-                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.……
+                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
                         </article>
@@ -190,7 +193,9 @@
                             
                             <div class="post-content">
                                 1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
-#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号……
+#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
+#查看空口令账号 awk -F: '($2==&quot;&quot;)' /etc/shadow #为空口令账号设定密码 passwd &lt;用户名&gt; #查看UID为零的账号，确认只有root账号 awk -F: '($3==0)' /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
+vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &lt;用户名&gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/security/">阅读全文</a></p>
                         </article>
@@ -214,7 +219,7 @@
                             
                             <div class="post-content">
                                 1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.……
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
                         </article>
@@ -239,7 +244,7 @@
                             <div class="post-content">
                                 1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
 2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.……
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
                         </article>
@@ -266,7 +271,7 @@
                             <div class="post-content">
                                 1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
 drone文档：https://docs.drone.io/
-2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.……
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: '2' services: #gogs: #image: gogs/gogs:latest #ports: # - &quot;10022:22&quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/drone/">阅读全文</a></p>
                         </article>

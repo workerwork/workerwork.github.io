@@ -18,7 +18,9 @@
       
       <guid>https://workerwork.github.io/posts/security/</guid>
       <description>1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
-#删除不必要的账号 userdel &amp;lt;用户名&amp;gt; #锁定不必要的账号 passwd -l &amp;lt;用户名&amp;gt; #解锁必要的账号 passwd -u &amp;lt;用户名&amp;gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号</description>
+#删除不必要的账号 userdel &amp;lt;用户名&amp;gt; #锁定不必要的账号 passwd -l &amp;lt;用户名&amp;gt; #解锁必要的账号 passwd -u &amp;lt;用户名&amp;gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
+#查看空口令账号 awk -F: &#39;($2==&amp;quot;&amp;quot;)&#39; /etc/shadow #为空口令账号设定密码 passwd &amp;lt;用户名&amp;gt; #查看UID为零的账号，确认只有root账号 awk -F: &#39;($3==0)&#39; /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
+vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &amp;lt;用户名&amp;gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.</description>
     </item>
     
   </channel>
