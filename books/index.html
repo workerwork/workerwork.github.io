@@ -321,6 +321,18 @@ BLOCK
 &amp;- #关闭标准输出
 n&amp;- #关闭n号输出
 
+exec {fd_lock}&gt;&quot;${LOCK_FILE}&quot;
+flock -x &quot;${fd_lock}&quot; || { echo &quot;ERROR: flock() failed.&quot; &gt;&amp;2; exit 1; }
+[[critical code]] 
+flock -u &quot;${fd_lock}&quot; &amp;&amp; echo &quot;removed lock here&quot; || echo &quot;lock busy didn't remove lock .. &quot; 
+[[ -e &quot;/proc/$$/fd/${fd_lock}&quot; ]] &amp;&amp; eval &quot;exec ${fd_lock}&gt;&amp;-&quot;
+if lsof &quot;${lock_file}&quot; &amp;&gt;/dev/random; then 
+echo &quot;lock file still in use, not deleting&quot;
+else 
+rm -f &quot;${lock_file}&quot;
+echo &quot;removed lock file&quot;
+fi 
+
 ...
 详见
 http://xstarcd.github.io/wiki/shell/exec_redirect.html
