@@ -1,0 +1,3235 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>vpp编译分析 | WorkSpace</title>
+    <meta property="og:title" content="vpp编译分析 - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-06-15T09:34:52&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-06-15T09:34:52&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="vpp编译分析">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/vpp-debs/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">vpp编译分析</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年6月15日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-下载源码">1. 下载源码</h2>
+
+<pre><code class="language-shell">git clone http://192.168.9.105:60080/UPF/upf-vpp.git
+</code></pre>
+
+<h2 id="2-编译选项">2. 编译选项</h2>
+
+<pre><code class="language-shell">1.make install-dep #install software dependencies
+2.make wipe(wipe-release) #wipe all products
+3.make build(build-release) #build binaries
+4.make install-ext-deps #install external development dependencies(about dpdk)
+5.make pkg-deb #build DEB packages
+</code></pre>
+
+<h2 id="3-deb包">3. deb包</h2>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra
+/.
+/usr
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/libvppinfra.so.19.08.1
+/usr/share
+/usr/share/doc
+/usr/share/doc/libvppinfra
+/usr/share/doc/libvppinfra/changelog.Debian.gz
+/usr/share/doc/libvppinfra/copyright
+/usr/lib/x86_64-linux-gnu/libvppinfra.so
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra-dev 
+/.
+/usr
+/usr/include
+/usr/include/vppinfra
+/usr/include/vppinfra/atomics.h
+/usr/include/vppinfra/bihash_16_8.h
+/usr/include/vppinfra/bihash_24_8.h
+/usr/include/vppinfra/bihash_40_8.h
+/usr/include/vppinfra/bihash_48_8.h
+/usr/include/vppinfra/bihash_8_8.h
+/usr/include/vppinfra/bihash_template.c
+/usr/include/vppinfra/bihash_template.h
+/usr/include/vppinfra/bihash_vec8_8.h
+/usr/include/vppinfra/bitmap.h
+/usr/include/vppinfra/bitops.h
+/usr/include/vppinfra/byte_order.h
+/usr/include/vppinfra/cache.h
+/usr/include/vppinfra/callback.h
+/usr/include/vppinfra/clib.h
+/usr/include/vppinfra/clib_error.h
+/usr/include/vppinfra/cpu.h
+/usr/include/vppinfra/crc32.h
+/usr/include/vppinfra/dlist.h
+/usr/include/vppinfra/dlmalloc.h
+/usr/include/vppinfra/elf.h
+/usr/include/vppinfra/elf_clib.h
+/usr/include/vppinfra/elog.h
+/usr/include/vppinfra/error.h
+/usr/include/vppinfra/error_bootstrap.h
+/usr/include/vppinfra/fheap.h
+/usr/include/vppinfra/fifo.h
+/usr/include/vppinfra/file.h
+/usr/include/vppinfra/flowhash_24_16.h
+/usr/include/vppinfra/flowhash_8_8.h
+/usr/include/vppinfra/flowhash_template.h
+/usr/include/vppinfra/format.h
+/usr/include/vppinfra/graph.h
+/usr/include/vppinfra/hash.h
+/usr/include/vppinfra/heap.h
+/usr/include/vppinfra/lb_hash_hash.h
+/usr/include/vppinfra/linux
+/usr/include/vppinfra/linux/syscall.h
+/usr/include/vppinfra/linux/sysfs.h
+/usr/include/vppinfra/llist.h
+/usr/include/vppinfra/lock.h
+/usr/include/vppinfra/longjmp.h
+/usr/include/vppinfra/macros.h
+/usr/include/vppinfra/maplog.h
+/usr/include/vppinfra/math.h
+/usr/include/vppinfra/mem.h
+/usr/include/vppinfra/memcpy_avx2.h
+/usr/include/vppinfra/memcpy_avx512.h
+/usr/include/vppinfra/memcpy_sse3.h
+/usr/include/vppinfra/mhash.h
+/usr/include/vppinfra/mheap.h
+/usr/include/vppinfra/mheap_bootstrap.h
+/usr/include/vppinfra/mpcap.h
+/usr/include/vppinfra/os.h
+/usr/include/vppinfra/pcap.h
+/usr/include/vppinfra/pcap_funcs.h
+/usr/include/vppinfra/pipeline.h
+/usr/include/vppinfra/pmalloc.h
+/usr/include/vppinfra/pmc.h
+/usr/include/vppinfra/pool.h
+/usr/include/vppinfra/ptclosure.h
+/usr/include/vppinfra/random.h
+/usr/include/vppinfra/random_buffer.h
+/usr/include/vppinfra/random_isaac.h
+/usr/include/vppinfra/rbtree.h
+/usr/include/vppinfra/serialize.h
+/usr/include/vppinfra/sha2.h
+/usr/include/vppinfra/slist.h
+/usr/include/vppinfra/smp.h
+/usr/include/vppinfra/socket.h
+/usr/include/vppinfra/sparse_vec.h
+/usr/include/vppinfra/string.h
+/usr/include/vppinfra/time.h
+/usr/include/vppinfra/time_range.h
+/usr/include/vppinfra/timing_wheel.h
+/usr/include/vppinfra/tw_timer_16t_1w_2048sl.h
+/usr/include/vppinfra/tw_timer_16t_2w_512sl.h
+/usr/include/vppinfra/tw_timer_1t_3w_1024sl_ov.h
+/usr/include/vppinfra/tw_timer_2t_1w_2048sl.h
+/usr/include/vppinfra/tw_timer_4t_3w_256sl.h
+/usr/include/vppinfra/tw_timer_template.c
+/usr/include/vppinfra/tw_timer_template.h
+/usr/include/vppinfra/types.h
+/usr/include/vppinfra/unix.h
+/usr/include/vppinfra/valgrind.h
+/usr/include/vppinfra/valloc.h
+/usr/include/vppinfra/vec.h
+/usr/include/vppinfra/vec_bootstrap.h
+/usr/include/vppinfra/vector.h
+/usr/include/vppinfra/vector_altivec.h
+/usr/include/vppinfra/vector_avx2.h
+/usr/include/vppinfra/vector_avx512.h
+/usr/include/vppinfra/vector_funcs.h
+/usr/include/vppinfra/vector_neon.h
+/usr/include/vppinfra/vector_sse42.h
+/usr/include/vppinfra/xxhash.h
+/usr/include/vppinfra/xy.h
+/usr/include/vppinfra/zvec.h
+/usr/share
+/usr/share/doc
+/usr/share/doc/libvppinfra-dev
+/usr/share/doc/libvppinfra-dev/changelog.Debian.gz
+/usr/share/doc/libvppinfra-dev/copyright
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp
+/.
+/etc
+/etc/sysctl.d
+/etc/sysctl.d/80-vpp.conf
+/etc/vpp
+/etc/vpp/startup.conf
+/lib
+/lib/systemd
+/lib/systemd/system
+/lib/systemd/system/vpp.service
+/usr
+/usr/bin
+/usr/bin/elftool
+/usr/bin/svmdbtool
+/usr/bin/svmtool
+/usr/bin/vpp
+/usr/bin/vpp_api_test
+/usr/bin/vpp_get_metrics
+/usr/bin/vpp_get_stats
+/usr/bin/vpp_prometheus_export
+/usr/bin/vpp_restart
+/usr/bin/vppctl
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/libsvm.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libsvmdb.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvapiclient.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvatplugin.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvcl_ldpreload.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvlib.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvlibmemory.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvlibmemoryclient.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvnet.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvppapiclient.so.19.08.1
+/usr/lib/x86_64-linux-gnu/libvppcom.so.19.08.1
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp
+/usr/share/doc/vpp/changelog.Debian.gz
+/usr/share/doc/vpp/copyright
+/usr/share/vpp
+/usr/share/vpp/api
+/usr/share/vpp/api/core
+/usr/share/vpp/api/core/af_packet.api.json
+/usr/share/vpp/api/core/bfd.api.json
+/usr/share/vpp/api/core/bier.api.json
+/usr/share/vpp/api/core/bond.api.json
+/usr/share/vpp/api/core/classify.api.json
+/usr/share/vpp/api/core/cop.api.json
+/usr/share/vpp/api/core/dhcp.api.json
+/usr/share/vpp/api/core/dhcp6_ia_na_client_cp.api.json
+/usr/share/vpp/api/core/dhcp6_pd_client_cp.api.json
+/usr/share/vpp/api/core/ethernet_types.api.json
+/usr/share/vpp/api/core/feature.api.json
+/usr/share/vpp/api/core/fib_types.api.json
+/usr/share/vpp/api/core/geneve.api.json
+/usr/share/vpp/api/core/gre.api.json
+/usr/share/vpp/api/core/interface.api.json
+/usr/share/vpp/api/core/interface_types.api.json
+/usr/share/vpp/api/core/ip.api.json
+/usr/share/vpp/api/core/ip_types.api.json
+/usr/share/vpp/api/core/ipfix_export.api.json
+/usr/share/vpp/api/core/ipip.api.json
+/usr/share/vpp/api/core/ipsec.api.json
+/usr/share/vpp/api/core/l2.api.json
+/usr/share/vpp/api/core/l2tp.api.json
+/usr/share/vpp/api/core/lisp.api.json
+/usr/share/vpp/api/core/lisp_gpe.api.json
+/usr/share/vpp/api/core/lldp.api.json
+/usr/share/vpp/api/core/memclnt.api.json
+/usr/share/vpp/api/core/mfib_types.api.json
+/usr/share/vpp/api/core/mpls.api.json
+/usr/share/vpp/api/core/netmap.api.json
+/usr/share/vpp/api/core/one.api.json
+/usr/share/vpp/api/core/p2p_ethernet.api.json
+/usr/share/vpp/api/core/pg.api.json
+/usr/share/vpp/api/core/pipe.api.json
+/usr/share/vpp/api/core/policer.api.json
+/usr/share/vpp/api/core/punt.api.json
+/usr/share/vpp/api/core/qos.api.json
+/usr/share/vpp/api/core/rd_cp.api.json
+/usr/share/vpp/api/core/session.api.json
+/usr/share/vpp/api/core/span.api.json
+/usr/share/vpp/api/core/sr.api.json
+/usr/share/vpp/api/core/sr_mpls.api.json
+/usr/share/vpp/api/core/syslog.api.json
+/usr/share/vpp/api/core/tapv2.api.json
+/usr/share/vpp/api/core/tcp.api.json
+/usr/share/vpp/api/core/udp.api.json
+/usr/share/vpp/api/core/vhost_user.api.json
+/usr/share/vpp/api/core/virtio.api.json
+/usr/share/vpp/api/core/vpe.api.json
+/usr/share/vpp/api/core/vpe_types.api.json
+/usr/share/vpp/api/core/vxlan.api.json
+/usr/share/vpp/api/core/vxlan_gbp.api.json
+/usr/share/vpp/api/core/vxlan_gpe.api.json
+/usr/lib/x86_64-linux-gnu/libsvm.so
+/usr/lib/x86_64-linux-gnu/libsvmdb.so
+/usr/lib/x86_64-linux-gnu/libvapiclient.so
+/usr/lib/x86_64-linux-gnu/libvatplugin.so
+/usr/lib/x86_64-linux-gnu/libvcl_ldpreload.so
+/usr/lib/x86_64-linux-gnu/libvlib.so
+/usr/lib/x86_64-linux-gnu/libvlibmemory.so
+/usr/lib/x86_64-linux-gnu/libvlibmemoryclient.so
+/usr/lib/x86_64-linux-gnu/libvnet.so
+/usr/lib/x86_64-linux-gnu/libvppapiclient.so
+/usr/lib/x86_64-linux-gnu/libvppcom.so
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-dev
+/.
+/usr
+/usr/bin
+/usr/bin/vppapigen
+/usr/include
+/usr/include/svm
+/usr/include/svm/fifo_segment.h
+/usr/include/svm/message_queue.h
+/usr/include/svm/queue.h
+/usr/include/svm/ssvm.h
+/usr/include/svm/svm.h
+/usr/include/svm/svm_common.h
+/usr/include/svm/svm_fifo.h
+/usr/include/svm/svmdb.h
+/usr/include/vapi
+/usr/include/vapi/abf.api.vapi.h
+/usr/include/vapi/abf.api.vapi.hpp
+/usr/include/vapi/acl.api.vapi.h
+/usr/include/vapi/acl.api.vapi.hpp
+/usr/include/vapi/af_packet.api.vapi.h
+/usr/include/vapi/af_packet.api.vapi.hpp
+/usr/include/vapi/avf.api.vapi.h
+/usr/include/vapi/avf.api.vapi.hpp
+/usr/include/vapi/bfd.api.vapi.h
+/usr/include/vapi/bfd.api.vapi.hpp
+/usr/include/vapi/bier.api.vapi.h
+/usr/include/vapi/bier.api.vapi.hpp
+/usr/include/vapi/bond.api.vapi.h
+/usr/include/vapi/bond.api.vapi.hpp
+/usr/include/vapi/cdp.api.vapi.h
+/usr/include/vapi/cdp.api.vapi.hpp
+/usr/include/vapi/classify.api.vapi.h
+/usr/include/vapi/classify.api.vapi.hpp
+/usr/include/vapi/cop.api.vapi.h
+/usr/include/vapi/cop.api.vapi.hpp
+/usr/include/vapi/ct6.api.vapi.h
+/usr/include/vapi/ct6.api.vapi.hpp
+/usr/include/vapi/dhcp.api.vapi.h
+/usr/include/vapi/dhcp.api.vapi.hpp
+/usr/include/vapi/dhcp6_ia_na_client_cp.api.vapi.h
+/usr/include/vapi/dhcp6_ia_na_client_cp.api.vapi.hpp
+/usr/include/vapi/dhcp6_pd_client_cp.api.vapi.h
+/usr/include/vapi/dhcp6_pd_client_cp.api.vapi.hpp
+/usr/include/vapi/dns.api.vapi.h
+/usr/include/vapi/dns.api.vapi.hpp
+/usr/include/vapi/dpi.api.vapi.h
+/usr/include/vapi/dpi.api.vapi.hpp
+/usr/include/vapi/ethernet_types.api.vapi.h
+/usr/include/vapi/ethernet_types.api.vapi.hpp
+/usr/include/vapi/feature.api.vapi.h
+/usr/include/vapi/feature.api.vapi.hpp
+/usr/include/vapi/fib_types.api.vapi.h
+/usr/include/vapi/fib_types.api.vapi.hpp
+/usr/include/vapi/flowprobe.api.vapi.h
+/usr/include/vapi/flowprobe.api.vapi.hpp
+/usr/include/vapi/gbp.api.vapi.h
+/usr/include/vapi/gbp.api.vapi.hpp
+/usr/include/vapi/geneve.api.vapi.h
+/usr/include/vapi/geneve.api.vapi.hpp
+/usr/include/vapi/gre.api.vapi.h
+/usr/include/vapi/gre.api.vapi.hpp
+/usr/include/vapi/gtpu.api.vapi.h
+/usr/include/vapi/gtpu.api.vapi.hpp
+/usr/include/vapi/http_static.api.vapi.h
+/usr/include/vapi/http_static.api.vapi.hpp
+/usr/include/vapi/igmp.api.vapi.h
+/usr/include/vapi/igmp.api.vapi.hpp
+/usr/include/vapi/ikev2.api.vapi.h
+/usr/include/vapi/ikev2.api.vapi.hpp
+/usr/include/vapi/interface.api.vapi.h
+/usr/include/vapi/interface.api.vapi.hpp
+/usr/include/vapi/interface_types.api.vapi.h
+/usr/include/vapi/interface_types.api.vapi.hpp
+/usr/include/vapi/ioam_cache.api.vapi.h
+/usr/include/vapi/ioam_cache.api.vapi.hpp
+/usr/include/vapi/ioam_export.api.vapi.h
+/usr/include/vapi/ioam_export.api.vapi.hpp
+/usr/include/vapi/ioam_vxlan_gpe.api.vapi.h
+/usr/include/vapi/ioam_vxlan_gpe.api.vapi.hpp
+/usr/include/vapi/ip.api.vapi.h
+/usr/include/vapi/ip.api.vapi.hpp
+/usr/include/vapi/ip_types.api.vapi.h
+/usr/include/vapi/ip_types.api.vapi.hpp
+/usr/include/vapi/ipfix_export.api.vapi.h
+/usr/include/vapi/ipfix_export.api.vapi.hpp
+/usr/include/vapi/ipip.api.vapi.h
+/usr/include/vapi/ipip.api.vapi.hpp
+/usr/include/vapi/ipsec.api.vapi.h
+/usr/include/vapi/ipsec.api.vapi.hpp
+/usr/include/vapi/l2.api.vapi.h
+/usr/include/vapi/l2.api.vapi.hpp
+/usr/include/vapi/l2e.api.vapi.h
+/usr/include/vapi/l2e.api.vapi.hpp
+/usr/include/vapi/l2tp.api.vapi.h
+/usr/include/vapi/l2tp.api.vapi.hpp
+/usr/include/vapi/l3xc.api.vapi.h
+/usr/include/vapi/l3xc.api.vapi.hpp
+/usr/include/vapi/lacp.api.vapi.h
+/usr/include/vapi/lacp.api.vapi.hpp
+/usr/include/vapi/lb.api.vapi.h
+/usr/include/vapi/lb.api.vapi.hpp
+/usr/include/vapi/lb_types.api.vapi.h
+/usr/include/vapi/lb_types.api.vapi.hpp
+/usr/include/vapi/lisp.api.vapi.h
+/usr/include/vapi/lisp.api.vapi.hpp
+/usr/include/vapi/lisp_gpe.api.vapi.h
+/usr/include/vapi/lisp_gpe.api.vapi.hpp
+/usr/include/vapi/lldp.api.vapi.h
+/usr/include/vapi/lldp.api.vapi.hpp
+/usr/include/vapi/mactime.api.vapi.h
+/usr/include/vapi/mactime.api.vapi.hpp
+/usr/include/vapi/map.api.vapi.h
+/usr/include/vapi/map.api.vapi.hpp
+/usr/include/vapi/memclnt.api.vapi.h
+/usr/include/vapi/memclnt.api.vapi.hpp
+/usr/include/vapi/memif.api.vapi.h
+/usr/include/vapi/memif.api.vapi.hpp
+/usr/include/vapi/mfib_types.api.vapi.h
+/usr/include/vapi/mfib_types.api.vapi.hpp
+/usr/include/vapi/mpls.api.vapi.h
+/usr/include/vapi/mpls.api.vapi.hpp
+/usr/include/vapi/nat.api.vapi.h
+/usr/include/vapi/nat.api.vapi.hpp
+/usr/include/vapi/netmap.api.vapi.h
+/usr/include/vapi/netmap.api.vapi.hpp
+/usr/include/vapi/nsh.api.vapi.h
+/usr/include/vapi/nsh.api.vapi.hpp
+/usr/include/vapi/nsim.api.vapi.h
+/usr/include/vapi/nsim.api.vapi.hpp
+/usr/include/vapi/oddbuf.api.vapi.h
+/usr/include/vapi/oddbuf.api.vapi.hpp
+/usr/include/vapi/one.api.vapi.h
+/usr/include/vapi/one.api.vapi.hpp
+/usr/include/vapi/p2p_ethernet.api.vapi.h
+/usr/include/vapi/p2p_ethernet.api.vapi.hpp
+/usr/include/vapi/pg.api.vapi.h
+/usr/include/vapi/pg.api.vapi.hpp
+/usr/include/vapi/pipe.api.vapi.h
+/usr/include/vapi/pipe.api.vapi.hpp
+/usr/include/vapi/policer.api.vapi.h
+/usr/include/vapi/policer.api.vapi.hpp
+/usr/include/vapi/pot.api.vapi.h
+/usr/include/vapi/pot.api.vapi.hpp
+/usr/include/vapi/pppoe.api.vapi.h
+/usr/include/vapi/pppoe.api.vapi.hpp
+/usr/include/vapi/punt.api.vapi.h
+/usr/include/vapi/punt.api.vapi.hpp
+/usr/include/vapi/qos.api.vapi.h
+/usr/include/vapi/qos.api.vapi.hpp
+/usr/include/vapi/rd_cp.api.vapi.h
+/usr/include/vapi/rd_cp.api.vapi.hpp
+/usr/include/vapi/sctp.api.vapi.h
+/usr/include/vapi/sctp.api.vapi.hpp
+/usr/include/vapi/session.api.vapi.h
+/usr/include/vapi/session.api.vapi.hpp
+/usr/include/vapi/span.api.vapi.h
+/usr/include/vapi/span.api.vapi.hpp
+/usr/include/vapi/sr.api.vapi.h
+/usr/include/vapi/sr.api.vapi.hpp
+/usr/include/vapi/sr_mpls.api.vapi.h
+/usr/include/vapi/sr_mpls.api.vapi.hpp
+/usr/include/vapi/stn.api.vapi.h
+/usr/include/vapi/stn.api.vapi.hpp
+/usr/include/vapi/svs.api.vapi.h
+/usr/include/vapi/svs.api.vapi.hpp
+/usr/include/vapi/syslog.api.vapi.h
+/usr/include/vapi/syslog.api.vapi.hpp
+/usr/include/vapi/tapv2.api.vapi.h
+/usr/include/vapi/tapv2.api.vapi.hpp
+/usr/include/vapi/tcp.api.vapi.h
+/usr/include/vapi/tcp.api.vapi.hpp
+/usr/include/vapi/trace.api.vapi.h
+/usr/include/vapi/trace.api.vapi.hpp
+/usr/include/vapi/udp.api.vapi.h
+/usr/include/vapi/udp.api.vapi.hpp
+/usr/include/vapi/udp_ping.api.vapi.h
+/usr/include/vapi/udp_ping.api.vapi.hpp
+/usr/include/vapi/upf.api.vapi.h
+/usr/include/vapi/upf.api.vapi.hpp
+/usr/include/vapi/vapi.h
+/usr/include/vapi/vapi.hpp
+/usr/include/vapi/vapi_common.h
+/usr/include/vapi/vapi_dbg.h
+/usr/include/vapi/vapi_internal.h
+/usr/include/vapi/vhost_user.api.vapi.h
+/usr/include/vapi/vhost_user.api.vapi.hpp
+/usr/include/vapi/virtio.api.vapi.h
+/usr/include/vapi/virtio.api.vapi.hpp
+/usr/include/vapi/vmxnet3.api.vapi.h
+/usr/include/vapi/vmxnet3.api.vapi.hpp
+/usr/include/vapi/vpe.api.vapi.h
+/usr/include/vapi/vpe.api.vapi.hpp
+/usr/include/vapi/vpe_types.api.vapi.h
+/usr/include/vapi/vpe_types.api.vapi.hpp
+/usr/include/vapi/vxlan.api.vapi.h
+/usr/include/vapi/vxlan.api.vapi.hpp
+/usr/include/vapi/vxlan_gbp.api.vapi.h
+/usr/include/vapi/vxlan_gbp.api.vapi.hpp
+/usr/include/vapi/vxlan_gpe.api.vapi.h
+/usr/include/vapi/vxlan_gpe.api.vapi.hpp
+/usr/include/vapi/vxlan_gpe_ioam_export.api.vapi.h
+/usr/include/vapi/vxlan_gpe_ioam_export.api.vapi.hpp
+/usr/include/vat
+/usr/include/vat/json_format.h
+/usr/include/vat/vat.h
+/usr/include/vcl
+/usr/include/vcl/ldp.h
+/usr/include/vcl/ldp_glibc_socket.h
+/usr/include/vcl/ldp_socket_wrapper.h
+/usr/include/vcl/vcl_locked.h
+/usr/include/vcl/vppcom.h
+/usr/include/vlib
+/usr/include/vlib/buffer.h
+/usr/include/vlib/buffer_funcs.h
+/usr/include/vlib/buffer_node.h
+/usr/include/vlib/cli.h
+/usr/include/vlib/cli_funcs.h
+/usr/include/vlib/config.h
+/usr/include/vlib/counter.h
+/usr/include/vlib/counter_types.h
+/usr/include/vlib/defs.h
+/usr/include/vlib/error.h
+/usr/include/vlib/error_funcs.h
+/usr/include/vlib/format_funcs.h
+/usr/include/vlib/global_funcs.h
+/usr/include/vlib/i2c.h
+/usr/include/vlib/init.h
+/usr/include/vlib/linux
+/usr/include/vlib/linux/vfio.h
+/usr/include/vlib/log.h
+/usr/include/vlib/main.h
+/usr/include/vlib/node.h
+/usr/include/vlib/node_funcs.h
+/usr/include/vlib/pci
+/usr/include/vlib/pci/pci.h
+/usr/include/vlib/pci/pci_config.h
+/usr/include/vlib/physmem.h
+/usr/include/vlib/physmem_funcs.h
+/usr/include/vlib/punt.h
+/usr/include/vlib/threads.h
+/usr/include/vlib/trace.h
+/usr/include/vlib/trace_funcs.h
+/usr/include/vlib/unix
+/usr/include/vlib/unix/cj.h
+/usr/include/vlib/unix/mc_socket.h
+/usr/include/vlib/unix/plugin.h
+/usr/include/vlib/unix/unix.h
+/usr/include/vlib/vlib.h
+/usr/include/vlib/vmbus
+/usr/include/vlib/vmbus/vmbus.h
+/usr/include/vlibapi
+/usr/include/vlibapi/api.h
+/usr/include/vlibapi/api_common.h
+/usr/include/vlibapi/api_helper_macros.h
+/usr/include/vlibapi/api_types.h
+/usr/include/vlibapi/vat_helper_macros.h
+/usr/include/vlibmemory
+/usr/include/vlibmemory/api.h
+/usr/include/vlibmemory/memclnt.api
+/usr/include/vlibmemory/memclnt.api.h
+/usr/include/vlibmemory/memory_api.h
+/usr/include/vlibmemory/memory_client.h
+/usr/include/vlibmemory/memory_shared.h
+/usr/include/vlibmemory/socket_api.h
+/usr/include/vlibmemory/socket_client.h
+/usr/include/vlibmemory/vl_memory_api_h.h
+/usr/include/vlibmemory/vl_memory_msg_enum.h
+/usr/include/vnet
+/usr/include/vnet/adj
+/usr/include/vnet/adj/adj.h
+/usr/include/vnet/adj/adj_glean.h
+/usr/include/vnet/adj/adj_midchain.h
+/usr/include/vnet/adj/adj_nbr.h
+/usr/include/vnet/adj/adj_nsh.h
+/usr/include/vnet/adj/adj_types.h
+/usr/include/vnet/adj/rewrite.h
+/usr/include/vnet/api_errno.h
+/usr/include/vnet/bfd
+/usr/include/vnet/bfd/bfd.api
+/usr/include/vnet/bfd/bfd.api.h
+/usr/include/vnet/bfd/bfd_api.h
+/usr/include/vnet/bfd/bfd_main.h
+/usr/include/vnet/bfd/bfd_protocol.h
+/usr/include/vnet/bfd/bfd_udp.h
+/usr/include/vnet/bier
+/usr/include/vnet/bier/bier.api
+/usr/include/vnet/bier/bier.api.h
+/usr/include/vnet/bier/bier_entry.h
+/usr/include/vnet/bier/bier_table.h
+/usr/include/vnet/bier/bier_types.h
+/usr/include/vnet/bier/bier_update.h
+/usr/include/vnet/bonding
+/usr/include/vnet/bonding/bond.api
+/usr/include/vnet/bonding/bond.api.h
+/usr/include/vnet/bonding/node.h
+/usr/include/vnet/buffer.h
+/usr/include/vnet/classify
+/usr/include/vnet/classify/classify.api
+/usr/include/vnet/classify/classify.api.h
+/usr/include/vnet/classify/flow_classify.h
+/usr/include/vnet/classify/in_out_acl.h
+/usr/include/vnet/classify/policer_classify.h
+/usr/include/vnet/classify/vnet_classify.h
+/usr/include/vnet/config.h
+/usr/include/vnet/cop
+/usr/include/vnet/cop/cop.api
+/usr/include/vnet/cop/cop.api.h
+/usr/include/vnet/cop/cop.h
+/usr/include/vnet/crypto
+/usr/include/vnet/crypto/crypto.h
+/usr/include/vnet/devices
+/usr/include/vnet/devices/af_packet
+/usr/include/vnet/devices/af_packet/af_packet.api
+/usr/include/vnet/devices/af_packet/af_packet.api.h
+/usr/include/vnet/devices/af_packet/af_packet.h
+/usr/include/vnet/devices/devices.h
+/usr/include/vnet/devices/netlink.h
+/usr/include/vnet/devices/netmap
+/usr/include/vnet/devices/netmap/netmap.api
+/usr/include/vnet/devices/netmap/netmap.api.h
+/usr/include/vnet/devices/netmap/netmap.h
+/usr/include/vnet/devices/pipe
+/usr/include/vnet/devices/pipe/pipe.api
+/usr/include/vnet/devices/pipe/pipe.api.h
+/usr/include/vnet/devices/pipe/pipe.h
+/usr/include/vnet/devices/tap
+/usr/include/vnet/devices/tap/tap.h
+/usr/include/vnet/devices/tap/tapv2.api
+/usr/include/vnet/devices/tap/tapv2.api.h
+/usr/include/vnet/devices/virtio
+/usr/include/vnet/devices/virtio/pci.h
+/usr/include/vnet/devices/virtio/vhost_user.api
+/usr/include/vnet/devices/virtio/vhost_user.api.h
+/usr/include/vnet/devices/virtio/vhost_user.h
+/usr/include/vnet/devices/virtio/virtio.api
+/usr/include/vnet/devices/virtio/virtio.api.h
+/usr/include/vnet/devices/virtio/virtio.h
+/usr/include/vnet/dhcp
+/usr/include/vnet/dhcp/client.h
+/usr/include/vnet/dhcp/dhcp.api
+/usr/include/vnet/dhcp/dhcp.api.h
+/usr/include/vnet/dhcp/dhcp4_packet.h
+/usr/include/vnet/dhcp/dhcp4_proxy_error.def
+/usr/include/vnet/dhcp/dhcp6_client_common_dp.h
+/usr/include/vnet/dhcp/dhcp6_ia_na_client_cp.api
+/usr/include/vnet/dhcp/dhcp6_ia_na_client_cp.api.h
+/usr/include/vnet/dhcp/dhcp6_ia_na_client_dp.h
+/usr/include/vnet/dhcp/dhcp6_packet.h
+/usr/include/vnet/dhcp/dhcp6_pd_client_cp.api
+/usr/include/vnet/dhcp/dhcp6_pd_client_cp.api.h
+/usr/include/vnet/dhcp/dhcp6_pd_client_dp.h
+/usr/include/vnet/dhcp/dhcp6_proxy_error.def
+/usr/include/vnet/dhcp/dhcp_proxy.h
+/usr/include/vnet/dpo
+/usr/include/vnet/dpo/classify_dpo.h
+/usr/include/vnet/dpo/dpo.h
+/usr/include/vnet/dpo/drop_dpo.h
+/usr/include/vnet/dpo/ip_null_dpo.h
+/usr/include/vnet/dpo/load_balance.h
+/usr/include/vnet/dpo/lookup_dpo.h
+/usr/include/vnet/dpo/punt_dpo.h
+/usr/include/vnet/dpo/receive_dpo.h
+/usr/include/vnet/dpo/replicate_dpo.h
+/usr/include/vnet/ethernet
+/usr/include/vnet/ethernet/arp.h
+/usr/include/vnet/ethernet/arp_packet.h
+/usr/include/vnet/ethernet/error.def
+/usr/include/vnet/ethernet/ethernet.h
+/usr/include/vnet/ethernet/ethernet_types.api
+/usr/include/vnet/ethernet/ethernet_types.api.h
+/usr/include/vnet/ethernet/mac_address.h
+/usr/include/vnet/ethernet/p2p_ethernet.api
+/usr/include/vnet/ethernet/p2p_ethernet.api.h
+/usr/include/vnet/ethernet/p2p_ethernet.h
+/usr/include/vnet/ethernet/packet.h
+/usr/include/vnet/ethernet/sfp.h
+/usr/include/vnet/ethernet/types.def
+/usr/include/vnet/feature
+/usr/include/vnet/feature/feature.api
+/usr/include/vnet/feature/feature.api.h
+/usr/include/vnet/feature/feature.h
+/usr/include/vnet/fib
+/usr/include/vnet/fib/fib.h
+/usr/include/vnet/fib/fib_api.h
+/usr/include/vnet/fib/fib_entry.h
+/usr/include/vnet/fib/fib_entry_delegate.h
+/usr/include/vnet/fib/fib_node.h
+/usr/include/vnet/fib/fib_node_list.h
+/usr/include/vnet/fib/fib_table.h
+/usr/include/vnet/fib/fib_types.api
+/usr/include/vnet/fib/fib_types.api.h
+/usr/include/vnet/fib/fib_types.h
+/usr/include/vnet/fib/ip4_fib.h
+/usr/include/vnet/fib/ip6_fib.h
+/usr/include/vnet/flow
+/usr/include/vnet/flow/flow.h
+/usr/include/vnet/geneve
+/usr/include/vnet/geneve/geneve.api
+/usr/include/vnet/geneve/geneve.api.h
+/usr/include/vnet/geneve/geneve.h
+/usr/include/vnet/geneve/geneve_error.def
+/usr/include/vnet/geneve/geneve_packet.h
+/usr/include/vnet/global_funcs.h
+/usr/include/vnet/gre
+/usr/include/vnet/gre/error.def
+/usr/include/vnet/gre/gre.api
+/usr/include/vnet/gre/gre.api.h
+/usr/include/vnet/gre/gre.h
+/usr/include/vnet/gre/packet.h
+/usr/include/vnet/handoff.h
+/usr/include/vnet/hdlc
+/usr/include/vnet/hdlc/error.def
+/usr/include/vnet/hdlc/hdlc.h
+/usr/include/vnet/hdlc/packet.h
+/usr/include/vnet/interface.api
+/usr/include/vnet/interface.api.h
+/usr/include/vnet/interface.h
+/usr/include/vnet/interface_funcs.h
+/usr/include/vnet/interface_types.api
+/usr/include/vnet/interface_types.api.h
+/usr/include/vnet/ip
+/usr/include/vnet/ip/format.h
+/usr/include/vnet/ip/icmp4.h
+/usr/include/vnet/ip/icmp46_packet.h
+/usr/include/vnet/ip/icmp6.h
+/usr/include/vnet/ip/igmp_packet.h
+/usr/include/vnet/ip/ip.api
+/usr/include/vnet/ip/ip.api.h
+/usr/include/vnet/ip/ip.h
+/usr/include/vnet/ip/ip4.h
+/usr/include/vnet/ip/ip4_error.h
+/usr/include/vnet/ip/ip4_mtrie.h
+/usr/include/vnet/ip/ip4_packet.h
+/usr/include/vnet/ip/ip4_to_ip6.h
+/usr/include/vnet/ip/ip6.h
+/usr/include/vnet/ip/ip6_error.h
+/usr/include/vnet/ip/ip6_hop_by_hop.h
+/usr/include/vnet/ip/ip6_hop_by_hop_packet.h
+/usr/include/vnet/ip/ip6_neighbor.h
+/usr/include/vnet/ip/ip6_packet.h
+/usr/include/vnet/ip/ip6_to_ip4.h
+/usr/include/vnet/ip/ip_neighbor.h
+/usr/include/vnet/ip/ip_packet.h
+/usr/include/vnet/ip/ip_source_and_port_range_check.h
+/usr/include/vnet/ip/ip_types.api
+/usr/include/vnet/ip/ip_types.api.h
+/usr/include/vnet/ip/ip_types_api.h
+/usr/include/vnet/ip/lookup.h
+/usr/include/vnet/ip/ports.def
+/usr/include/vnet/ip/protocols.def
+/usr/include/vnet/ip/punt.api
+/usr/include/vnet/ip/punt.api.h
+/usr/include/vnet/ip/punt.h
+/usr/include/vnet/ip/punt_error.def
+/usr/include/vnet/ip/rd_cp.api
+/usr/include/vnet/ip/rd_cp.api.h
+/usr/include/vnet/ipfix-export
+/usr/include/vnet/ipfix-export/flow_report.h
+/usr/include/vnet/ipfix-export/flow_report_classify.h
+/usr/include/vnet/ipfix-export/ipfix_export.api
+/usr/include/vnet/ipfix-export/ipfix_export.api.h
+/usr/include/vnet/ipfix-export/ipfix_info_elements.h
+/usr/include/vnet/ipfix-export/ipfix_packet.h
+/usr/include/vnet/ipip
+/usr/include/vnet/ipip/ipip.api
+/usr/include/vnet/ipip/ipip.api.h
+/usr/include/vnet/ipip/ipip.h
+/usr/include/vnet/ipsec
+/usr/include/vnet/ipsec/ah.h
+/usr/include/vnet/ipsec/esp.h
+/usr/include/vnet/ipsec/ipsec.api
+/usr/include/vnet/ipsec/ipsec.api.h
+/usr/include/vnet/ipsec/ipsec.h
+/usr/include/vnet/ipsec/ipsec_if.h
+/usr/include/vnet/ipsec/ipsec_punt.h
+/usr/include/vnet/ipsec/ipsec_sa.h
+/usr/include/vnet/ipsec/ipsec_spd.h
+/usr/include/vnet/ipsec/ipsec_spd_policy.h
+/usr/include/vnet/l2
+/usr/include/vnet/l2/feat_bitmap.h
+/usr/include/vnet/l2/l2.api
+/usr/include/vnet/l2/l2.api.h
+/usr/include/vnet/l2/l2_bd.h
+/usr/include/vnet/l2/l2_bvi.h
+/usr/include/vnet/l2/l2_classify.h
+/usr/include/vnet/l2/l2_efp_filter.h
+/usr/include/vnet/l2/l2_fib.h
+/usr/include/vnet/l2/l2_flood.h
+/usr/include/vnet/l2/l2_fwd.h
+/usr/include/vnet/l2/l2_input.h
+/usr/include/vnet/l2/l2_input_vtr.h
+/usr/include/vnet/l2/l2_output.h
+/usr/include/vnet/l2/l2_rw.h
+/usr/include/vnet/l2/l2_vtr.h
+/usr/include/vnet/l2/l2_xcrw.h
+/usr/include/vnet/l2tp
+/usr/include/vnet/l2tp/l2tp.api
+/usr/include/vnet/l2tp/l2tp.api.h
+/usr/include/vnet/l2tp/l2tp.h
+/usr/include/vnet/l2tp/packet.h
+/usr/include/vnet/l3_types.h
+/usr/include/vnet/lawful-intercept
+/usr/include/vnet/lawful-intercept/lawful_intercept.h
+/usr/include/vnet/lisp-cp
+/usr/include/vnet/lisp-cp/control.h
+/usr/include/vnet/lisp-cp/gid_dictionary.h
+/usr/include/vnet/lisp-cp/lisp.api
+/usr/include/vnet/lisp-cp/lisp.api.h
+/usr/include/vnet/lisp-cp/lisp_cp_messages.h
+/usr/include/vnet/lisp-cp/lisp_msg_serdes.h
+/usr/include/vnet/lisp-cp/lisp_types.h
+/usr/include/vnet/lisp-cp/one.api
+/usr/include/vnet/lisp-cp/one.api.h
+/usr/include/vnet/lisp-cp/packets.h
+/usr/include/vnet/lisp-gpe
+/usr/include/vnet/lisp-gpe/lisp_gpe.api
+/usr/include/vnet/lisp-gpe/lisp_gpe.api.h
+/usr/include/vnet/lisp-gpe/lisp_gpe.h
+/usr/include/vnet/lisp-gpe/lisp_gpe_error.def
+/usr/include/vnet/lisp-gpe/lisp_gpe_fwd_entry.h
+/usr/include/vnet/lisp-gpe/lisp_gpe_packet.h
+/usr/include/vnet/lisp-gpe/lisp_gpe_tenant.h
+/usr/include/vnet/llc
+/usr/include/vnet/llc/llc.h
+/usr/include/vnet/lldp
+/usr/include/vnet/lldp/lldp.api
+/usr/include/vnet/lldp/lldp.api.h
+/usr/include/vnet/lldp/lldp.h
+/usr/include/vnet/lldp/lldp_protocol.h
+/usr/include/vnet/mfib
+/usr/include/vnet/mfib/ip4_mfib.h
+/usr/include/vnet/mfib/mfib_table.h
+/usr/include/vnet/mfib/mfib_types.api
+/usr/include/vnet/mfib/mfib_types.api.h
+/usr/include/vnet/mfib/mfib_types.h
+/usr/include/vnet/mpls
+/usr/include/vnet/mpls/error.def
+/usr/include/vnet/mpls/mpls.api
+/usr/include/vnet/mpls/mpls.api.h
+/usr/include/vnet/mpls/mpls.h
+/usr/include/vnet/mpls/mpls_tunnel.h
+/usr/include/vnet/mpls/mpls_types.h
+/usr/include/vnet/mpls/packet.h
+/usr/include/vnet/osi
+/usr/include/vnet/osi/osi.h
+/usr/include/vnet/pg
+/usr/include/vnet/pg/edit.h
+/usr/include/vnet/pg/pg.api
+/usr/include/vnet/pg/pg.api.h
+/usr/include/vnet/pg/pg.h
+/usr/include/vnet/pipeline.h
+/usr/include/vnet/plugin
+/usr/include/vnet/plugin/plugin.h
+/usr/include/vnet/policer
+/usr/include/vnet/policer/police.h
+/usr/include/vnet/policer/policer.api
+/usr/include/vnet/policer/policer.api.h
+/usr/include/vnet/policer/policer.h
+/usr/include/vnet/policer/xlate.h
+/usr/include/vnet/ppp
+/usr/include/vnet/ppp/error.def
+/usr/include/vnet/ppp/packet.h
+/usr/include/vnet/ppp/ppp.h
+/usr/include/vnet/qos
+/usr/include/vnet/qos/qos.api
+/usr/include/vnet/qos/qos.api.h
+/usr/include/vnet/session
+/usr/include/vnet/session/application.h
+/usr/include/vnet/session/application_interface.h
+/usr/include/vnet/session/application_local.h
+/usr/include/vnet/session/application_namespace.h
+/usr/include/vnet/session/mma_16.h
+/usr/include/vnet/session/mma_40.h
+/usr/include/vnet/session/mma_template.c
+/usr/include/vnet/session/mma_template.h
+/usr/include/vnet/session/segment_manager.h
+/usr/include/vnet/session/session.api
+/usr/include/vnet/session/session.api.h
+/usr/include/vnet/session/session.h
+/usr/include/vnet/session/session_debug.h
+/usr/include/vnet/session/session_lookup.h
+/usr/include/vnet/session/session_rules_table.h
+/usr/include/vnet/session/session_table.h
+/usr/include/vnet/session/session_types.h
+/usr/include/vnet/session/transport.h
+/usr/include/vnet/session/transport_types.h
+/usr/include/vnet/snap
+/usr/include/vnet/snap/snap.h
+/usr/include/vnet/span
+/usr/include/vnet/span/span.api
+/usr/include/vnet/span/span.api.h
+/usr/include/vnet/span/span.h
+/usr/include/vnet/srmpls
+/usr/include/vnet/srmpls/sr_mpls.api
+/usr/include/vnet/srmpls/sr_mpls.api.h
+/usr/include/vnet/srmpls/sr_mpls.h
+/usr/include/vnet/srp
+/usr/include/vnet/srp/packet.h
+/usr/include/vnet/srp/srp.h
+/usr/include/vnet/srv6
+/usr/include/vnet/srv6/sr.api
+/usr/include/vnet/srv6/sr.api.h
+/usr/include/vnet/srv6/sr.h
+/usr/include/vnet/srv6/sr_packet.h
+/usr/include/vnet/syslog
+/usr/include/vnet/syslog/syslog.api
+/usr/include/vnet/syslog/syslog.api.h
+/usr/include/vnet/syslog/syslog.h
+/usr/include/vnet/syslog/syslog_udp.h
+/usr/include/vnet/tcp
+/usr/include/vnet/tcp/tcp.api
+/usr/include/vnet/tcp/tcp.api.h
+/usr/include/vnet/tcp/tcp.h
+/usr/include/vnet/tcp/tcp_debug.h
+/usr/include/vnet/tcp/tcp_error.def
+/usr/include/vnet/tcp/tcp_packet.h
+/usr/include/vnet/tcp/tcp_timer.h
+/usr/include/vnet/tls
+/usr/include/vnet/tls/tls.h
+/usr/include/vnet/tls/tls_test.h
+/usr/include/vnet/udp
+/usr/include/vnet/udp/udp.api
+/usr/include/vnet/udp/udp.api.h
+/usr/include/vnet/udp/udp.h
+/usr/include/vnet/udp/udp_error.def
+/usr/include/vnet/udp/udp_packet.h
+/usr/include/vnet/unix
+/usr/include/vnet/unix/tuntap.h
+/usr/include/vnet/util
+/usr/include/vnet/util/radix.h
+/usr/include/vnet/util/refcount.h
+/usr/include/vnet/util/throttle.h
+/usr/include/vnet/vnet.h
+/usr/include/vnet/vnet_all_api_h.h
+/usr/include/vnet/vnet_msg_enum.h
+/usr/include/vnet/vxlan
+/usr/include/vnet/vxlan/vxlan.api
+/usr/include/vnet/vxlan/vxlan.api.h
+/usr/include/vnet/vxlan/vxlan.h
+/usr/include/vnet/vxlan/vxlan_error.def
+/usr/include/vnet/vxlan/vxlan_packet.h
+/usr/include/vnet/vxlan-gbp
+/usr/include/vnet/vxlan-gbp/vxlan_gbp.api
+/usr/include/vnet/vxlan-gbp/vxlan_gbp.api.h
+/usr/include/vnet/vxlan-gbp/vxlan_gbp.h
+/usr/include/vnet/vxlan-gbp/vxlan_gbp_error.def
+/usr/include/vnet/vxlan-gbp/vxlan_gbp_packet.h
+/usr/include/vnet/vxlan-gpe
+/usr/include/vnet/vxlan-gpe/vxlan_gpe.api
+/usr/include/vnet/vxlan-gpe/vxlan_gpe.api.h
+/usr/include/vnet/vxlan-gpe/vxlan_gpe.h
+/usr/include/vnet/vxlan-gpe/vxlan_gpe_error.def
+/usr/include/vnet/vxlan-gpe/vxlan_gpe_packet.h
+/usr/include/vpp
+/usr/include/vpp/api
+/usr/include/vpp/api/vpe.api.h
+/usr/include/vpp/api/vpe_all_api_h.h
+/usr/include/vpp/api/vpe_msg_enum.h
+/usr/include/vpp/api/vpe_types.api.h
+/usr/include/vpp/stats
+/usr/include/vpp/stats/stat_segment.h
+/usr/include/vpp-api
+/usr/include/vpp-api/client
+/usr/include/vpp-api/client/stat_client.h
+/usr/include/vpp-api/client/vppapiclient.h
+/usr/include/vpp_plugins
+/usr/include/vpp_plugins/abf
+/usr/include/vpp_plugins/abf/abf.api.h
+/usr/include/vpp_plugins/abf/abf_all_api_h.h
+/usr/include/vpp_plugins/abf/abf_msg_enum.h
+/usr/include/vpp_plugins/acl
+/usr/include/vpp_plugins/acl/acl.api.h
+/usr/include/vpp_plugins/acl/acl_all_api_h.h
+/usr/include/vpp_plugins/acl/acl_msg_enum.h
+/usr/include/vpp_plugins/acl/manual_fns.h
+/usr/include/vpp_plugins/avf
+/usr/include/vpp_plugins/avf/avf.api.h
+/usr/include/vpp_plugins/avf/avf_all_api_h.h
+/usr/include/vpp_plugins/avf/avf_msg_enum.h
+/usr/include/vpp_plugins/cdp
+/usr/include/vpp_plugins/cdp/cdp.api.h
+/usr/include/vpp_plugins/cdp/cdp.h
+/usr/include/vpp_plugins/cdp/cdp_all_api_h.h
+/usr/include/vpp_plugins/cdp/cdp_msg_enum.h
+/usr/include/vpp_plugins/cdp/cdp_protocol.h
+/usr/include/vpp_plugins/ct6
+/usr/include/vpp_plugins/ct6/ct6.api.h
+/usr/include/vpp_plugins/ct6/ct6_all_api_h.h
+/usr/include/vpp_plugins/ct6/ct6_msg_enum.h
+/usr/include/vpp_plugins/dns
+/usr/include/vpp_plugins/dns/dns.api.h
+/usr/include/vpp_plugins/dns/dns_all_api_h.h
+/usr/include/vpp_plugins/dns/dns_msg_enum.h
+/usr/include/vpp_plugins/dns/dns_packet.h
+/usr/include/vpp_plugins/dpdk
+/usr/include/vpp_plugins/dpdk/device
+/usr/include/vpp_plugins/dpdk/device/dpdk.h
+/usr/include/vpp_plugins/dpdk/ipsec
+/usr/include/vpp_plugins/dpdk/ipsec/ipsec.h
+/usr/include/vpp_plugins/dpi
+/usr/include/vpp_plugins/dpi/dpi.api.h
+/usr/include/vpp_plugins/dpi/dpi.h
+/usr/include/vpp_plugins/dpi/dpi_app_match.h
+/usr/include/vpp_plugins/flowprobe
+/usr/include/vpp_plugins/flowprobe/flowprobe.api.h
+/usr/include/vpp_plugins/flowprobe/flowprobe_all_api_h.h
+/usr/include/vpp_plugins/flowprobe/flowprobe_msg_enum.h
+/usr/include/vpp_plugins/gbp
+/usr/include/vpp_plugins/gbp/gbp.api.h
+/usr/include/vpp_plugins/gbp/gbp.h
+/usr/include/vpp_plugins/gbp/gbp_all_api_h.h
+/usr/include/vpp_plugins/gbp/gbp_api_print.h
+/usr/include/vpp_plugins/gbp/gbp_msg_enum.h
+/usr/include/vpp_plugins/gtpu
+/usr/include/vpp_plugins/gtpu/gtpu.api.h
+/usr/include/vpp_plugins/gtpu/gtpu_all_api_h.h
+/usr/include/vpp_plugins/gtpu/gtpu_msg_enum.h
+/usr/include/vpp_plugins/http_static
+/usr/include/vpp_plugins/http_static/http_static.api.h
+/usr/include/vpp_plugins/http_static/http_static_all_api_h.h
+/usr/include/vpp_plugins/http_static/http_static_msg_enum.h
+/usr/include/vpp_plugins/igmp
+/usr/include/vpp_plugins/igmp/igmp.api.h
+/usr/include/vpp_plugins/igmp/igmp_all_api_h.h
+/usr/include/vpp_plugins/igmp/igmp_msg_enum.h
+/usr/include/vpp_plugins/ikev2
+/usr/include/vpp_plugins/ikev2/ikev2.api.h
+/usr/include/vpp_plugins/ikev2/ikev2.h
+/usr/include/vpp_plugins/ikev2/ikev2_all_api.h
+/usr/include/vpp_plugins/ikev2/ikev2_msg_enum.h
+/usr/include/vpp_plugins/ikev2/ikev2_priv.h
+/usr/include/vpp_plugins/ila
+/usr/include/vpp_plugins/ila/ila.h
+/usr/include/vpp_plugins/ioam
+/usr/include/vpp_plugins/ioam/encap
+/usr/include/vpp_plugins/ioam/encap/ip6_ioam_e2e.h
+/usr/include/vpp_plugins/ioam/encap/ip6_ioam_seqno.h
+/usr/include/vpp_plugins/ioam/encap/ip6_ioam_trace.h
+/usr/include/vpp_plugins/ioam/export
+/usr/include/vpp_plugins/ioam/export/ioam_export.api.h
+/usr/include/vpp_plugins/ioam/export/ioam_export_all_api_h.h
+/usr/include/vpp_plugins/ioam/export/ioam_export_msg_enum.h
+/usr/include/vpp_plugins/ioam/export-common
+/usr/include/vpp_plugins/ioam/export-common/ioam_export.h
+/usr/include/vpp_plugins/ioam/export-vxlan-gpe
+/usr/include/vpp_plugins/ioam/export-vxlan-gpe/vxlan_gpe_ioam_export.api.h
+/usr/include/vpp_plugins/ioam/export-vxlan-gpe/vxlan_gpe_ioam_export_all_api_h.h
+/usr/include/vpp_plugins/ioam/export-vxlan-gpe/vxlan_gpe_ioam_export_msg_enum.h
+/usr/include/vpp_plugins/ioam/ip6
+/usr/include/vpp_plugins/ioam/ip6/ioam_cache.api.h
+/usr/include/vpp_plugins/ioam/ip6/ioam_cache_all_api_h.h
+/usr/include/vpp_plugins/ioam/ip6/ioam_cache_msg_enum.h
+/usr/include/vpp_plugins/ioam/lib-e2e
+/usr/include/vpp_plugins/ioam/lib-e2e/ioam_seqno_lib.h
+/usr/include/vpp_plugins/ioam/lib-pot
+/usr/include/vpp_plugins/ioam/lib-pot/math64.h
+/usr/include/vpp_plugins/ioam/lib-pot/pot.api.h
+/usr/include/vpp_plugins/ioam/lib-pot/pot_all_api_h.h
+/usr/include/vpp_plugins/ioam/lib-pot/pot_msg_enum.h
+/usr/include/vpp_plugins/ioam/lib-pot/pot_util.h
+/usr/include/vpp_plugins/ioam/lib-trace
+/usr/include/vpp_plugins/ioam/lib-trace/trace.api.h
+/usr/include/vpp_plugins/ioam/lib-trace/trace_all_api_h.h
+/usr/include/vpp_plugins/ioam/lib-trace/trace_config.h
+/usr/include/vpp_plugins/ioam/lib-trace/trace_msg_enum.h
+/usr/include/vpp_plugins/ioam/lib-trace/trace_util.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/ioam_vxlan_gpe.api.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/vxlan_gpe_all_api_h.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/vxlan_gpe_ioam.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/vxlan_gpe_ioam_packet.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/vxlan_gpe_ioam_util.h
+/usr/include/vpp_plugins/ioam/lib-vxlan-gpe/vxlan_gpe_msg_enum.h
+/usr/include/vpp_plugins/ioam/udp-ping
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping.api.h
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping.h
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping_all_api_h.h
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping_msg_enum.h
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping_packet.h
+/usr/include/vpp_plugins/ioam/udp-ping/udp_ping_util.h
+/usr/include/vpp_plugins/ixge
+/usr/include/vpp_plugins/ixge/ixge.h
+/usr/include/vpp_plugins/l2e
+/usr/include/vpp_plugins/l2e/l2e.api.h
+/usr/include/vpp_plugins/l2e/l2e.h
+/usr/include/vpp_plugins/l2e/l2e_all_api_h.h
+/usr/include/vpp_plugins/l2e/l2e_msg_enum.h
+/usr/include/vpp_plugins/l3xc
+/usr/include/vpp_plugins/l3xc/l3xc.api.h
+/usr/include/vpp_plugins/l3xc/l3xc_all_api_h.h
+/usr/include/vpp_plugins/l3xc/l3xc_msg_enum.h
+/usr/include/vpp_plugins/lacp
+/usr/include/vpp_plugins/lacp/lacp.api.h
+/usr/include/vpp_plugins/lacp/lacp_all_api_h.h
+/usr/include/vpp_plugins/lacp/lacp_msg_enum.h
+/usr/include/vpp_plugins/lacp/machine.h
+/usr/include/vpp_plugins/lacp/mux_machine.h
+/usr/include/vpp_plugins/lacp/node.h
+/usr/include/vpp_plugins/lacp/protocol.h
+/usr/include/vpp_plugins/lacp/ptx_machine.h
+/usr/include/vpp_plugins/lacp/rx_machine.h
+/usr/include/vpp_plugins/lacp/tx_machine.h
+/usr/include/vpp_plugins/lb
+/usr/include/vpp_plugins/lb/lb.api.h
+/usr/include/vpp_plugins/lb/lb.h
+/usr/include/vpp_plugins/lb/lb_types.api.h
+/usr/include/vpp_plugins/lb/lbhash.h
+/usr/include/vpp_plugins/lb/util.h
+/usr/include/vpp_plugins/mactime
+/usr/include/vpp_plugins/mactime/mactime.api.h
+/usr/include/vpp_plugins/mactime/mactime_all_api_h.h
+/usr/include/vpp_plugins/mactime/mactime_msg_enum.h
+/usr/include/vpp_plugins/map
+/usr/include/vpp_plugins/map/lpm.h
+/usr/include/vpp_plugins/map/map.api.h
+/usr/include/vpp_plugins/map/map.h
+/usr/include/vpp_plugins/map/map_all_api_h.h
+/usr/include/vpp_plugins/map/map_msg_enum.h
+/usr/include/vpp_plugins/memif
+/usr/include/vpp_plugins/memif/memif.api.h
+/usr/include/vpp_plugins/memif/memif.h
+/usr/include/vpp_plugins/memif/memif_all_api_h.h
+/usr/include/vpp_plugins/memif/memif_msg_enum.h
+/usr/include/vpp_plugins/nat
+/usr/include/vpp_plugins/nat/nat.api.h
+/usr/include/vpp_plugins/nat/nat_all_api_h.h
+/usr/include/vpp_plugins/nat/nat_msg_enum.h
+/usr/include/vpp_plugins/nsh
+/usr/include/vpp_plugins/nsh/nsh.api.h
+/usr/include/vpp_plugins/nsim
+/usr/include/vpp_plugins/nsim/nsim.api.h
+/usr/include/vpp_plugins/nsim/nsim_all_api_h.h
+/usr/include/vpp_plugins/nsim/nsim_msg_enum.h
+/usr/include/vpp_plugins/oddbuf
+/usr/include/vpp_plugins/oddbuf/oddbuf.api.h
+/usr/include/vpp_plugins/oddbuf/oddbuf_all_api_h.h
+/usr/include/vpp_plugins/oddbuf/oddbuf_msg_enum.h
+/usr/include/vpp_plugins/pppoe
+/usr/include/vpp_plugins/pppoe/pppoe.api.h
+/usr/include/vpp_plugins/pppoe/pppoe_all_api_h.h
+/usr/include/vpp_plugins/pppoe/pppoe_msg_enum.h
+/usr/include/vpp_plugins/sctp
+/usr/include/vpp_plugins/sctp/sctp.api.h
+/usr/include/vpp_plugins/sctp/sctp.h
+/usr/include/vpp_plugins/sctp/sctp_all_api_h.h
+/usr/include/vpp_plugins/sctp/sctp_error.def
+/usr/include/vpp_plugins/sctp/sctp_msg_enum.h
+/usr/include/vpp_plugins/sctp/sctp_packet.h
+/usr/include/vpp_plugins/sctp/sctp_timer.h
+/usr/include/vpp_plugins/srv6ad
+/usr/include/vpp_plugins/srv6ad/ad.h
+/usr/include/vpp_plugins/srv6am
+/usr/include/vpp_plugins/srv6am/am.h
+/usr/include/vpp_plugins/srv6as
+/usr/include/vpp_plugins/srv6as/as.h
+/usr/include/vpp_plugins/stn
+/usr/include/vpp_plugins/stn/stn.api.h
+/usr/include/vpp_plugins/stn/stn.h
+/usr/include/vpp_plugins/stn/stn_all_api_h.h
+/usr/include/vpp_plugins/stn/stn_msg_enum.h
+/usr/include/vpp_plugins/svs
+/usr/include/vpp_plugins/svs/svs.api.h
+/usr/include/vpp_plugins/svs/svs_all_api_h.h
+/usr/include/vpp_plugins/svs/svs_msg_enum.h
+/usr/include/vpp_plugins/upf
+/usr/include/vpp_plugins/upf/dpi_app_match.h
+/usr/include/vpp_plugins/upf/flowtable.h
+/usr/include/vpp_plugins/upf/flowtable_tcp.h
+/usr/include/vpp_plugins/upf/pfcp.h
+/usr/include/vpp_plugins/upf/upf.api.h
+/usr/include/vpp_plugins/upf/upf.h
+/usr/include/vpp_plugins/upf/upf_adf.h
+/usr/include/vpp_plugins/upf/upf_all_api_h.h
+/usr/include/vpp_plugins/upf/upf_charge.h
+/usr/include/vpp_plugins/upf/upf_charge_timer.h
+/usr/include/vpp_plugins/upf/upf_debug.h
+/usr/include/vpp_plugins/upf/upf_msg_enum.h
+/usr/include/vpp_plugins/upf/upf_pfcp.h
+/usr/include/vpp_plugins/upf/upf_pfcp_api.h
+/usr/include/vpp_plugins/upf/upf_pfcp_server.h
+/usr/include/vpp_plugins/upf/upf_proxy.h
+/usr/include/vpp_plugins/vmxnet3
+/usr/include/vpp_plugins/vmxnet3/vmxnet3.api.h
+/usr/include/vpp_plugins/vmxnet3/vmxnet3_all_api_h.h
+/usr/include/vpp_plugins/vmxnet3/vmxnet3_msg_enum.h
+/usr/include/vppinfra
+/usr/include/vppinfra/config.h
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp
+/usr/lib/x86_64-linux-gnu/cmake/vpp/VPPConfig.cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp/api.cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp/cpu.cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp/library.cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp/pack.cmake
+/usr/lib/x86_64-linux-gnu/cmake/vpp/plugin.cmake
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-dev
+/usr/share/doc/vpp-dev/changelog.Debian.gz
+/usr/share/doc/vpp-dev/copyright
+/usr/share/vpp
+/usr/share/vpp/generate_json.py
+/usr/share/vpp/vapi_c_gen.py
+/usr/share/vpp/vapi_cpp_gen.py
+/usr/share/vpp/vapi_json_parser.py
+/usr/share/vpp/vppapigen_c.py
+/usr/share/vpp/vppapigen_json.py
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-dbg 
+/.
+/usr
+/usr/lib
+/usr/lib/debug
+/usr/lib/debug/.build-id
+/usr/lib/debug/.build-id/00
+/usr/lib/debug/.build-id/00/70f0af9ffe9c6ad61d971a3b548c6e539f347f.debug
+/usr/lib/debug/.build-id/05
+/usr/lib/debug/.build-id/05/d0f6a65787d3257a6bd2f7fe8979d5ce5f0db0.debug
+/usr/lib/debug/.build-id/07
+/usr/lib/debug/.build-id/07/ffc1ff0e10af4886bbcf3752a84ed6027a614b.debug
+/usr/lib/debug/.build-id/0b
+/usr/lib/debug/.build-id/0b/c2beef1c5686cba7459b86151c1c4689e1a492.debug
+/usr/lib/debug/.build-id/0c
+/usr/lib/debug/.build-id/0c/450479f1a925e3825a9e604215806601d6a52d.debug
+/usr/lib/debug/.build-id/0d
+/usr/lib/debug/.build-id/0d/930122dcb3cc29f9f9a3b495376d8d86167bb7.debug
+/usr/lib/debug/.build-id/11
+/usr/lib/debug/.build-id/11/d7494e43b6ff349b9457d912c38a14908dc9a9.debug
+/usr/lib/debug/.build-id/12
+/usr/lib/debug/.build-id/12/1feb08278426cbbe55e7f2b8c91593efc5a734.debug
+/usr/lib/debug/.build-id/15
+/usr/lib/debug/.build-id/15/dd23d1d4e3c0d6da60b02fdb0f81387cffeeb4.debug
+/usr/lib/debug/.build-id/17
+/usr/lib/debug/.build-id/17/6c0f5b57fbaf4b6f83e4ed51cad20cd9163be9.debug
+/usr/lib/debug/.build-id/18
+/usr/lib/debug/.build-id/18/37c1e0f9bc81202a89b95aeb16ba8003cb8343.debug
+/usr/lib/debug/.build-id/1a
+/usr/lib/debug/.build-id/1a/8a227df8fb8bc254a62d4366b2bad3efb0be53.debug
+/usr/lib/debug/.build-id/1b
+/usr/lib/debug/.build-id/1b/3495d7f095c926265c26604c753b13f41dd048.debug
+/usr/lib/debug/.build-id/1c
+/usr/lib/debug/.build-id/1c/141f6b702828be216a11099ba1460e59013231.debug
+/usr/lib/debug/.build-id/1d
+/usr/lib/debug/.build-id/1d/6e4202d82ce6f766586958231a77a586656763.debug
+/usr/lib/debug/.build-id/1f
+/usr/lib/debug/.build-id/1f/938582fb743db2d3ea3d0838fc2c8064596f07.debug
+/usr/lib/debug/.build-id/20
+/usr/lib/debug/.build-id/20/e58cb36f5571275063038a2ea8bb6422d26b45.debug
+/usr/lib/debug/.build-id/21
+/usr/lib/debug/.build-id/21/5e3155cf616d70a5c42aa0c6be5da31604d0e5.debug
+/usr/lib/debug/.build-id/21/f3e15802a4817d80e80ac7fb55d8ce89f3e12f.debug
+/usr/lib/debug/.build-id/26
+/usr/lib/debug/.build-id/26/0478b639032fedb6dabd47cf20aaa7fad930d1.debug
+/usr/lib/debug/.build-id/28
+/usr/lib/debug/.build-id/28/0b34cdb24ee78a90b2e21a495a3dc04930754f.debug
+/usr/lib/debug/.build-id/28/8e5df6e35f00a1d3f3432860fac26a52dfc416.debug
+/usr/lib/debug/.build-id/29
+/usr/lib/debug/.build-id/29/5abf3cde090ccd7a0f5480e38cb81969852c2e.debug
+/usr/lib/debug/.build-id/29/de6b003fc6b3d0aae9891d3d825ace64bc2ee4.debug
+/usr/lib/debug/.build-id/2a
+/usr/lib/debug/.build-id/2a/e6446a91e8e8216b7e2bf791e53558ac5be7f5.debug
+/usr/lib/debug/.build-id/2e
+/usr/lib/debug/.build-id/2e/d861429135ba2d0e601657506c8c7f80155052.debug
+/usr/lib/debug/.build-id/30
+/usr/lib/debug/.build-id/30/e78a41c9309f3013d7ede5c3190d55894b9891.debug
+/usr/lib/debug/.build-id/34
+/usr/lib/debug/.build-id/34/a0c9243e4d2ab3aa8375658a2978d9d21e0bc5.debug
+/usr/lib/debug/.build-id/37
+/usr/lib/debug/.build-id/37/eabc6374d2489e95a650fc32155654b6ae5e63.debug
+/usr/lib/debug/.build-id/3d
+/usr/lib/debug/.build-id/3d/06a878c95f8a3a0b5ca6f0710f58c69fb6041c.debug
+/usr/lib/debug/.build-id/43
+/usr/lib/debug/.build-id/43/b9218d36c418e85127a7809ca6ad6f58f3c429.debug
+/usr/lib/debug/.build-id/45
+/usr/lib/debug/.build-id/45/0d2b0f176950297b2390111adf6e6bf1b0b986.debug
+/usr/lib/debug/.build-id/46
+/usr/lib/debug/.build-id/46/01d743243b141e50ff93115eab2506f58a291a.debug
+/usr/lib/debug/.build-id/46/81b6a17c36725612e407aee747bf9bf115599b.debug
+/usr/lib/debug/.build-id/46/9a080bc50f582ebbde2dec750fa92aba18c385.debug
+/usr/lib/debug/.build-id/49
+/usr/lib/debug/.build-id/49/48d4c843c16d9fdda609058b14c9114b493209.debug
+/usr/lib/debug/.build-id/4b
+/usr/lib/debug/.build-id/4b/757a145be7bb4c592b94f5d7ac6f22fd9cb7b9.debug
+/usr/lib/debug/.build-id/4c
+/usr/lib/debug/.build-id/4c/196ee44df475536cace9b43afe2b9d52d59578.debug
+/usr/lib/debug/.build-id/4c/fb33919eeb9d586faeb7e35d9aa0d4455ac147.debug
+/usr/lib/debug/.build-id/4d
+/usr/lib/debug/.build-id/4d/86a373f2739e11130a540c5ff8f2f2eb9c820a.debug
+/usr/lib/debug/.build-id/4d/8a773c9e6649f2b314085e5aa75c017b46e3a5.debug
+/usr/lib/debug/.build-id/55
+/usr/lib/debug/.build-id/55/907da0ab2a8d8857538cada3b6f71c56978b81.debug
+/usr/lib/debug/.build-id/55/b871ead7c31eccc4d2d5844d8912cfc5713e11.debug
+/usr/lib/debug/.build-id/58
+/usr/lib/debug/.build-id/58/553349bbad8f325dcb700a07ede000337b935a.debug
+/usr/lib/debug/.build-id/5c
+/usr/lib/debug/.build-id/5c/15577ca3917c73c9d2153e2a3e420f630a2bfc.debug
+/usr/lib/debug/.build-id/5c/dc7d23c5b1390729a37bc86c65756b21796cb8.debug
+/usr/lib/debug/.build-id/5d
+/usr/lib/debug/.build-id/5d/81c75ed8ba108141769fee99f37226567e528f.debug
+/usr/lib/debug/.build-id/5d/df41f567be9c4c232b85d428ddd0b6efebb0c1.debug
+/usr/lib/debug/.build-id/60
+/usr/lib/debug/.build-id/60/1bfcdf1860c8791381296b9d30b1d54feb3cb4.debug
+/usr/lib/debug/.build-id/62
+/usr/lib/debug/.build-id/62/352d0396e1a892aa557211b0337785ecb19830.debug
+/usr/lib/debug/.build-id/63
+/usr/lib/debug/.build-id/63/b8829e92755644c245ace2e0b7bb100c6a8383.debug
+/usr/lib/debug/.build-id/66
+/usr/lib/debug/.build-id/66/c0bdd551c2de95300a44f254012726af221a06.debug
+/usr/lib/debug/.build-id/6e
+/usr/lib/debug/.build-id/6e/aa31ad16c021e02533884c18d9a920ac439fe9.debug
+/usr/lib/debug/.build-id/70
+/usr/lib/debug/.build-id/70/9b2986e592bffa0e159116a1c7a978b07f3ed2.debug
+/usr/lib/debug/.build-id/71
+/usr/lib/debug/.build-id/71/f70954cfab5c8132cdfc1557265a71a09be225.debug
+/usr/lib/debug/.build-id/72
+/usr/lib/debug/.build-id/72/ac1c75c0e37b54a6df36380757e5ae27a1dcbd.debug
+/usr/lib/debug/.build-id/75
+/usr/lib/debug/.build-id/75/80a902e9b9e5a939d8590a48a7dcdf28f7417e.debug
+/usr/lib/debug/.build-id/7d
+/usr/lib/debug/.build-id/7d/8a3f73980e9aed30c28ac6c05c0c1f0e357ee8.debug
+/usr/lib/debug/.build-id/7f
+/usr/lib/debug/.build-id/7f/2311ab45fe547f77ed3c42ec0832a67893b289.debug
+/usr/lib/debug/.build-id/87
+/usr/lib/debug/.build-id/87/0b45fe7637a9d35ebcc67952257ec356ab9c3f.debug
+/usr/lib/debug/.build-id/87/c1164d1f8bf6c06776e36edb710afab8f1c3e9.debug
+/usr/lib/debug/.build-id/9b
+/usr/lib/debug/.build-id/9b/297ee788b03ad1431aed2a68e101bcaae3a181.debug
+/usr/lib/debug/.build-id/9b/8409b086ad842f01c72215c8eb6e86f8c54aab.debug
+/usr/lib/debug/.build-id/9d
+/usr/lib/debug/.build-id/9d/3740cf4d4ea774ba9608d47bbcb63cb5d0e2e2.debug
+/usr/lib/debug/.build-id/a2
+/usr/lib/debug/.build-id/a2/a0dc9dac2394b85d24a66309ebd29077f3fc07.debug
+/usr/lib/debug/.build-id/a2/b58dc5188902f3627d047672ba029ffc90a041.debug
+/usr/lib/debug/.build-id/a3
+/usr/lib/debug/.build-id/a3/1063d1944fc5d914289f6194f1e99ac155fce2.debug
+/usr/lib/debug/.build-id/b0
+/usr/lib/debug/.build-id/b0/de6b680b67757a3daf35c9d482e8688bc660ab.debug
+/usr/lib/debug/.build-id/b6
+/usr/lib/debug/.build-id/b6/f4eb43466119c6a957908e2c21da977c1e868d.debug
+/usr/lib/debug/.build-id/b8
+/usr/lib/debug/.build-id/b8/b946d0d7252e74f3c8af36a1be4424599b0631.debug
+/usr/lib/debug/.build-id/bb
+/usr/lib/debug/.build-id/bb/86c5204715ef0cd6194c12207c4ad9a15b3541.debug
+/usr/lib/debug/.build-id/c0
+/usr/lib/debug/.build-id/c0/245f3a4f1f1458a1836a8201f75fb82319c9f8.debug
+/usr/lib/debug/.build-id/c4
+/usr/lib/debug/.build-id/c4/452c60b061e27660aa1081ad0c9dfcef3fddd9.debug
+/usr/lib/debug/.build-id/cd
+/usr/lib/debug/.build-id/cd/1eacbfd87750817370f37cdaa5532e2ebdcf44.debug
+/usr/lib/debug/.build-id/d0
+/usr/lib/debug/.build-id/d0/e3f6975bc46b350ec6c700ebb0d8bd3c99eac1.debug
+/usr/lib/debug/.build-id/d1
+/usr/lib/debug/.build-id/d1/f7a14bcb4a2282cd3995e041f6d6eb5c025de1.debug
+/usr/lib/debug/.build-id/d5
+/usr/lib/debug/.build-id/d5/11f631408121024692be16ddfb3bb50ebff3b5.debug
+/usr/lib/debug/.build-id/d5/74c03c65b09fe84f68723b64139c9cd730c818.debug
+/usr/lib/debug/.build-id/d9
+/usr/lib/debug/.build-id/d9/872b67678b4f395d5e69704aae66802b7bc1d9.debug
+/usr/lib/debug/.build-id/dc
+/usr/lib/debug/.build-id/dc/b2947a78dc07e81485a1dfc8cd61a609cd91a7.debug
+/usr/lib/debug/.build-id/e5
+/usr/lib/debug/.build-id/e5/18301ea0d83fed17c4a8da2ba16c020a73dee3.debug
+/usr/lib/debug/.build-id/ea
+/usr/lib/debug/.build-id/ea/3ae86978e5f8a5a0bba4ab3383654e21ead1b8.debug
+/usr/lib/debug/.build-id/eb
+/usr/lib/debug/.build-id/eb/133301dcede38d78a03093102e5228ac0e88b1.debug
+/usr/lib/debug/.build-id/ef
+/usr/lib/debug/.build-id/ef/63ce99a8a8a6fb90d2e281940d6a09d744f789.debug
+/usr/lib/debug/.build-id/ef/9d38d1d795ec7be12cdb4108767e6f4854c119.debug
+/usr/lib/debug/.build-id/f3
+/usr/lib/debug/.build-id/f3/31ca258bab92faf3c2e30e72d8f88f866ffe0b.debug
+/usr/lib/debug/.build-id/f7
+/usr/lib/debug/.build-id/f7/1ec905c6f9daed017524e9c38f8975359019e9.debug
+/usr/lib/debug/.build-id/f7/d067952546288224a3f39a3046264851316a42.debug
+/usr/lib/debug/.build-id/f8
+/usr/lib/debug/.build-id/f8/f4cb78ae54fc8e823d67336d3cec834848f7fd.debug
+/usr/lib/debug/.build-id/f9
+/usr/lib/debug/.build-id/f9/0880d70744bf772ec558696ab3ba893268e866.debug
+/usr/lib/debug/.build-id/fd
+/usr/lib/debug/.build-id/fd/6ef80d24f7605794de64688bfc84026c138722.debug
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-dbg
+/usr/share/doc/vpp-dbg/changelog.Debian.gz
+/usr/share/doc/vpp-dbg/copyright
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-plugin-core 
+/.
+/usr
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/acl_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/avf_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/cdp_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/ct6_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/dns_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/flowprobe_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/gtpu_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/http_static_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/ikev2_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/ioam_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/lacp_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/lb_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/mactime_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/memif_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/nat_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/nsh_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/nsim_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/oddbuf_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/pppoe_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/stn_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/upf_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_api_test_plugins/vmxnet3_test_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins
+/usr/lib/x86_64-linux-gnu/vpp_plugins/abf_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/acl_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/avf_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/cdp_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/crypto_ia32_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/crypto_ipsecmb_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/crypto_openssl_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/ct6_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/dns_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/dpi_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/flowprobe_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/gbp_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/gtpu_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/hs_apps_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/http_static_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/igmp_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/ikev2_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/ila_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/ioam_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/ixge_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/l2e_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/l3xc_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/lacp_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/lb_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/mactime_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/map_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/memif_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/nat_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/nsh_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/nsim_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/oddbuf_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/perfmon_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/pppoe_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/quic_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/rdma_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/sctp_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/srv6ad_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/srv6am_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/srv6as_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/stn_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/svs_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/tlsmbedtls_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/tlsopenssl_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/unittest_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/upf_plugin.so
+/usr/lib/x86_64-linux-gnu/vpp_plugins/vmxnet3_plugin.so
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-plugin-core
+/usr/share/doc/vpp-plugin-core/changelog.Debian.gz
+/usr/share/doc/vpp-plugin-core/copyright
+/usr/share/vpp
+/usr/share/vpp/api
+/usr/share/vpp/api/plugins
+/usr/share/vpp/api/plugins/abf.api.json
+/usr/share/vpp/api/plugins/acl.api.json
+/usr/share/vpp/api/plugins/avf.api.json
+/usr/share/vpp/api/plugins/cdp.api.json
+/usr/share/vpp/api/plugins/ct6.api.json
+/usr/share/vpp/api/plugins/dns.api.json
+/usr/share/vpp/api/plugins/dpi.api.json
+/usr/share/vpp/api/plugins/flowprobe.api.json
+/usr/share/vpp/api/plugins/gbp.api.json
+/usr/share/vpp/api/plugins/gtpu.api.json
+/usr/share/vpp/api/plugins/http_static.api.json
+/usr/share/vpp/api/plugins/igmp.api.json
+/usr/share/vpp/api/plugins/ikev2.api.json
+/usr/share/vpp/api/plugins/ioam_cache.api.json
+/usr/share/vpp/api/plugins/ioam_export.api.json
+/usr/share/vpp/api/plugins/ioam_vxlan_gpe.api.json
+/usr/share/vpp/api/plugins/l2e.api.json
+/usr/share/vpp/api/plugins/l3xc.api.json
+/usr/share/vpp/api/plugins/lacp.api.json
+/usr/share/vpp/api/plugins/lb.api.json
+/usr/share/vpp/api/plugins/lb_types.api.json
+/usr/share/vpp/api/plugins/mactime.api.json
+/usr/share/vpp/api/plugins/map.api.json
+/usr/share/vpp/api/plugins/memif.api.json
+/usr/share/vpp/api/plugins/nat.api.json
+/usr/share/vpp/api/plugins/nsh.api.json
+/usr/share/vpp/api/plugins/nsim.api.json
+/usr/share/vpp/api/plugins/oddbuf.api.json
+/usr/share/vpp/api/plugins/pot.api.json
+/usr/share/vpp/api/plugins/pppoe.api.json
+/usr/share/vpp/api/plugins/sctp.api.json
+/usr/share/vpp/api/plugins/stn.api.json
+/usr/share/vpp/api/plugins/svs.api.json
+/usr/share/vpp/api/plugins/trace.api.json
+/usr/share/vpp/api/plugins/udp_ping.api.json
+/usr/share/vpp/api/plugins/upf.api.json
+/usr/share/vpp/api/plugins/vmxnet3.api.json
+/usr/share/vpp/api/plugins/vxlan_gpe_ioam_export.api.json
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-plugin-dpdk 
+/.
+/usr
+/usr/lib
+/usr/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu/vpp_plugins
+/usr/lib/x86_64-linux-gnu/vpp_plugins/dpdk_plugin.so
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-plugin-dpdk
+/usr/share/doc/vpp-plugin-dpdk/changelog.Debian.gz
+/usr/share/doc/vpp-plugin-dpdk/copyright
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-api-python 
+/.
+/usr
+/usr/lib
+/usr/lib/python2.7
+/usr/lib/python2.7/dist-packages
+/usr/lib/python2.7/dist-packages/vpp_papi
+/usr/lib/python2.7/dist-packages/vpp_papi/__init__.py
+/usr/lib/python2.7/dist-packages/vpp_papi/macaddress.py
+/usr/lib/python2.7/dist-packages/vpp_papi/tests
+/usr/lib/python2.7/dist-packages/vpp_papi/tests/__init__.py
+/usr/lib/python2.7/dist-packages/vpp_papi/tests/test_macaddress.py
+/usr/lib/python2.7/dist-packages/vpp_papi/tests/test_vpp_format.py
+/usr/lib/python2.7/dist-packages/vpp_papi/tests/test_vpp_papi.py
+/usr/lib/python2.7/dist-packages/vpp_papi/tests/test_vpp_serializer.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_format.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_papi.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_serializer.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_stats.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_transport_shmem.py
+/usr/lib/python2.7/dist-packages/vpp_papi/vpp_transport_socket.py
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info/PKG-INFO
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info/dependency_links.txt
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info/requires.txt
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info/top_level.txt
+/usr/lib/python2.7/dist-packages/vpp_papi-1.6.2.egg-info/zip-safe
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-api-python
+/usr/share/doc/vpp-api-python/changelog.Debian.gz
+/usr/share/doc/vpp-api-python/copyright
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L python3-vpp-api 
+/.
+/usr
+/usr/lib
+/usr/lib/python3
+/usr/lib/python3/dist-packages
+/usr/lib/python3/dist-packages/vpp_papi
+/usr/lib/python3/dist-packages/vpp_papi/__init__.py
+/usr/lib/python3/dist-packages/vpp_papi/macaddress.py
+/usr/lib/python3/dist-packages/vpp_papi/tests
+/usr/lib/python3/dist-packages/vpp_papi/tests/__init__.py
+/usr/lib/python3/dist-packages/vpp_papi/tests/test_macaddress.py
+/usr/lib/python3/dist-packages/vpp_papi/tests/test_vpp_format.py
+/usr/lib/python3/dist-packages/vpp_papi/tests/test_vpp_papi.py
+/usr/lib/python3/dist-packages/vpp_papi/tests/test_vpp_serializer.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_format.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_papi.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_serializer.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_stats.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_transport_shmem.py
+/usr/lib/python3/dist-packages/vpp_papi/vpp_transport_socket.py
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info/PKG-INFO
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info/dependency_links.txt
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info/requires.txt
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info/top_level.txt
+/usr/lib/python3/dist-packages/vpp_papi-1.6.2.egg-info/zip-safe
+/usr/share
+/usr/share/doc
+/usr/share/doc/python3-vpp-api
+/usr/share/doc/python3-vpp-api/changelog.Debian.gz
+/usr/share/doc/python3-vpp-api/copyright
+</code></pre>
+
+<pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-ext-deps 
+/.
+/opt
+/opt/vpp
+/opt/vpp/external
+/opt/vpp/external/x86_64
+/opt/vpp/external/x86_64/bin
+/opt/vpp/external/x86_64/bin/dpdk-pdump
+/opt/vpp/external/x86_64/bin/dpdk-procinfo
+/opt/vpp/external/x86_64/bin/dpdk-test-compress-perf
+/opt/vpp/external/x86_64/bin/dpdk-test-crypto-perf
+/opt/vpp/external/x86_64/bin/dpdk-test-eventdev
+/opt/vpp/external/x86_64/bin/nasm
+/opt/vpp/external/x86_64/bin/ndisasm
+/opt/vpp/external/x86_64/include
+/opt/vpp/external/x86_64/include/dpdk
+/opt/vpp/external/x86_64/include/dpdk/cmdline.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_cirbuf.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse_etheraddr.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse_ipaddr.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse_num.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse_portlist.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_parse_string.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_rdline.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_socket.h
+/opt/vpp/external/x86_64/include/dpdk/cmdline_vt100.h
+/opt/vpp/external/x86_64/include/dpdk/dpaax_iova_table.h
+/opt/vpp/external/x86_64/include/dpdk/generic
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_atomic.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_byteorder.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_cpuflags.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_cycles.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_io.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_memcpy.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_pause.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_prefetch.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_rwlock.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_spinlock.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_ticketlock.h
+/opt/vpp/external/x86_64/include/dpdk/generic/rte_vect.h
+/opt/vpp/external/x86_64/include/dpdk/rte_acl.h
+/opt/vpp/external/x86_64/include/dpdk/rte_acl_osdep.h
+/opt/vpp/external/x86_64/include/dpdk/rte_alarm.h
+/opt/vpp/external/x86_64/include/dpdk/rte_approx.h
+/opt/vpp/external/x86_64/include/dpdk/rte_arp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_atomic.h
+/opt/vpp/external/x86_64/include/dpdk/rte_atomic_32.h
+/opt/vpp/external/x86_64/include/dpdk/rte_atomic_64.h
+/opt/vpp/external/x86_64/include/dpdk/rte_avp_common.h
+/opt/vpp/external/x86_64/include/dpdk/rte_avp_fifo.h
+/opt/vpp/external/x86_64/include/dpdk/rte_bitmap.h
+/opt/vpp/external/x86_64/include/dpdk/rte_branch_prediction.h
+/opt/vpp/external/x86_64/include/dpdk/rte_bus.h
+/opt/vpp/external/x86_64/include/dpdk/rte_bus_pci.h
+/opt/vpp/external/x86_64/include/dpdk/rte_bus_vdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_bus_vmbus.h
+/opt/vpp/external/x86_64/include/dpdk/rte_byteorder.h
+/opt/vpp/external/x86_64/include/dpdk/rte_byteorder_32.h
+/opt/vpp/external/x86_64/include/dpdk/rte_byteorder_64.h
+/opt/vpp/external/x86_64/include/dpdk/rte_class.h
+/opt/vpp/external/x86_64/include/dpdk/rte_common.h
+/opt/vpp/external/x86_64/include/dpdk/rte_comp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_compat.h
+/opt/vpp/external/x86_64/include/dpdk/rte_compressdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_compressdev_internal.h
+/opt/vpp/external/x86_64/include/dpdk/rte_compressdev_pmd.h
+/opt/vpp/external/x86_64/include/dpdk/rte_config.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cpuflags.h
+/opt/vpp/external/x86_64/include/dpdk/rte_crypto.h
+/opt/vpp/external/x86_64/include/dpdk/rte_crypto_asym.h
+/opt/vpp/external/x86_64/include/dpdk/rte_crypto_sym.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cryptodev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cryptodev_pmd.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cryptodev_scheduler.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cryptodev_scheduler_operations.h
+/opt/vpp/external/x86_64/include/dpdk/rte_cycles.h
+/opt/vpp/external/x86_64/include/dpdk/rte_debug.h
+/opt/vpp/external/x86_64/include/dpdk/rte_dev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_dev_info.h
+/opt/vpp/external/x86_64/include/dpdk/rte_devargs.h
+/opt/vpp/external/x86_64/include/dpdk/rte_dpaa2_mempool.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eal.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eal_interrupts.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eal_memconfig.h
+/opt/vpp/external/x86_64/include/dpdk/rte_errno.h
+/opt/vpp/external/x86_64/include/dpdk/rte_esp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eth_ctrl.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eth_ring.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eth_vhost.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ethdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ethdev_core.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ethdev_driver.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ethdev_pci.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ethdev_vdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ether.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_crypto_adapter.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_eth_rx_adapter.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_eth_tx_adapter.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_ring.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_timer_adapter.h
+/opt/vpp/external/x86_64/include/dpdk/rte_event_timer_adapter_pmd.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eventdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eventdev_pmd.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eventdev_pmd_pci.h
+/opt/vpp/external/x86_64/include/dpdk/rte_eventdev_pmd_vdev.h
+/opt/vpp/external/x86_64/include/dpdk/rte_fbarray.h
+/opt/vpp/external/x86_64/include/dpdk/rte_fbk_hash.h
+/opt/vpp/external/x86_64/include/dpdk/rte_flow.h
+/opt/vpp/external/x86_64/include/dpdk/rte_flow_driver.h
+/opt/vpp/external/x86_64/include/dpdk/rte_gre.h
+/opt/vpp/external/x86_64/include/dpdk/rte_hash.h
+/opt/vpp/external/x86_64/include/dpdk/rte_hash_crc.h
+/opt/vpp/external/x86_64/include/dpdk/rte_hexdump.h
+/opt/vpp/external/x86_64/include/dpdk/rte_hypervisor.h
+/opt/vpp/external/x86_64/include/dpdk/rte_icmp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_interrupts.h
+/opt/vpp/external/x86_64/include/dpdk/rte_io.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ip.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ip_frag.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ipsec.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ipsec_group.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ipsec_sa.h
+/opt/vpp/external/x86_64/include/dpdk/rte_jhash.h
+/opt/vpp/external/x86_64/include/dpdk/rte_keepalive.h
+/opt/vpp/external/x86_64/include/dpdk/rte_kni_common.h
+/opt/vpp/external/x86_64/include/dpdk/rte_kvargs.h
+/opt/vpp/external/x86_64/include/dpdk/rte_launch.h
+/opt/vpp/external/x86_64/include/dpdk/rte_lcore.h
+/opt/vpp/external/x86_64/include/dpdk/rte_log.h
+/opt/vpp/external/x86_64/include/dpdk/rte_malloc.h
+/opt/vpp/external/x86_64/include/dpdk/rte_malloc_heap.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mbuf.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mbuf_pool_ops.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mbuf_ptype.h
+/opt/vpp/external/x86_64/include/dpdk/rte_memcpy.h
+/opt/vpp/external/x86_64/include/dpdk/rte_memory.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mempool.h
+/opt/vpp/external/x86_64/include/dpdk/rte_memzone.h
+/opt/vpp/external/x86_64/include/dpdk/rte_meter.h
+/opt/vpp/external/x86_64/include/dpdk/rte_metrics.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mpls.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mtr.h
+/opt/vpp/external/x86_64/include/dpdk/rte_mtr_driver.h
+/opt/vpp/external/x86_64/include/dpdk/rte_net.h
+/opt/vpp/external/x86_64/include/dpdk/rte_net_crc.h
+/opt/vpp/external/x86_64/include/dpdk/rte_option.h
+/opt/vpp/external/x86_64/include/dpdk/rte_os.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pause.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pci.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pci_dev_feature_defs.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pci_dev_features.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pdump.h
+/opt/vpp/external/x86_64/include/dpdk/rte_per_lcore.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pmd_bnxt.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pmd_dpaa2.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pmd_i40e.h
+/opt/vpp/external/x86_64/include/dpdk/rte_pmd_ixgbe.h
+/opt/vpp/external/x86_64/include/dpdk/rte_prefetch.h
+/opt/vpp/external/x86_64/include/dpdk/rte_random.h
+/opt/vpp/external/x86_64/include/dpdk/rte_rcu_qsbr.h
+/opt/vpp/external/x86_64/include/dpdk/rte_reciprocal.h
+/opt/vpp/external/x86_64/include/dpdk/rte_red.h
+/opt/vpp/external/x86_64/include/dpdk/rte_reorder.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ring.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ring_c11_mem.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ring_generic.h
+/opt/vpp/external/x86_64/include/dpdk/rte_rtm.h
+/opt/vpp/external/x86_64/include/dpdk/rte_rwlock.h
+/opt/vpp/external/x86_64/include/dpdk/rte_sched.h
+/opt/vpp/external/x86_64/include/dpdk/rte_sched_common.h
+/opt/vpp/external/x86_64/include/dpdk/rte_sctp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_security.h
+/opt/vpp/external/x86_64/include/dpdk/rte_security_driver.h
+/opt/vpp/external/x86_64/include/dpdk/rte_service.h
+/opt/vpp/external/x86_64/include/dpdk/rte_service_component.h
+/opt/vpp/external/x86_64/include/dpdk/rte_spinlock.h
+/opt/vpp/external/x86_64/include/dpdk/rte_stack.h
+/opt/vpp/external/x86_64/include/dpdk/rte_stack_lf.h
+/opt/vpp/external/x86_64/include/dpdk/rte_stack_lf_c11.h
+/opt/vpp/external/x86_64/include/dpdk/rte_stack_lf_generic.h
+/opt/vpp/external/x86_64/include/dpdk/rte_stack_std.h
+/opt/vpp/external/x86_64/include/dpdk/rte_string_fns.h
+/opt/vpp/external/x86_64/include/dpdk/rte_tailq.h
+/opt/vpp/external/x86_64/include/dpdk/rte_tcp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_test.h
+/opt/vpp/external/x86_64/include/dpdk/rte_thash.h
+/opt/vpp/external/x86_64/include/dpdk/rte_ticketlock.h
+/opt/vpp/external/x86_64/include/dpdk/rte_time.h
+/opt/vpp/external/x86_64/include/dpdk/rte_timer.h
+/opt/vpp/external/x86_64/include/dpdk/rte_tm.h
+/opt/vpp/external/x86_64/include/dpdk/rte_tm_driver.h
+/opt/vpp/external/x86_64/include/dpdk/rte_udp.h
+/opt/vpp/external/x86_64/include/dpdk/rte_uuid.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vdpa.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vect.h
+/opt/vpp/external/x86_64/include/dpdk/rte_version.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vfio.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vhost.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vhost_crypto.h
+/opt/vpp/external/x86_64/include/dpdk/rte_vmbus_reg.h
+/opt/vpp/external/x86_64/include/infiniband
+/opt/vpp/external/x86_64/include/infiniband/ib_user_ioctl_verbs.h
+/opt/vpp/external/x86_64/include/infiniband/verbs.h
+/opt/vpp/external/x86_64/include/infiniband/verbs_api.h
+/opt/vpp/external/x86_64/include/intel-ipsec-mb.h
+/opt/vpp/external/x86_64/include/picotls
+/opt/vpp/external/x86_64/include/picotls/asn1.h
+/opt/vpp/external/x86_64/include/picotls/certificate_compression.h
+/opt/vpp/external/x86_64/include/picotls/ffx.h
+/opt/vpp/external/x86_64/include/picotls/minicrypto.h
+/opt/vpp/external/x86_64/include/picotls/openssl.h
+/opt/vpp/external/x86_64/include/picotls/pembase64.h
+/opt/vpp/external/x86_64/include/picotls.h
+/opt/vpp/external/x86_64/include/quicly
+/opt/vpp/external/x86_64/include/quicly/cc.h
+/opt/vpp/external/x86_64/include/quicly/constants.h
+/opt/vpp/external/x86_64/include/quicly/defaults.h
+/opt/vpp/external/x86_64/include/quicly/frame.h
+/opt/vpp/external/x86_64/include/quicly/linklist.h
+/opt/vpp/external/x86_64/include/quicly/loss.h
+/opt/vpp/external/x86_64/include/quicly/maxsender.h
+/opt/vpp/external/x86_64/include/quicly/ranges.h
+/opt/vpp/external/x86_64/include/quicly/recvstate.h
+/opt/vpp/external/x86_64/include/quicly/sendstate.h
+/opt/vpp/external/x86_64/include/quicly/sentmap.h
+/opt/vpp/external/x86_64/include/quicly/streambuf.h
+/opt/vpp/external/x86_64/include/quicly.h
+/opt/vpp/external/x86_64/include/rdma
+/opt/vpp/external/x86_64/include/rdma/ib_user_verbs.h
+/opt/vpp/external/x86_64/lib
+/opt/vpp/external/x86_64/lib/libIPSec_MB.a
+/opt/vpp/external/x86_64/lib/libdpdk.a
+/opt/vpp/external/x86_64/lib/libibverbs.a
+/opt/vpp/external/x86_64/lib/libmlx5.a
+/opt/vpp/external/x86_64/lib/libpicotls-core.a
+/opt/vpp/external/x86_64/lib/libpicotls-openssl.a
+/opt/vpp/external/x86_64/lib/libquicly.a
+/opt/vpp/external/x86_64/lib/librdma_util.a
+/opt/vpp/external/x86_64/lib/librte_acl.a
+/opt/vpp/external/x86_64/lib/librte_bus_fslmc.a
+/opt/vpp/external/x86_64/lib/librte_bus_pci.a
+/opt/vpp/external/x86_64/lib/librte_bus_vdev.a
+/opt/vpp/external/x86_64/lib/librte_bus_vmbus.a
+/opt/vpp/external/x86_64/lib/librte_cmdline.a
+/opt/vpp/external/x86_64/lib/librte_common_cpt.a
+/opt/vpp/external/x86_64/lib/librte_common_dpaax.a
+/opt/vpp/external/x86_64/lib/librte_common_octeontx.a
+/opt/vpp/external/x86_64/lib/librte_compressdev.a
+/opt/vpp/external/x86_64/lib/librte_cryptodev.a
+/opt/vpp/external/x86_64/lib/librte_eal.a
+/opt/vpp/external/x86_64/lib/librte_ethdev.a
+/opt/vpp/external/x86_64/lib/librte_eventdev.a
+/opt/vpp/external/x86_64/lib/librte_hash.a
+/opt/vpp/external/x86_64/lib/librte_ip_frag.a
+/opt/vpp/external/x86_64/lib/librte_ipsec.a
+/opt/vpp/external/x86_64/lib/librte_kvargs.a
+/opt/vpp/external/x86_64/lib/librte_mbuf.a
+/opt/vpp/external/x86_64/lib/librte_mempool.a
+/opt/vpp/external/x86_64/lib/librte_mempool_bucket.a
+/opt/vpp/external/x86_64/lib/librte_mempool_dpaa2.a
+/opt/vpp/external/x86_64/lib/librte_mempool_octeontx.a
+/opt/vpp/external/x86_64/lib/librte_mempool_ring.a
+/opt/vpp/external/x86_64/lib/librte_mempool_stack.a
+/opt/vpp/external/x86_64/lib/librte_meter.a
+/opt/vpp/external/x86_64/lib/librte_metrics.a
+/opt/vpp/external/x86_64/lib/librte_net.a
+/opt/vpp/external/x86_64/lib/librte_pci.a
+/opt/vpp/external/x86_64/lib/librte_pdump.a
+/opt/vpp/external/x86_64/lib/librte_pmd_aesni_gcm.a
+/opt/vpp/external/x86_64/lib/librte_pmd_aesni_mb.a
+/opt/vpp/external/x86_64/lib/librte_pmd_af_packet.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ark.a
+/opt/vpp/external/x86_64/lib/librte_pmd_atlantic.a
+/opt/vpp/external/x86_64/lib/librte_pmd_avp.a
+/opt/vpp/external/x86_64/lib/librte_pmd_axgbe.a
+/opt/vpp/external/x86_64/lib/librte_pmd_bnxt.a
+/opt/vpp/external/x86_64/lib/librte_pmd_crypto_scheduler.a
+/opt/vpp/external/x86_64/lib/librte_pmd_cxgbe.a
+/opt/vpp/external/x86_64/lib/librte_pmd_dpaa2.a
+/opt/vpp/external/x86_64/lib/librte_pmd_dpaa2_event.a
+/opt/vpp/external/x86_64/lib/librte_pmd_dpaa2_sec.a
+/opt/vpp/external/x86_64/lib/librte_pmd_dsw_event.a
+/opt/vpp/external/x86_64/lib/librte_pmd_e1000.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ena.a
+/opt/vpp/external/x86_64/lib/librte_pmd_enetc.a
+/opt/vpp/external/x86_64/lib/librte_pmd_enic.a
+/opt/vpp/external/x86_64/lib/librte_pmd_fm10k.a
+/opt/vpp/external/x86_64/lib/librte_pmd_i40e.a
+/opt/vpp/external/x86_64/lib/librte_pmd_iavf.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ice.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ifc.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ixgbe.a
+/opt/vpp/external/x86_64/lib/librte_pmd_lio.a
+/opt/vpp/external/x86_64/lib/librte_pmd_netvsc.a
+/opt/vpp/external/x86_64/lib/librte_pmd_nfp.a
+/opt/vpp/external/x86_64/lib/librte_pmd_null.a
+/opt/vpp/external/x86_64/lib/librte_pmd_null_crypto.a
+/opt/vpp/external/x86_64/lib/librte_pmd_octeontx.a
+/opt/vpp/external/x86_64/lib/librte_pmd_octeontx_crypto.a
+/opt/vpp/external/x86_64/lib/librte_pmd_octeontx_ssovf.a
+/opt/vpp/external/x86_64/lib/librte_pmd_octeontx_zip.a
+/opt/vpp/external/x86_64/lib/librte_pmd_opdl_event.a
+/opt/vpp/external/x86_64/lib/librte_pmd_qat.a
+/opt/vpp/external/x86_64/lib/librte_pmd_qede.a
+/opt/vpp/external/x86_64/lib/librte_pmd_ring.a
+/opt/vpp/external/x86_64/lib/librte_pmd_sfc_efx.a
+/opt/vpp/external/x86_64/lib/librte_pmd_skeleton_event.a
+/opt/vpp/external/x86_64/lib/librte_pmd_sw_event.a
+/opt/vpp/external/x86_64/lib/librte_pmd_thunderx_nicvf.a
+/opt/vpp/external/x86_64/lib/librte_pmd_vdev_netvsc.a
+/opt/vpp/external/x86_64/lib/librte_pmd_vhost.a
+/opt/vpp/external/x86_64/lib/librte_pmd_virtio.a
+/opt/vpp/external/x86_64/lib/librte_pmd_virtio_crypto.a
+/opt/vpp/external/x86_64/lib/librte_pmd_vmxnet3_uio.a
+/opt/vpp/external/x86_64/lib/librte_rcu.a
+/opt/vpp/external/x86_64/lib/librte_reorder.a
+/opt/vpp/external/x86_64/lib/librte_ring.a
+/opt/vpp/external/x86_64/lib/librte_sched.a
+/opt/vpp/external/x86_64/lib/librte_security.a
+/opt/vpp/external/x86_64/lib/librte_stack.a
+/opt/vpp/external/x86_64/lib/librte_timer.a
+/opt/vpp/external/x86_64/lib/librte_vhost.a
+/opt/vpp/external/x86_64/sbin
+/opt/vpp/external/x86_64/share
+/opt/vpp/external/x86_64/share/dpdk
+/opt/vpp/external/x86_64/share/dpdk/buildtools
+/opt/vpp/external/x86_64/share/dpdk/buildtools/Makefile
+/opt/vpp/external/x86_64/share/dpdk/buildtools/auto-config-h.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/check-experimental-syms.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/gen-build-mk.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/gen-config-h.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/gen-pmdinfo-cfile.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/meson.build
+/opt/vpp/external/x86_64/share/dpdk/buildtools/options-ibverbs-static.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/pmdinfogen
+/opt/vpp/external/x86_64/share/dpdk/buildtools/pmdinfogen/Makefile
+/opt/vpp/external/x86_64/share/dpdk/buildtools/pmdinfogen/meson.build
+/opt/vpp/external/x86_64/share/dpdk/buildtools/pmdinfogen/pmdinfogen.c
+/opt/vpp/external/x86_64/share/dpdk/buildtools/pmdinfogen/pmdinfogen.h
+/opt/vpp/external/x86_64/share/dpdk/buildtools/relpath.sh
+/opt/vpp/external/x86_64/share/dpdk/buildtools/symlink-drivers-solibs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples
+/opt/vpp/external/x86_64/share/dpdk/examples/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/bbdev_app
+/opt/vpp/external/x86_64/share/dpdk/examples/bbdev_app/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/bbdev_app/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/bbdev_app/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/bond
+/opt/vpp/external/x86_64/share/dpdk/examples/bond/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/bond/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/bond/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/bond/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/README
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/dummy.c
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/mbuf.h
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/t1.c
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/t2.c
+/opt/vpp/external/x86_64/share/dpdk/examples/bpf/t3.c
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/commands.c
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/commands.h
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/parse_obj_list.c
+/opt/vpp/external/x86_64/share/dpdk/examples/cmdline/parse_obj_list.h
+/opt/vpp/external/x86_64/share/dpdk/examples/distributor
+/opt/vpp/external/x86_64/share/dpdk/examples/distributor/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/distributor/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/distributor/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/ethtool-app
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/ethtool-app/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/ethtool-app/ethapp.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/ethtool-app/ethapp.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/ethtool-app/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/lib
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/lib/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/lib/rte_ethtool.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/lib/rte_ethtool.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ethtool/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/pipeline_common.h
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/pipeline_worker_generic.c
+/opt/vpp/external/x86_64/share/dpdk/examples/eventdev_pipeline/pipeline_worker_tx.c
+/opt/vpp/external/x86_64/share/dpdk/examples/exception_path
+/opt/vpp/external/x86_64/share/dpdk/examples/exception_path/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/exception_path/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/exception_path/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_dev_self_test.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_dev_self_test.h
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation.h
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_aes.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_ccm.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_cmac.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_gcm.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_hmac.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_sha.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/fips_validation_tdes.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/fips_validation/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_classify
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_classify/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_classify/flow_classify.c
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_classify/ipv4_rules_file.txt
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_classify/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_filtering
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_filtering/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_filtering/flow_blocks.c
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_filtering/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/flow_filtering/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/helloworld
+/opt/vpp/external/x86_64/share/dpdk/examples/helloworld/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/helloworld/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/helloworld/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_fragmentation
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_fragmentation/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_fragmentation/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_fragmentation/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/action.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/action.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/cli.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/cli.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/common.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/conn.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/conn.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/cryptodev.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/cryptodev.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/firewall.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/flow.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/flow_crypto.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/kni.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/l2fwd.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/route.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/route_ecmp.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/rss.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/examples/tap.cli
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/kni.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/kni.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/link.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/link.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/mempool.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/mempool.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/parser.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/parser.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/pipeline.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/pipeline.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/swq.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/swq.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/tap.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/tap.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/thread.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/thread.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/tmgr.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_pipeline/tmgr.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_reassembly
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_reassembly/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_reassembly/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ip_reassembly/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ep0.cfg
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ep1.cfg
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/esp.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/esp.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ipip.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ipsec-secgw.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ipsec.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ipsec.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/ipsec_process.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/parser.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/parser.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/rt.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/sa.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/sp4.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/sp6.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/data_rxtx.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/linux_test4.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/linux_test6.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/run_test.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_3descbc_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_3descbc_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_3descbc_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_3descbc_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_3descbc_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aescbc_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aescbc_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aescbc_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aescbc_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aescbc_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesctr_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesctr_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesctr_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesctr_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesctr_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_inline_crypto_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_inline_crypto_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/trs_aesgcm_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_3descbc_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_3descbc_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_3descbc_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_3descbc_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_3descbc_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aescbc_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aescbc_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aescbc_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aescbc_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aescbc_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesctr_sha1_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesctr_sha1_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesctr_sha1_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesctr_sha1_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesctr_sha1_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_common_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_esn_atom_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_esn_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_inline_crypto_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_inline_crypto_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipsec-secgw/test/tun_aesgcm_old_defs.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/ipv4_multicast
+/opt/vpp/external/x86_64/share/dpdk/examples/ipv4_multicast/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ipv4_multicast/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/ipv4_multicast/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/kni
+/opt/vpp/external/x86_64/share/dpdk/examples/kni/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/kni/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/kni/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat/cat.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat/cat.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat/l2fwd-cat.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-cat/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-crypto
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-crypto/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-crypto/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-crypto/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-jobstats
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-jobstats/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-jobstats/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-jobstats/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/ka-agent
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/ka-agent/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/ka-agent/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/shm.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l2fwd-keepalive/shm.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_altivec.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_common.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em_hlm.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em_hlm_neon.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em_hlm_sse.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_em_sequential.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_lpm.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_lpm.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_lpm_altivec.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_lpm_neon.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_lpm_sse.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_neon.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/l3fwd_sse.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-acl
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-acl/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-acl/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-acl/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/perf_core.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-power/perf_core.h
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-vf
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-vf/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-vf/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/l3fwd-vf/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/link_status_interrupt
+/opt/vpp/external/x86_64/share/dpdk/examples/link_status_interrupt/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/link_status_interrupt/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/link_status_interrupt/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/config.c
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/init.c
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/load_balancer/runtime.c
+/opt/vpp/external/x86_64/share/dpdk/examples/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_client
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_client/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_client/client.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/args.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/args.h
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/init.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/init.h
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/mp_server/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/shared
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/client_server_mp/shared/common.h
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/hotplug_mp
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/hotplug_mp/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/hotplug_mp/commands.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/hotplug_mp/commands.h
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/hotplug_mp/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/simple_mp
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/simple_mp/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/simple_mp/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/simple_mp/mp_commands.c
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/simple_mp/mp_commands.h
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/symmetric_mp
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/symmetric_mp/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/multi_process/symmetric_mp/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/bridge
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/bridge/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/bridge/bridge.c
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/lib
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/lib/compat_netmap.c
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/lib/compat_netmap.h
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/netmap
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/netmap/netmap.h
+/opt/vpp/external/x86_64/share/dpdk/examples/netmap_compat/netmap/netmap_user.h
+/opt/vpp/external/x86_64/share/dpdk/examples/packet_ordering
+/opt/vpp/external/x86_64/share/dpdk/examples/packet_ordering/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/packet_ordering/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/packet_ordering/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/arm64
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/arm64/ctx.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/arm64/ctx.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/arm64/stack.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/x86
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/x86/ctx.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/x86/ctx.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/arch/x86/stack.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/common.mk
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_api.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_cond.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_cond.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_diag.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_diag.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_diag_api.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_int.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_mutex.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_mutex.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_objcache.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_pool.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_queue.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_sched.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_sched.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_timer.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_tls.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/common/lthread_tls.h
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/l3fwd-thread
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/l3fwd-thread/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/l3fwd-thread/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/l3fwd-thread/test.sh
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/pthread_shim
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/pthread_shim/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/pthread_shim/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/pthread_shim/pthread_shim.c
+/opt/vpp/external/x86_64/share/dpdk/examples/performance-thread/pthread_shim/pthread_shim.h
+/opt/vpp/external/x86_64/share/dpdk/examples/ptpclient
+/opt/vpp/external/x86_64/share/dpdk/examples/ptpclient/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/ptpclient/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/ptpclient/ptpclient.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/rte_policer.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_meter/rte_policer.h
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/app_thread.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/args.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/cfg_file.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/cfg_file.h
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/cmdline.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/init.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/profile.cfg
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/profile_ov.cfg
+/opt/vpp/external/x86_64/share/dpdk/examples/qos_sched/stats.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/include
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/include/conf.h
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/args.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/args.h
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/init.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/init.h
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qw/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl/commands.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl/commands.h
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl/qwctl.c
+/opt/vpp/external/x86_64/share/dpdk/examples/quota_watermark/qwctl/qwctl.h
+/opt/vpp/external/x86_64/share/dpdk/examples/rxtx_callbacks
+/opt/vpp/external/x86_64/share/dpdk/examples/rxtx_callbacks/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/rxtx_callbacks/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/rxtx_callbacks/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/node
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/node/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/node/node.c
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/args.c
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/args.h
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/init.c
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/init.h
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/server/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/shared
+/opt/vpp/external/x86_64/share/dpdk/examples/server_node_efd/shared/common.h
+/opt/vpp/external/x86_64/share/dpdk/examples/service_cores
+/opt/vpp/external/x86_64/share/dpdk/examples/service_cores/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/service_cores/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/service_cores/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/skeleton
+/opt/vpp/external/x86_64/share/dpdk/examples/skeleton/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/skeleton/basicfwd.c
+/opt/vpp/external/x86_64/share/dpdk/examples/skeleton/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/vxlan.c
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/vxlan.h
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/vxlan_setup.c
+/opt/vpp/external/x86_64/share/dpdk/examples/tep_termination/vxlan_setup.h
+/opt/vpp/external/x86_64/share/dpdk/examples/timer
+/opt/vpp/external/x86_64/share/dpdk/examples/timer/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/timer/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/timer/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vdpa
+/opt/vpp/external/x86_64/share/dpdk/examples/vdpa/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vdpa/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vdpa/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost/main.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost/virtio_net.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_crypto
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_crypto/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_crypto/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_crypto/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/scsi.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/scsi_spec.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/vhost_scsi.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vhost_scsi/vhost_scsi.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/channel_manager.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/channel_manager.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/channel_monitor.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/channel_monitor.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/parse.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/parse.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/vm_power_cli_guest.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/guest_cli/vm_power_cli_guest.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/oob_monitor.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/oob_monitor_nop.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/oob_monitor_x86.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/parse.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/parse.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/power_manager.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/power_manager.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/vm_power_cli.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vm_power_manager/vm_power_cli.h
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq/meson.build
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq_dcb
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq_dcb/Makefile
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq_dcb/main.c
+/opt/vpp/external/x86_64/share/dpdk/examples/vmdq_dcb/meson.build
+/opt/vpp/external/x86_64/share/dpdk/mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/arm
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/arm/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/arm64
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/arm64/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/i686
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/i686/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/ppc_64
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/ppc_64/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/x86_64
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/x86_64/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/x86_x32
+/opt/vpp/external/x86_64/share/dpdk/mk/arch/x86_x32/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/freebsd
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/freebsd/rte.app.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/freebsd/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/linux
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/linux/rte.app.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/linux/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.build-post.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.build-pre.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.clean-post.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.clean-pre.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.compile-post.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.compile-pre.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.extvars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.install-post.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/internal/rte.install-pre.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/armv7a
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/armv7a/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/armv8a
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/armv8a/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/default
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/default/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/dpaa
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/dpaa/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/dpaa2
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/dpaa2/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/hsw
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/hsw/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/ivb
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/ivb/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/native
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/native/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/nhm
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/nhm/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/octeontx2
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/octeontx2/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/power8
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/power8/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/silvermont
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/silvermont/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/snb
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/snb/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/thunderx
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/thunderx/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/thunderx2
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/thunderx2/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/wsm
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/wsm/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/xgene1
+/opt/vpp/external/x86_64/share/dpdk/mk/machine/xgene1/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.app.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.bsdmodule.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.combinedlib.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.cpuflags.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.extapp.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.extlib.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.extobj.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.extshared.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.extsubdir.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.gnuconfigure.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.helper.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.hostapp.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.hostlib.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.install.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.lib.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.module.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.obj.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkbuild.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkconfig.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkdepdirs.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkdoc.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkexamples.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkgcov.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkinstall.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdkroot.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.sdktest.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.shared.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.subdir.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/target
+/opt/vpp/external/x86_64/share/dpdk/mk/target/generic
+/opt/vpp/external/x86_64/share/dpdk/mk/target/generic/rte.app.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/target/generic/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/clang
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/clang/rte.toolchain-compat.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/clang/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/gcc
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/gcc/rte.toolchain-compat.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/gcc/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/icc
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/icc/rte.toolchain-compat.mk
+/opt/vpp/external/x86_64/share/dpdk/mk/toolchain/icc/rte.vars.mk
+/opt/vpp/external/x86_64/share/dpdk/usertools
+/opt/vpp/external/x86_64/share/dpdk/usertools/cpu_layout.py
+/opt/vpp/external/x86_64/share/dpdk/usertools/dpdk-devbind.py
+/opt/vpp/external/x86_64/share/dpdk/usertools/dpdk-pmdinfo.py
+/opt/vpp/external/x86_64/share/dpdk/usertools/dpdk-setup.sh
+/opt/vpp/external/x86_64/share/dpdk/usertools/dpdk-telemetry-client.py
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/.config
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/app
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/app/dpdk-pmdinfogen
+/opt/vpp/external/x86_64/share/man
+/opt/vpp/external/x86_64/share/man/man1
+/opt/vpp/external/x86_64/share/man/man1/nasm.1
+/opt/vpp/external/x86_64/share/man/man1/ndisasm.1
+/usr
+/usr/share
+/usr/share/doc
+/usr/share/doc/vpp-ext-deps
+/usr/share/doc/vpp-ext-deps/changelog.Debian.gz
+/opt/vpp/external/x86_64/bin/dpdk-pmdinfo
+/opt/vpp/external/x86_64/sbin/dpdk-devbind
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/bsdapp
+/opt/vpp/external/x86_64/share/dpdk/mk/exec-env/linuxapp
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/include
+/opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/lib
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/vpp/">基于VPP&#43;DPDK开源框架开发UPF</a></li>
+        
+        <li><a href="/posts/vpp-node-graph/">vpp node-graph编排过程</a></li>
+        
+        <li><a href="/posts/vpp-feature/">vpp feature节点以及数据走向控制</a></li>
+        
+        <li><a href="/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a></li>
+        
+        <li><a href="/posts/vpp-sample-plugin/">vpp sample plugin</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/upf">upf</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏">使用rust语言&#43;SDL2库写游戏</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title" style="color:red">日历</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a href="" title="时间如白驹过隙" target="_blank" style="color:red">
+                
+                    <img src="/index/img/202006.jpeg">
+                
+            </a>
+        </li>
+        
+    </ul>
+</section>
+
+
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ubuntu/">ubuntu(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/frp/">frp</a>
+    
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/github/">github</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
+    
+    <a href="https://workerwork.github.io/tags/pip/">pip</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
+    
+    <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BB%A3%E7%90%86/">代理</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.kdocs.cn/" title="在线文档">wps</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.youtube.com/" title="youtube">youtube</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://vimeo.com/" title="vimeo">vimeo</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.wikipedia.org/" title="维基">维基</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thepiratebay.org/index.html" title="海盗湾">海盗湾</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thekickasstorrents.to/" title="KickassTorrents">KickassTorrents</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.reddit.com/" title="reddit">reddit</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.imdb.com/" title="IMDB">IMDB</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.quora.com/" title="quora">quora</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.c114.com.cn/" title="c114">c114</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://news.cnblogs.com/" title="博客园">博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.csdn.net/" title="csdn">csdn</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://leetcode-cn.com/" title="leetcode">leetcode</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.ted.com/" title="ted">ted</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.sdnlab.com/" title="sdnlab">sdnlab</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.v2ex.com/" title="v2ex">v2ex</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.pinterest.com/" title="pinterest">pinterest</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://d.serctl.com/" title="d.serctl">d.serctl</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://g.widora.cn/" title="github代理下载">github代理下载</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/p4lang/tutorials" title="P4教程">P4教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://fd.io/" title="FD.io">FD.io</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.opennetworking.org/" title="ONF">ONF</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.zsythink.net/" title="网络博客4">网络博客4</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.netcan666.com/" title="netcan666">netcan666</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust视频教程">rust视频教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://kaisery.github.io/trpl-zh-cn/" title="rust中文教程">rust中文教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustcc.com/" title="rust中文社区索引">rust中文社区索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://doc.rust-lang.org/std/" title="rust标准库">rust标准库</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://docs.rs/" title="docs.rs">docs.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://lib.rs/" title="lib.rs">lib.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitee.com/" title="gitee">gitee</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://192.168.10.79/" title="RSAS(admin/Nsfocus@123)">RSAS</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-debs/">vpp编译分析</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月15日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载源码 git clone http://192.168.9.105:60080/UPF/upf-vpp.git  2. 编译选项 1.make install-dep #install software dependencies 2.make wipe(wipe-release) #wipe all products 3.make build(build-release) #build binaries 4.make install-ext-deps #install external development dependencies(about dpdk) 5.make pkg-deb #build DEB packages  3. deb包 root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra /. /usr /usr/lib /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libvppinfra.so.19.08.1 /usr/share /usr/share/doc /usr/share/doc/libvppinfra /usr/share/doc/libvppinfra/changelog.Debian.gz /usr/share/doc/libvppinfra/copyright /usr/lib/x86_64-linux-gnu/libvppinfra.so  root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra-dev /. /usr /usr/include /usr/include/vppinfra /usr/include/vppinfra/atomics.h /usr/include/vppinfra/bihash_16_8.h /usr/include/vppinfra/bihash_24_8.h /usr/include/vppinfra/bihash_40_8.h /usr/include/vppinfra/bihash_48_8.h /usr/include/vppinfra/bihash_8_8.h /usr/include/vppinfra/bihash_template.c /usr/include/vppinfra/bihash_template.h /usr/include/vppinfra/bihash_vec8_8.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-debs/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp/">基于VPP&#43;DPDK开源框架开发UPF</a>
                                 </h1>
                             </header>
@@ -136,6 +159,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
     </li>
     
@@ -169,10 +196,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-node-fw/" title="vpp 节点报文处理流程分析">vpp 节点报文处理流程分析</a>
     </li>
     
 </ul>
@@ -245,7 +268,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(4)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
     </li>
     
     <li>
