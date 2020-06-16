@@ -139,7 +139,7 @@ cp *.rpm rpms/
 
 <h1 id="5-在客户端添加本地yum源">5. 在客户端添加本地yum源</h1>
 
-<pre><code class="language-shell">cat&gt;&gt;/etc/yum.repo.d/local.repo&lt;&lt;EOF
+<pre><code class="language-shell">cat&gt;&gt;/etc/yum.repos.d/local.repo&lt;&lt;EOF
 [local]
 name=local for centos7
 baseurl=file://192.168.9.105/root/df/yum
