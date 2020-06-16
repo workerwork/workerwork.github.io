@@ -128,7 +128,9 @@
 
 <h1 id="3-创建仓库">3. 创建仓库</h1>
 
-<pre><code class="language-shell">createrepo -g comps.xml .
+<pre><code class="language-shell">createrepo -g comps.xml . #精确分组
+#createrepo .
+#createrepo --update
 </code></pre>
 
 <h1 id="4-拷贝rpm包到仓库">4. 拷贝rpm包到仓库</h1>
@@ -142,7 +144,8 @@ cp *.rpm rpms/
 <pre><code class="language-shell">cat&gt;&gt;/etc/yum.repos.d/local.repo&lt;&lt;EOF
 [local]
 name=local for centos7
-baseurl=file://192.168.9.105/root/df/yum
+baseurl=file://192.168.9.105/root/df/yum　＃局域网
+#baseurl=file:///root/df/yum  #本地
 enable=1
 gpgcheck=0
 priority=1
