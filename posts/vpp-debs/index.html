@@ -111,6 +111,22 @@
 
 <h2 id="3-deb包">3. deb包</h2>
 
+<pre><code class="language-shell">root@localhost:/home/ubuntu/work/upf-vpp# ll build-root/*.deb
+-rw-r--r-- 1 root root   184920 Jun 22 19:33 build-root/libvppinfra_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root   145112 Jun 22 19:33 build-root/libvppinfra-dev_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root    22456 Jun 22 19:33 build-root/python3-vpp-api_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root  3313088 Jun 22 19:33 build-root/vpp_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root    22388 Jun 22 19:33 build-root/vpp-api-python_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root 69034440 Jun 22 19:33 build-root/vpp-dbg_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root   955016 Jun 22 19:33 build-root/vpp-dev_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root  2914896 Jun 22 19:33 build-root/vpp-plugin-core_19.08.1-21~g512cdac9c-dirty_amd64.deb
+-rw-r--r-- 1 root root  2711400 Jun 22 19:33 build-root/vpp-plugin-dpdk_19.08.1-21~g512cdac9c-dirty_amd64.deb
+
+root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
+-rw-r--r-- 1 root root 16904236 Apr 24 15:52 build/external/vpp-ext-deps_19.08-14_amd64.deb
+
+</code></pre>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra
 /.
 /usr
