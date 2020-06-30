@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年1月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1 前言 1.1 术语    英文缩写 英文全称 中文全称     eGW enterprise gateway 企业网关   OMC operation and maintenance center 操作管理中心    1.2 目的 本文档用来指导安装部署业务网关
+2 安装指导 2.1 安装系统 系统版本要求：centos7.2
+安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
+2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
                                 </h1>
                             </header>
@@ -88,31 +114,6 @@
                                 this is the first test for hugo!……
                             </div>
                             <p class="readmore"><a href="https://workerwork.github.io/posts/my-first-post/">阅读全文</a></p>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用" >keepalived应用</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                1年1月1日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 监控脚本 在Master节点和Slave节点 /etc/keepalived目录下添加check_nginx.sh 文件，用于检测Nginx的存活状况
-#!/bin/bash #时间变量，用于记录日志 d=`date --date today +%Y%m%d_%H:%M:%S` #计算nginx进程数量 n=`ps -C nginx --no-heading|wc -l` #如果进程为0，则尝试启动nginx，并且再次检测nginx进程数量， #如果还为0，说明nginx无法启动，此时需要关闭keepalived if [ $n -eq &quot;0&quot; ]; then #如果挂掉了，就启动nginx #注意nginx.conf配置文件的位置 #尝试重新启动nginx /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf sleep 3 #睡眠3秒 n2=`ps -C nginx --no-heading|wc -l` if [ $n2 -eq &quot;0&quot; ]; then #把nginx宕机时间写入日志 echo &quot;$d nginx down,keepalived will stop&quot; &gt;&gt; /usr/local/nginx/logs/check_ng.log #启动失败，将keepalived服务杀死。将vip漂移到其它备份节点 service keepalived stop fi fi  授权: chmod 755 /etc/keepalived/check_nginx.sh
-2. 非抢占模式 在Master 节点 /etc/keepalived目录下，配置keepalived.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/keepalived/">阅读全文</a></p>
                         </article>
                     
 
@@ -171,6 +172,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
@@ -204,10 +209,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
     </li>
     
 </ul>

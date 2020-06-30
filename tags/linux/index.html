@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/keepalived/">keepalived应用</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 监控脚本 在Master节点和Slave节点 /etc/keepalived目录下添加check_nginx.sh 文件，用于检测Nginx的存活状况
+#!/bin/bash #时间变量，用于记录日志 d=`date --date today +%Y%m%d_%H:%M:%S` #计算nginx进程数量 n=`ps -C nginx --no-heading|wc -l` #如果进程为0，则尝试启动nginx，并且再次检测nginx进程数量， #如果还为0，说明nginx无法启动，此时需要关闭keepalived if [ $n -eq &quot;0&quot; ]; then #如果挂掉了，就启动nginx #注意nginx.conf配置文件的位置 #尝试重新启动nginx /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf sleep 3 #睡眠3秒 n2=`ps -C nginx --no-heading|wc -l` if [ $n2 -eq &quot;0&quot; ]; then #把nginx宕机时间写入日志 echo &quot;$d nginx down,keepalived will stop&quot; &gt;&gt; /usr/local/nginx/logs/check_ng.log #启动失败，将keepalived服务杀死。将vip漂移到其它备份节点 service keepalived stop fi fi  授权: chmod 755 /etc/keepalived/check_nginx.sh
+2. 非抢占模式 在Master 节点 /etc/keepalived目录下，配置keepalived.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/keepalived/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/eth-name/">网卡命名</a>
                                 </h1>
                             </header>
@@ -311,30 +336,6 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-sample-plugin/">vpp sample plugin</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. plugin_sample.c 在此文件中定义feature和cli
-#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点 &quot;plugin_sample&quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -379,6 +380,10 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
@@ -412,10 +417,6 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
     
     <li>
         <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
     </li>
     
 </ul>

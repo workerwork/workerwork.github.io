@@ -4,32 +4,47 @@
   
   <url>
     <loc>https://workerwork.github.io/categories/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/ha/</loc>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/keepalived/</loc>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/keepalived/</loc>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/categories/linux/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/linux/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://workerwork.github.io/</loc>
-    <lastmod>2020-06-30T10:25:52+08:00</lastmod>
+    <lastmod>2020-06-30T14:23:52+08:00</lastmod>
   </url>
   
   <url>
@@ -143,12 +158,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/python/</loc>
+    <loc>https://workerwork.github.io/categories/python/</loc>
     <lastmod>2020-05-10T16:25:52+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/python/</loc>
+    <loc>https://workerwork.github.io/tags/python/</loc>
     <lastmod>2020-05-10T16:25:52+08:00</lastmod>
   </url>
   
@@ -158,12 +173,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/p4/</loc>
+    <loc>https://workerwork.github.io/tags/p4/</loc>
     <lastmod>2020-05-06T18:00:52+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/p4/</loc>
+    <loc>https://workerwork.github.io/categories/p4/</loc>
     <lastmod>2020-05-06T18:00:52+08:00</lastmod>
   </url>
   
@@ -595,18 +610,6 @@
   <url>
     <loc>https://workerwork.github.io/posts/my-first-post/</loc>
     <lastmod>2019-01-21T15:37:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/ha/</loc>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/keepalived/</loc>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/posts/keepalived/</loc>
   </url>
   
   <url>
