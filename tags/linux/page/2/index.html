@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-deps/">WCG-deps-install</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.sh # version:1.0 # update:20181120 ########################################################## DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kernel-dev/">kernel 字符设备驱动</a>
                                 </h1>
                             </header>
@@ -257,6 +280,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
     </li>
     
@@ -290,10 +317,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程">vpp node-graph编排过程</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature节点以及数据走向控制">vpp feature节点以及数据走向控制</a>
     </li>
     
 </ul>
@@ -338,7 +361,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(8)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(9)</a>
     </li>
     
     <li>
@@ -501,6 +524,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
     
     <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E7%BD%91%E5%8D%A1%E5%91%BD%E5%90%8D/">网卡命名</a>
     
     <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
     
