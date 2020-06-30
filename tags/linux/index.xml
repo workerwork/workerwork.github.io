@@ -6,10 +6,19 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 30 Jun 2020 14:23:52 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 30 Jun 2020 17:18:27 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>DPDK-Devbind</title>
+      <link>https://workerwork.github.io/posts/dpdk-devbind/</link>
+      <pubDate>Tue, 30 Jun 2020 17:18:27 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/dpdk-devbind/</guid>
+      <description>dpdk-devbind.py #! /usr/bin/env python # SPDX-License-Identifier: BSD-3-Clause # Copyright(c) 2010-2014 Intel Corporation # import sys import os import getopt import subprocess from os.path import exists, abspath, dirname, basename # The PCI base class for all devices network_class = {&#39;Class&#39;: &#39;02&#39;, &#39;Vendor&#39;: None, &#39;Device&#39;: None, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} encryption_class = {&#39;Class&#39;: &#39;10&#39;, &#39;Vendor&#39;: None, &#39;Device&#39;: None, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} intel_processor_class = {&#39;Class&#39;: &#39;0b&#39;, &#39;Vendor&#39;: &#39;8086&#39;, &#39;Device&#39;: None, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} cavium_sso = {&#39;Class&#39;: &#39;08&#39;, &#39;Vendor&#39;: &#39;177d&#39;, &#39;Device&#39;: &#39;a04b,a04d&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} cavium_fpa = {&#39;Class&#39;: &#39;08&#39;, &#39;Vendor&#39;: &#39;177d&#39;, &#39;Device&#39;: &#39;a053&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} cavium_pkx = {&#39;Class&#39;: &#39;08&#39;, &#39;Vendor&#39;: &#39;177d&#39;, &#39;Device&#39;: &#39;a0dd,a049&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} cavium_tim = {&#39;Class&#39;: &#39;08&#39;, &#39;Vendor&#39;: &#39;177d&#39;, &#39;Device&#39;: &#39;a051&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} cavium_zip = {&#39;Class&#39;: &#39;12&#39;, &#39;Vendor&#39;: &#39;177d&#39;, &#39;Device&#39;: &#39;a037&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} avp_vnic = {&#39;Class&#39;: &#39;05&#39;, &#39;Vendor&#39;: &#39;1af4&#39;, &#39;Device&#39;: &#39;1110&#39;, &#39;SVendor&#39;: None, &#39;SDevice&#39;: None} network_devices = [network_class, cavium_pkx, avp_vnic] crypto_devices = [encryption_class, intel_processor_class] eventdev_devices = [cavium_sso, cavium_tim] mempool_devices = [cavium_fpa] compress_devices = [cavium_zip] # global dict ethernet devices present.</description>
+    </item>
     
     <item>
       <title>keepalived应用</title>

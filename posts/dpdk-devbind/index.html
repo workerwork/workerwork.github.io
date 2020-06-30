@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DPDK-Devbind | WorkSpace</title>
+    <meta property="og:title" content="DPDK-Devbind - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-06-30T17:18:27&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-06-30T17:18:27&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="DPDK-Devbind">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/dpdk-devbind/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">DPDK-Devbind</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年6月30日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/dpdk">dpdk</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
+
+<h3 id="dpdk-devbind-py">dpdk-devbind.py</h3>
+
+<pre><code>#! /usr/bin/env python
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright(c) 2010-2014 Intel Corporation
+#
+
+import sys
+import os
+import getopt
+import subprocess
+from os.path import exists, abspath, dirname, basename
+
+# The PCI base class for all devices
+network_class = {'Class': '02', 'Vendor': None, 'Device': None,
+                    'SVendor': None, 'SDevice': None}
+encryption_class = {'Class': '10', 'Vendor': None, 'Device': None,
+                   'SVendor': None, 'SDevice': None}
+intel_processor_class = {'Class': '0b', 'Vendor': '8086', 'Device': None,
+                   'SVendor': None, 'SDevice': None}
+cavium_sso = {'Class': '08', 'Vendor': '177d', 'Device': 'a04b,a04d',
+              'SVendor': None, 'SDevice': None}
+cavium_fpa = {'Class': '08', 'Vendor': '177d', 'Device': 'a053',
+              'SVendor': None, 'SDevice': None}
+cavium_pkx = {'Class': '08', 'Vendor': '177d', 'Device': 'a0dd,a049',
+              'SVendor': None, 'SDevice': None}
+cavium_tim = {'Class': '08', 'Vendor': '177d', 'Device': 'a051',
+              'SVendor': None, 'SDevice': None}
+cavium_zip = {'Class': '12', 'Vendor': '177d', 'Device': 'a037',
+              'SVendor': None, 'SDevice': None}
+avp_vnic = {'Class': '05', 'Vendor': '1af4', 'Device': '1110',
+              'SVendor': None, 'SDevice': None}
+
+network_devices = [network_class, cavium_pkx, avp_vnic]
+crypto_devices = [encryption_class, intel_processor_class]
+eventdev_devices = [cavium_sso, cavium_tim]
+mempool_devices = [cavium_fpa]
+compress_devices = [cavium_zip]
+
+# global dict ethernet devices present. Dictionary indexed by PCI address.
+# Each device within this is itself a dictionary of device properties
+devices = {}
+# list of supported DPDK drivers
+dpdk_drivers = [&quot;igb_uio&quot;, &quot;vfio-pci&quot;, &quot;uio_pci_generic&quot;]
+
+# command-line arg flags
+b_flag = None
+status_flag = False
+force_flag = False
+args = []
+
+
+def usage():
+    '''Print usage information for the program'''
+    argv0 = basename(sys.argv[0])
+    print(&quot;&quot;&quot;
+Usage:
+------
+
+     %(argv0)s [options] DEVICE1 DEVICE2 ....
+
+where DEVICE1, DEVICE2 etc, are specified via PCI &quot;domain:bus:slot.func&quot; syntax
+or &quot;bus:slot.func&quot; syntax. For devices bound to Linux kernel drivers, they may
+also be referred to by Linux interface name e.g. eth0, eth1, em0, em1, etc.
+
+Options:
+    --help, --usage:
+        Display usage information and quit
+
+    -s, --status:
+        Print the current status of all known network, crypto, event
+        and mempool devices.
+        For each device, it displays the PCI domain, bus, slot and function,
+        along with a text description of the device. Depending upon whether the
+        device is being used by a kernel driver, the igb_uio driver, or no
+        driver, other relevant information will be displayed:
+        * the Linux interface name e.g. if=eth0
+        * the driver being used e.g. drv=igb_uio
+        * any suitable drivers not currently using that device
+            e.g. unused=igb_uio
+        NOTE: if this flag is passed along with a bind/unbind option, the
+        status display will always occur after the other operations have taken
+        place.
+
+    --status-dev:
+        Print the status of given device group. Supported device groups are:
+        &quot;net&quot;, &quot;crypto&quot;, &quot;event&quot;, &quot;mempool&quot; and &quot;compress&quot;
+
+    -b driver, --bind=driver:
+        Select the driver to use or \&quot;none\&quot; to unbind the device
+
+    -u, --unbind:
+        Unbind a device (Equivalent to \&quot;-b none\&quot;)
+
+    --force:
+        By default, network devices which are used by Linux - as indicated by
+        having routes in the routing table - cannot be modified. Using the
+        --force flag overrides this behavior, allowing active links to be
+        forcibly unbound.
+        WARNING: This can lead to loss of network connection and should be used
+        with caution.
+
+Examples:
+---------
+
+To display current device status:
+        %(argv0)s --status
+
+To display current network device status:
+        %(argv0)s --status-dev net
+
+To bind eth1 from the current driver and move to use igb_uio
+        %(argv0)s --bind=igb_uio eth1
+
+To unbind 0000:01:00.0 from using any driver
+        %(argv0)s -u 0000:01:00.0
+
+To bind 0000:02:00.0 and 0000:02:00.1 to the ixgbe kernel driver
+        %(argv0)s -b ixgbe 02:00.0 02:00.1
+
+    &quot;&quot;&quot; % locals())  # replace items from local variables
+
+
+# This is roughly compatible with check_output function in subprocess module
+# which is only available in python 2.7.
+def check_output(args, stderr=None):
+    '''Run a command and capture its output'''
+    return subprocess.Popen(args, stdout=subprocess.PIPE,
+                            stderr=stderr).communicate()[0]
+
+
+def check_modules():
+    '''Checks that igb_uio is loaded'''
+    global dpdk_drivers
+
+    # list of supported modules
+    mods = [{&quot;Name&quot;: driver, &quot;Found&quot;: False} for driver in dpdk_drivers]
+
+    # first check if module is loaded
+    try:
+        # Get list of sysfs modules (both built-in and dynamically loaded)
+        sysfs_path = '/sys/module/'
+
+        # Get the list of directories in sysfs_path
+        sysfs_mods = [os.path.join(sysfs_path, o) for o
+                      in os.listdir(sysfs_path)
+                      if os.path.isdir(os.path.join(sysfs_path, o))]
+
+        # Extract the last element of '/sys/module/abc' in the array
+        sysfs_mods = [a.split('/')[-1] for a in sysfs_mods]
+
+        # special case for vfio_pci (module is named vfio-pci,
+        # but its .ko is named vfio_pci)
+        sysfs_mods = [a if a != 'vfio_pci' else 'vfio-pci' for a in sysfs_mods]
+
+        for mod in mods:
+            if mod[&quot;Name&quot;] in sysfs_mods:
+                mod[&quot;Found&quot;] = True
+    except:
+        pass
+
+    # check if we have at least one loaded module
+    if True not in [mod[&quot;Found&quot;] for mod in mods] and b_flag is not None:
+        if b_flag in dpdk_drivers:
+            print(&quot;Error - no supported modules(DPDK driver) are loaded&quot;)
+            sys.exit(1)
+        else:
+            print(&quot;Warning - no supported modules(DPDK driver) are loaded&quot;)
+
+    # change DPDK driver list to only contain drivers that are loaded
+    dpdk_drivers = [mod[&quot;Name&quot;] for mod in mods if mod[&quot;Found&quot;]]
+
+
+def has_driver(dev_id):
+    '''return true if a device is assigned to a driver. False otherwise'''
+    return &quot;Driver_str&quot; in devices[dev_id]
+
+
+def get_pci_device_details(dev_id, probe_lspci):
+    '''This function gets additional details for a PCI device'''
+    device = {}
+
+    if probe_lspci:
+        extra_info = check_output([&quot;lspci&quot;, &quot;-vmmks&quot;, dev_id]).splitlines()
+
+        # parse lspci details
+        for line in extra_info:
+            if len(line) == 0:
+                continue
+            name, value = line.decode().split(&quot;\t&quot;, 1)
+            name = name.strip(&quot;:&quot;) + &quot;_str&quot;
+            device[name] = value
+    # check for a unix interface name
+    device[&quot;Interface&quot;] = &quot;&quot;
+    for base, dirs, _ in os.walk(&quot;/sys/bus/pci/devices/%s/&quot; % dev_id):
+        if &quot;net&quot; in dirs:
+            device[&quot;Interface&quot;] = \
+                &quot;,&quot;.join(os.listdir(os.path.join(base, &quot;net&quot;)))
+            break
+    # check if a port is used for ssh connection
+    device[&quot;Ssh_if&quot;] = False
+    device[&quot;Active&quot;] = &quot;&quot;
+
+    return device
+
+def clear_data():
+    '''This function clears any old data'''
+    devices = {}
+
+def get_device_details(devices_type):
+    '''This function populates the &quot;devices&quot; dictionary. The keys used are
+    the pci addresses (domain:bus:slot.func). The values are themselves
+    dictionaries - one for each NIC.'''
+    global devices
+    global dpdk_drivers
+
+    # first loop through and read details for all devices
+    # request machine readable format, with numeric IDs and String
+    dev = {}
+    dev_lines = check_output([&quot;lspci&quot;, &quot;-Dvmmnnk&quot;]).splitlines()
+    for dev_line in dev_lines:
+        if len(dev_line) == 0:
+            if device_type_match(dev, devices_type):
+                # Replace &quot;Driver&quot; with &quot;Driver_str&quot; to have consistency of
+                # of dictionary key names
+                if &quot;Driver&quot; in dev.keys():
+                    dev[&quot;Driver_str&quot;] = dev.pop(&quot;Driver&quot;)
+                if &quot;Module&quot; in dev.keys():
+                    dev[&quot;Module_str&quot;] = dev.pop(&quot;Module&quot;)
+                # use dict to make copy of dev
+                devices[dev[&quot;Slot&quot;]] = dict(dev)
+            # Clear previous device's data
+            dev = {}
+        else:
+            name, value = dev_line.decode().split(&quot;\t&quot;, 1)
+            value_list = value.rsplit(' ', 1)
+            if len(value_list) &gt; 1:
+                # String stored in &lt;name&gt;_str
+                dev[name.rstrip(&quot;:&quot;) + '_str'] = value_list[0]
+            # Numeric IDs
+            dev[name.rstrip(&quot;:&quot;)] = value_list[len(value_list) - 1] \
+                .rstrip(&quot;]&quot;).lstrip(&quot;[&quot;)
+
+    if devices_type == network_devices:
+        # check what is the interface if any for an ssh connection if
+        # any to this host, so we can mark it later.
+        ssh_if = []
+        route = check_output([&quot;ip&quot;, &quot;-o&quot;, &quot;route&quot;])
+        # filter out all lines for 169.254 routes
+        route = &quot;\n&quot;.join(filter(lambda ln: not ln.startswith(&quot;169.254&quot;),
+                             route.decode().splitlines()))
+        rt_info = route.split()
+        for i in range(len(rt_info) - 1):
+            if rt_info[i] == &quot;dev&quot;:
+                ssh_if.append(rt_info[i+1])
+
+    # based on the basic info, get extended text details
+    for d in devices.keys():
+        if not device_type_match(devices[d], devices_type):
+            continue
+
+        # get additional info and add it to existing data
+        devices[d] = devices[d].copy()
+        # No need to probe lspci
+        devices[d].update(get_pci_device_details(d, False).items())
+
+        if devices_type == network_devices:
+            for _if in ssh_if:
+                if _if in devices[d][&quot;Interface&quot;].split(&quot;,&quot;):
+                    devices[d][&quot;Ssh_if&quot;] = True
+                    devices[d][&quot;Active&quot;] = &quot;*Active*&quot;
+                    break
+
+        # add igb_uio to list of supporting modules if needed
+        if &quot;Module_str&quot; in devices[d]:
+            for driver in dpdk_drivers:
+                if driver not in devices[d][&quot;Module_str&quot;]:
+                    devices[d][&quot;Module_str&quot;] = \
+                        devices[d][&quot;Module_str&quot;] + &quot;,%s&quot; % driver
+        else:
+            devices[d][&quot;Module_str&quot;] = &quot;,&quot;.join(dpdk_drivers)
+
+        # make sure the driver and module strings do not have any duplicates
+        if has_driver(d):
+            modules = devices[d][&quot;Module_str&quot;].split(&quot;,&quot;)
+            if devices[d][&quot;Driver_str&quot;] in modules:
+                modules.remove(devices[d][&quot;Driver_str&quot;])
+                devices[d][&quot;Module_str&quot;] = &quot;,&quot;.join(modules)
+
+
+def device_type_match(dev, devices_type):
+    for i in range(len(devices_type)):
+        param_count = len(
+            [x for x in devices_type[i].values() if x is not None])
+        match_count = 0
+        if dev[&quot;Class&quot;][0:2] == devices_type[i][&quot;Class&quot;]:
+            match_count = match_count + 1
+            for key in devices_type[i].keys():
+                if key != 'Class' and devices_type[i][key]:
+                    value_list = devices_type[i][key].split(',')
+                    for value in value_list:
+                        if value.strip(' ') == dev[key]:
+                            match_count = match_count + 1
+            # count must be the number of non None parameters to match
+            if match_count == param_count:
+                return True
+    return False
+
+def dev_id_from_dev_name(dev_name):
+    '''Take a device &quot;name&quot; - a string passed in by user to identify a NIC
+    device, and determine the device id - i.e. the domain:bus:slot.func - for
+    it, which can then be used to index into the devices array'''
+
+    # check if it's already a suitable index
+    if dev_name in devices:
+        return dev_name
+    # check if it's an index just missing the domain part
+    elif &quot;0000:&quot; + dev_name in devices:
+        return &quot;0000:&quot; + dev_name
+    else:
+        # check if it's an interface name, e.g. eth1
+        for d in devices.keys():
+            if dev_name in devices[d][&quot;Interface&quot;].split(&quot;,&quot;):
+                return devices[d][&quot;Slot&quot;]
+    # if nothing else matches - error
+    print(&quot;Unknown device: %s. &quot;
+          &quot;Please specify device in \&quot;bus:slot.func\&quot; format&quot; % dev_name)
+    sys.exit(1)
+
+
+def unbind_one(dev_id, force):
+    '''Unbind the device identified by &quot;dev_id&quot; from its current driver'''
+    dev = devices[dev_id]
+    if not has_driver(dev_id):
+        print(&quot;%s %s %s is not currently managed by any driver\n&quot; %
+              (dev[&quot;Slot&quot;], dev[&quot;Device_str&quot;], dev[&quot;Interface&quot;]))
+        return
+
+    # prevent us disconnecting ourselves
+    if dev[&quot;Ssh_if&quot;] and not force:
+        print(&quot;Routing table indicates that interface %s is active. &quot;
+              &quot;Skipping unbind&quot; % (dev_id))
+        return
+
+    # write to /sys to unbind
+    filename = &quot;/sys/bus/pci/drivers/%s/unbind&quot; % dev[&quot;Driver_str&quot;]
+    try:
+        f = open(filename, &quot;a&quot;)
+    except:
+        print(&quot;Error: unbind failed for %s - Cannot open %s&quot;
+              % (dev_id, filename))
+        sys.exit(1)
+    f.write(dev_id)
+    f.close()
+
+
+def bind_one(dev_id, driver, force):
+    '''Bind the device given by &quot;dev_id&quot; to the driver &quot;driver&quot;. If the device
+    is already bound to a different driver, it will be unbound first'''
+    dev = devices[dev_id]
+    saved_driver = None  # used to rollback any unbind in case of failure
+
+    # prevent disconnection of our ssh session
+    if dev[&quot;Ssh_if&quot;] and not force:
+        print(&quot;Routing table indicates that interface %s is active. &quot;
+              &quot;Not modifying&quot; % (dev_id))
+        return
+
+    # unbind any existing drivers we don't want
+    if has_driver(dev_id):
+        if dev[&quot;Driver_str&quot;] == driver:
+            print(&quot;%s already bound to driver %s, skipping\n&quot;
+                  % (dev_id, driver))
+            return
+        else:
+            saved_driver = dev[&quot;Driver_str&quot;]
+            unbind_one(dev_id, force)
+            dev[&quot;Driver_str&quot;] = &quot;&quot;  # clear driver string
+
+    # For kernels &gt;= 3.15 driver_override can be used to specify the driver
+    # for a device rather than relying on the driver to provide a positive
+    # match of the device.  The existing process of looking up
+    # the vendor and device ID, adding them to the driver new_id,
+    # will erroneously bind other devices too which has the additional burden
+    # of unbinding those devices
+    if driver in dpdk_drivers:
+        filename = &quot;/sys/bus/pci/devices/%s/driver_override&quot; % dev_id
+        if os.path.exists(filename):
+            try:
+                f = open(filename, &quot;w&quot;)
+            except:
+                print(&quot;Error: bind failed for %s - Cannot open %s&quot;
+                      % (dev_id, filename))
+                return
+            try:
+                f.write(&quot;%s&quot; % driver)
+                f.close()
+            except:
+                print(&quot;Error: bind failed for %s - Cannot write driver %s to &quot;
+                      &quot;PCI ID &quot; % (dev_id, driver))
+                return
+        # For kernels &lt; 3.15 use new_id to add PCI id's to the driver
+        else:
+            filename = &quot;/sys/bus/pci/drivers/%s/new_id&quot; % driver
+            try:
+                f = open(filename, &quot;w&quot;)
+            except:
+                print(&quot;Error: bind failed for %s - Cannot open %s&quot;
+                      % (dev_id, filename))
+                return
+            try:
+                # Convert Device and Vendor Id to int to write to new_id
+                f.write(&quot;%04x %04x&quot; % (int(dev[&quot;Vendor&quot;],16),
+                        int(dev[&quot;Device&quot;], 16)))
+                f.close()
+            except:
+                print(&quot;Error: bind failed for %s - Cannot write new PCI ID to &quot;
+                      &quot;driver %s&quot; % (dev_id, driver))
+                return
+
+    # do the bind by writing to /sys
+    filename = &quot;/sys/bus/pci/drivers/%s/bind&quot; % driver
+    try:
+        f = open(filename, &quot;a&quot;)
+    except:
+        print(&quot;Error: bind failed for %s - Cannot open %s&quot;
+              % (dev_id, filename))
+        if saved_driver is not None:  # restore any previous driver
+            bind_one(dev_id, saved_driver, force)
+        return
+    try:
+        f.write(dev_id)
+        f.close()
+    except:
+        # for some reason, closing dev_id after adding a new PCI ID to new_id
+        # results in IOError. however, if the device was successfully bound,
+        # we don't care for any errors and can safely ignore IOError
+        tmp = get_pci_device_details(dev_id, True)
+        if &quot;Driver_str&quot; in tmp and tmp[&quot;Driver_str&quot;] == driver:
+            return
+        print(&quot;Error: bind failed for %s - Cannot bind to driver %s&quot;
+              % (dev_id, driver))
+        if saved_driver is not None:  # restore any previous driver
+            bind_one(dev_id, saved_driver, force)
+        return
+
+    # For kernels &gt; 3.15 driver_override is used to bind a device to a driver.
+    # Before unbinding it, overwrite driver_override with empty string so that
+    # the device can be bound to any other driver
+    filename = &quot;/sys/bus/pci/devices/%s/driver_override&quot; % dev_id
+    if os.path.exists(filename):
+        try:
+            f = open(filename, &quot;w&quot;)
+        except:
+            print(&quot;Error: unbind failed for %s - Cannot open %s&quot;
+                  % (dev_id, filename))
+            sys.exit(1)
+        try:
+            f.write(&quot;\00&quot;)
+            f.close()
+        except:
+            print(&quot;Error: unbind failed for %s - Cannot open %s&quot;
+                  % (dev_id, filename))
+            sys.exit(1)
+
+
+def unbind_all(dev_list, force=False):
+    &quot;&quot;&quot;Unbind method, takes a list of device locations&quot;&quot;&quot;
+
+    if dev_list[0] == &quot;dpdk&quot;:
+        for d in devices.keys():
+            if &quot;Driver_str&quot; in devices[d]:
+                if devices[d][&quot;Driver_str&quot;] in dpdk_drivers:
+                    unbind_one(devices[d][&quot;Slot&quot;], force)
+        return
+
+    dev_list = map(dev_id_from_dev_name, dev_list)
+    for d in dev_list:
+        unbind_one(d, force)
+
+
+def bind_all(dev_list, driver, force=False):
+    &quot;&quot;&quot;Bind method, takes a list of device locations&quot;&quot;&quot;
+    global devices
+
+    dev_list = map(dev_id_from_dev_name, dev_list)
+
+    for d in dev_list:
+        bind_one(d, driver, force)
+
+    # For kernels &lt; 3.15 when binding devices to a generic driver
+    # (i.e. one that doesn't have a PCI ID table) using new_id, some devices
+    # that are not bound to any other driver could be bound even if no one has
+    # asked them to. hence, we check the list of drivers again, and see if
+    # some of the previously-unbound devices were erroneously bound.
+    if not os.path.exists(&quot;/sys/bus/pci/devices/%s/driver_override&quot; % d):
+        for d in devices.keys():
+            # skip devices that were already bound or that we know should be bound
+            if &quot;Driver_str&quot; in devices[d] or d in dev_list:
+                continue
+
+            # update information about this device
+            devices[d] = dict(devices[d].items() +
+                              get_pci_device_details(d, True).items())
+
+            # check if updated information indicates that the device was bound
+            if &quot;Driver_str&quot; in devices[d]:
+                unbind_one(d, force)
+
+
+def display_devices(title, dev_list, extra_params=None):
+    '''Displays to the user the details of a list of devices given in
+    &quot;dev_list&quot;. The &quot;extra_params&quot; parameter, if given, should contain a string
+     with %()s fields in it for replacement by the named fields in each
+     device's dictionary.'''
+    strings = []  # this holds the strings to print. We sort before printing
+    print(&quot;\n%s&quot; % title)
+    print(&quot;=&quot;*len(title))
+    if len(dev_list) == 0:
+        strings.append(&quot;&lt;none&gt;&quot;)
+    else:
+        for dev in dev_list:
+            if extra_params is not None:
+                strings.append(&quot;%s '%s %s' %s&quot; % (dev[&quot;Slot&quot;],
+                                               dev[&quot;Device_str&quot;],
+                                               dev[&quot;Device&quot;],
+                                               extra_params % dev))
+            else:
+                strings.append(&quot;%s '%s'&quot; % (dev[&quot;Slot&quot;], dev[&quot;Device_str&quot;]))
+    # sort before printing, so that the entries appear in PCI order
+    strings.sort()
+    print(&quot;\n&quot;.join(strings))  # print one per line
+
+def show_device_status(devices_type, device_name):
+    global dpdk_drivers
+    kernel_drv = []
+    dpdk_drv = []
+    no_drv = []
+
+    # split our list of network devices into the three categories above
+    for d in devices.keys():
+        if device_type_match(devices[d], devices_type):
+            if not has_driver(d):
+                no_drv.append(devices[d])
+                continue
+            if devices[d][&quot;Driver_str&quot;] in dpdk_drivers:
+                dpdk_drv.append(devices[d])
+            else:
+                kernel_drv.append(devices[d])
+
+    n_devs = len(dpdk_drv) + len(kernel_drv) + len(no_drv)
+
+    # don't bother displaying anything if there are no devices
+    if n_devs == 0:
+        msg = &quot;No '%s' devices detected&quot; % device_name
+        print(&quot;&quot;)
+        print(msg)
+        print(&quot;&quot;.join('=' * len(msg)))
+        return
+
+    # print each category separately, so we can clearly see what's used by DPDK
+    if len(dpdk_drv) != 0:
+        display_devices(&quot;%s devices using DPDK-compatible driver&quot; % device_name,
+                        dpdk_drv, &quot;drv=%(Driver_str)s unused=%(Module_str)s&quot;)
+    if len(kernel_drv) != 0:
+        display_devices(&quot;%s devices using kernel driver&quot; % device_name, kernel_drv,
+                        &quot;if=%(Interface)s drv=%(Driver_str)s &quot;
+                        &quot;unused=%(Module_str)s %(Active)s&quot;)
+    if len(no_drv) != 0:
+        display_devices(&quot;Other %s devices&quot; % device_name, no_drv,
+                        &quot;unused=%(Module_str)s&quot;)
+
+def show_status():
+    '''Function called when the script is passed the &quot;--status&quot; option.
+    Displays to the user what devices are bound to the igb_uio driver, the
+    kernel driver or to no driver'''
+
+    if status_dev == &quot;net&quot; or status_dev == &quot;all&quot;:
+        show_device_status(network_devices, &quot;Network&quot;)
+
+    if status_dev == &quot;crypto&quot; or status_dev == &quot;all&quot;:
+        show_device_status(crypto_devices, &quot;Crypto&quot;)
+
+    if status_dev == &quot;event&quot; or status_dev == &quot;all&quot;:
+        show_device_status(eventdev_devices, &quot;Eventdev&quot;)
+
+    if status_dev == &quot;mempool&quot; or status_dev == &quot;all&quot;:
+        show_device_status(mempool_devices, &quot;Mempool&quot;)
+
+    if status_dev == &quot;compress&quot; or status_dev == &quot;all&quot;:
+        show_device_status(compress_devices , &quot;Compress&quot;)
+
+
+def parse_args():
+    '''Parses the command-line arguments given by the user and takes the
+    appropriate action for each'''
+    global b_flag
+    global status_flag
+    global status_dev
+    global force_flag
+    global args
+    if len(sys.argv) &lt;= 1:
+        usage()
+        sys.exit(0)
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], &quot;b:us&quot;,
+                                   [&quot;help&quot;, &quot;usage&quot;, &quot;status&quot;, &quot;status-dev=&quot;,
+                                    &quot;force&quot;, &quot;bind=&quot;, &quot;unbind&quot;, ])
+    except getopt.GetoptError as error:
+        print(str(error))
+        print(&quot;Run '%s --usage' for further information&quot; % sys.argv[0])
+        sys.exit(1)
+
+    for opt, arg in opts:
+        if opt == &quot;--help&quot; or opt == &quot;--usage&quot;:
+            usage()
+            sys.exit(0)
+        if opt == &quot;--status-dev&quot;:
+            status_flag = True
+            status_dev = arg
+        if opt == &quot;--status&quot; or opt == &quot;-s&quot;:
+            status_flag = True
+            status_dev = &quot;all&quot;
+        if opt == &quot;--force&quot;:
+            force_flag = True
+        if opt == &quot;-b&quot; or opt == &quot;-u&quot; or opt == &quot;--bind&quot; or opt == &quot;--unbind&quot;:
+            if b_flag is not None:
+                print(&quot;Error - Only one bind or unbind may be specified\n&quot;)
+                sys.exit(1)
+            if opt == &quot;-u&quot; or opt == &quot;--unbind&quot;:
+                b_flag = &quot;none&quot;
+            else:
+                b_flag = arg
+
+
+def do_arg_actions():
+    '''do the actual action requested by the user'''
+    global b_flag
+    global status_flag
+    global force_flag
+    global args
+
+    if b_flag is None and not status_flag:
+        print(&quot;Error: No action specified for devices.&quot;
+              &quot;Please give a -b or -u option&quot;)
+        print(&quot;Run '%s --usage' for further information&quot; % sys.argv[0])
+        sys.exit(1)
+
+    if b_flag is not None and len(args) == 0:
+        print(&quot;Error: No devices specified.&quot;)
+        print(&quot;Run '%s --usage' for further information&quot; % sys.argv[0])
+        sys.exit(1)
+
+    if b_flag == &quot;none&quot; or b_flag == &quot;None&quot;:
+        unbind_all(args, force_flag)
+    elif b_flag is not None:
+        bind_all(args, b_flag, force_flag)
+    if status_flag:
+        if b_flag is not None:
+            clear_data()
+            # refresh if we have changed anything
+            get_device_details(network_devices)
+            get_device_details(crypto_devices)
+            get_device_details(eventdev_devices)
+            get_device_details(mempool_devices)
+            get_device_details(compress_devices)
+        show_status()
+
+
+def main():
+    '''program main function'''
+    # check if lspci is installed, suppress any output
+    with open(os.devnull, 'w') as devnull:
+        ret = subprocess.call(['which', 'lspci'],
+                              stdout=devnull, stderr=devnull)
+        if ret != 0:
+            print(&quot;'lspci' not found - please install 'pciutils'&quot;)
+            sys.exit(1)
+    parse_args()
+    check_modules()
+    clear_data()
+    get_device_details(network_devices)
+    get_device_details(crypto_devices)
+    get_device_details(eventdev_devices)
+    get_device_details(mempool_devices)
+    get_device_details(compress_devices)
+    do_arg_actions()
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/keepalived/">keepalived应用</a></li>
+        
+        <li><a href="/posts/eth-name/">网卡命名</a></li>
+        
+        <li><a href="/posts/remote-desktop/">ubuntu18.04使用xrdp远程桌面</a></li>
+        
+        <li><a href="/posts/rust-game/">使用rust语言&#43;SDL2库写游戏</a></li>
+        
+        <li><a href="/posts/frp/">frp内网穿透</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/dpdk">dpdk</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏">使用rust语言&#43;SDL2库写游戏</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title" style="color:red">日历</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a href="" title="时间如白驹过隙" target="_blank" style="color:red">
+                
+                    <img src="/index/img/2020.jpg">
+                
+            </a>
+        </li>
+        
+    </ul>
+</section>
+
+
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/dpdk/">dpdk(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(10)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ubuntu/">ubuntu(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/frp/">frp</a>
+    
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/github/">github</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/ha/">ha</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/keepalived/">keepalived</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
+    
+    <a href="https://workerwork.github.io/tags/pip/">pip</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
+    
+    <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BB%A3%E7%90%86/">代理</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E7%BD%91%E5%8D%A1%E5%91%BD%E5%90%8D/">网卡命名</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.kdocs.cn/" title="在线文档">wps</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.youtube.com/" title="youtube">youtube</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://vimeo.com/" title="vimeo">vimeo</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.wikipedia.org/" title="维基">维基</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thepiratebay.org/index.html" title="海盗湾">海盗湾</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thekickasstorrents.to/" title="KickassTorrents">KickassTorrents</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.reddit.com/" title="reddit">reddit</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.imdb.com/" title="IMDB">IMDB</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.quora.com/" title="quora">quora</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.c114.com.cn/" title="c114">c114</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://news.cnblogs.com/" title="博客园">博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.csdn.net/" title="csdn">csdn</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://leetcode-cn.com/" title="leetcode">leetcode</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.ted.com/" title="ted">ted</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.sdnlab.com/" title="sdnlab">sdnlab</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.v2ex.com/" title="v2ex">v2ex</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.pinterest.com/" title="pinterest">pinterest</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://d.serctl.com/" title="d.serctl">d.serctl</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://g.widora.cn/" title="github代理下载">github代理下载</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/p4lang/tutorials" title="P4教程">P4教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://fd.io/" title="FD.io">FD.io</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.opennetworking.org/" title="ONF">ONF</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.zsythink.net/" title="网络博客4">网络博客4</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.netcan666.com/" title="netcan666">netcan666</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://wingwj.github.io/" title="wingwj">wingwj</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust视频教程">rust视频教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://kaisery.github.io/trpl-zh-cn/" title="rust中文教程">rust中文教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustcc.com/" title="rust中文社区索引">rust中文社区索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://doc.rust-lang.org/std/" title="rust标准库">rust标准库</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://danielkeep.github.io/tlborm/book/" title="rust宏">rust宏</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://docs.rs/" title="docs.rs">docs.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://lib.rs/" title="lib.rs">lib.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.redox-os.org/zh/" title="redox系统">redox系统</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitee.com/" title="gitee">gitee</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://192.168.10.79/" title="RSAS(admin/Nsfocus@123)">RSAS</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

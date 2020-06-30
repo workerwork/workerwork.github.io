@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind" >DPDK-Devbind</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/dpdk">dpdk</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                dpdk-devbind.py #! /usr/bin/env python # SPDX-License-Identifier: BSD-3-Clause # Copyright(c) 2010-2014 Intel Corporation # import sys import os import getopt import subprocess from os.path import exists, abspath, dirname, basename # The PCI base class for all devices network_class = {'Class': '02', 'Vendor': None, 'Device': None, 'SVendor': None, 'SDevice': None} encryption_class = {'Class': '10', 'Vendor': None, 'Device': None, 'SVendor': None, 'SDevice': None} intel_processor_class = {'Class': '0b', 'Vendor': '8086', 'Device': None, 'SVendor': None, 'SDevice': None} cavium_sso = {'Class': '08', 'Vendor': '177d', 'Device': 'a04b,a04d', 'SVendor': None, 'SDevice': None} cavium_fpa = {'Class': '08', 'Vendor': '177d', 'Device': 'a053', 'SVendor': None, 'SDevice': None} cavium_pkx = {'Class': '08', 'Vendor': '177d', 'Device': 'a0dd,a049', 'SVendor': None, 'SDevice': None} cavium_tim = {'Class': '08', 'Vendor': '177d', 'Device': 'a051', 'SVendor': None, 'SDevice': None} cavium_zip = {'Class': '12', 'Vendor': '177d', 'Device': 'a037', 'SVendor': None, 'SDevice': None} avp_vnic = {'Class': '05', 'Vendor': '1af4', 'Device': '1110', 'SVendor': None, 'SDevice': None} network_devices = [network_class, cavium_pkx, avp_vnic] crypto_devices = [encryption_class, intel_processor_class] eventdev_devices = [cavium_sso, cavium_tim] mempool_devices = [cavium_fpa] compress_devices = [cavium_zip] # global dict ethernet devices present.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/dpdk-devbind/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用" >keepalived应用</a>
                                 </h1>
                             </header>
@@ -290,34 +313,6 @@ setup.py
                             <p class="readmore"><a href="https://workerwork.github.io/posts/p4/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/github-fast/" title="github加速" >github加速</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月5日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候
-git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.proxy 'socks5://127.0.0.1:1080' git config --global http.proxy 'vmess://127.0.0.1:1081' git config --global https.proxy 'vmess://127.0.0.1:1081'  也可以直接修改用户主目录下的 .gitconfig 文件
-[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
-git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
-git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -374,6 +369,10 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
@@ -409,10 +408,6 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
         <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/github-fast/" title="github加速">github加速</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -444,6 +439,10 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
     
     <li>
         <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/dpdk/">dpdk(1)</a>
     </li>
     
     <li>
