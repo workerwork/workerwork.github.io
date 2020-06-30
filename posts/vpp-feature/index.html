@@ -7,17 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>vpp feature节点以及数据走向控制 | WorkSpace</title>
-    <meta property="og:title" content="vpp feature节点以及数据走向控制 - WorkSpace">
+    <title>vpp feature | WorkSpace</title>
+    <meta property="og:title" content="vpp feature - WorkSpace">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content="2020-04-29T16:04:24&#43;08:00">
+    <meta property="article:published_time" content="2020-04-28T15:00:18&#43;08:00">
         
         
-    <meta property="article:modified_time" content="2020-04-29T16:04:24&#43;08:00">
+    <meta property="article:modified_time" content="2020-04-28T15:00:18&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="vpp feature节点以及数据走向控制">
+    <meta name="description" content="vpp feature">
         
     <meta name="author" content="dongfeng">
     <meta property="og:url" content="https://workerwork.github.io/posts/vpp-feature/">
@@ -74,10 +74,10 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">vpp feature节点以及数据走向控制</h1>
+                            <h1 class="post-title">vpp feature</h1>
                         </header>
                         <date class="post-meta meta-date">
-                            2020年4月29日
+                            2020年4月28日
                         </date>
                         
                         <div class="post-meta">
@@ -95,205 +95,117 @@
                         <div class="post-content">
                             
 
-<h2 id="1-feature介绍">1. feature介绍</h2>
+<h2 id="1-背景和概念">1. 背景和概念</h2>
 
-<p>早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制</p>
+<ul>
+<li><p>早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化,为此新版本增加了feature机制.</p></li>
 
-<p>这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向</p>
+<li><p>每个feature是一个node，用户可以启用/停止某个或某些feature</p></li>
 
-<h2 id="2-选择合适的arc类">2. 选择合适的arc类</h2>
+<li><p>用户也可以自己写插件，把自定义node（自己的业务逻辑）加入到指定位置</p></li>
+</ul>
 
-<p>对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体</p>
+<h2 id="2-重要数据结构和操作函数">2. 重要数据结构和操作函数</h2>
 
-<p>通过set interface feature <intfc> <feature_name> arc <arc_name> [disable]命令来开启或关闭该feature功能</p>
+<pre><code class="language-c"># 
+# vnet_feature_arc_registration_t
+# ----------------------------------
+# vpp将feature分成不同的组，每组feature称为一个arc
+# arc中的feature按照代码指定的顺序串接起来
+# arc结构将记录这组feature的起始node和结束node
+# 系统初始化时完成每个feature的连接
 
-<p>通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向</p>
+# vnet/feature/feature.h +38
 
-<p>如果选择按照feature机制来加入结点的话需要注意以下几点：</p>
-
-<p>VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:</p>
-
-<pre><code class="language-shell">1.nsh-output:
-2.mpls-output:
-3.mpls-input:
-4.ip6-drop:
-5.ip6-punt:
-6.ip6-local:
-7.ip6-output:
-8.ip6-multicast:
-9.ip6-unicast:
-10.ip4-drop:
-11.ip4-punt:
-12.ip4-local:
-13.ip4-output:
-14.ip4-multicast:
-15.ip4-unicast:
-16.ethernet-output:
-17.interface-output:
-18.device-input:
-
-</code></pre>
-
-<p>ip4-unicast arc</p>
-
-<pre><code class="language-c">文件：vnet/ip/ip4_forward.c
-
-/* Built-in ip4 unicast rx feature path definition */
-/* *INDENT-OFF* */
-VNET_FEATURE_ARC_INIT (ip4_unicast, static) =
+/** feature registration object */
+typedef struct _vnet_feature_arc_registration
 {
-  .arc_name = &quot;ip4-unicast&quot;,          /*arc 类 名字*/
-  .start_nodes = VNET_FEATURES (&quot;ip4-input&quot;, &quot;ip4-input-no-checksum&quot;),  /*开始node*/
-  .end_node = &quot;ip4-lookup&quot;,/*结束node*/
-  .arc_index_ptr = &amp;ip4_main.lookup_main.ucast_feature_arc_index,
+  /** next registration in list of all registrations*/
+  struct _vnet_feature_arc_registration *next;
+  /** Feature Arc name */
+  char *arc_name;
+  /** Start nodes */
+  char **start_nodes;
+  int n_start_nodes;
+  /** End of the arc (optional, for consistency-checking) */
+  char *last_in_arc;
+  /* Feature arc index, assigned by init function */
+  u8 feature_arc_index;
+  u8 *arc_index_ptr;
+} vnet_feature_arc_registration_t;
+
+# VNET_FEATURE_ARC_INIT宏用来注册arc
+# ----------------------------------
+# 在arc中指定的起始node中，必须调用vnet_feature_arc_start函数，
+# 才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature
+
+# 先初始化arc
+VNET_FEATURE_ARC_INIT (device_input, static) =
+{
+  .arc_name  = &quot;device-input&quot;,
+  .start_nodes = VNET_FEATURES (&quot;device-input&quot;),
+  .arc_index_ptr = &amp;feature_main.device_input_feature_arc_index,
 };
 
-这个宏里的构造函数（在源码里找到这个宏的全部代码）会在main执行前执行，
-大体意思就是初始化ip4-unicast类的feature并添加到vnet_feature_main_t feature_main-&gt;next_feature的链表上，
-这是vpp固定代码里实现的，ip4-unicast初始化后，
-我们就可以在ip4-unicast的开始node和结束node之间添加我们自己的node节点，
-在测试时，关注的是结束node ip4-lookup
+# 再初始化这个arc下的feature，通过.runs_before来控制feature的先后关系，当然也有runs_after
+VNET_FEATURE_INIT (worker_handoff, static) = {
+  .arc_name = &quot;device-input&quot;,
+  .node_name = &quot;worker-handoff&quot;,
+  .runs_before = VNET_FEATURES (&quot;ethernet-input&quot;),
+};
 
-在arc中指定的起始node中，必须调用vnet_feature_arc_start函数，
-才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature
-在需要开始使用feature机制的业务node中调用如下函数即可，注意该业务node必须是arc中的起始node
-static_always_inline void vnet_feature_arc_start (u8 arc,
-            u32 sw_if_index, u32 * next0, vlib_buffer_t * b0)
+VNET_FEATURE_INIT (span_input, static) = {
+  .arc_name = &quot;device-input&quot;,
+  .node_name = &quot;span-input&quot;,
+  .runs_before = VNET_FEATURES (&quot;ethernet-input&quot;),
+};
+
+VNET_FEATURE_INIT (ethernet_input, static) = {
+  .arc_name = &quot;device-input&quot;,
+  .node_name = &quot;ethernet-input&quot;,
+  .runs_before = 0, /* not before any other features */
+};
+# 把这些node都挂在对应的构造函数上，在初始化的时候就会调用
+# 然后初始化相应的配置，也就是vnet_feature_arc_init 这个函数，
+# 会根据之前的配置，将各feature的先后关系排列好
+# 此时只是排列好顺序，并未插入feature_arc中，也就是不会被调用到
+
+# 调用vnet_feature_enable_disable，此时才是将要用到的feature真正的插入feature_arc中
+
+# vnet/feature/feature.h +122 
+
+#define VNET_FEATURE_ARC_INIT(x,...)                \
+  __VA_ARGS__ vnet_feature_arc_registration_t vnet_feat_arc_##x;\
+static void __vnet_add_feature_arc_registration_##x (void)  \
+  __attribute__((__constructor__)) ;                \
+static void __vnet_add_feature_arc_registration_##x (void)  \
+{                               \
+  vnet_feature_main_t * fm = &amp;feature_main;         \
+  vnet_feat_arc_##x.next = fm-&gt;next_arc;            \
+  fm-&gt;next_arc = &amp; vnet_feat_arc_##x;               \
+}                               \
+static void __vnet_rm_feature_arc_registration_##x (void)   \
+  __attribute__((__destructor__)) ;             \
+static void __vnet_rm_feature_arc_registration_##x (void)   \
+{                               \
+  vnet_feature_main_t * fm = &amp;feature_main;         \
+  vnet_feature_arc_registration_t *r = &amp;vnet_feat_arc_##x;  \
+  VLIB_REMOVE_FROM_LINKED_LIST (fm-&gt;next_arc, r, next);     \
+}                               \
+__VA_ARGS__ vnet_feature_arc_registration_t vnet_feat_arc_##x
+
+# vnet_feature_arc_start
+# ------------------------------
+
+# vnet/feature/feature.h +275
+
+static_always_inline void
+vnet_feature_arc_start (u8 arc, u32 sw_if_index, u32 * next0,
+            vlib_buffer_t * b0) 
 {
-    vnet_feature_arc_start_with_data (arc, sw_if_index, next0, b0, 0);
+  vnet_feature_arc_start_with_data (arc, sw_if_index, next0, b0, 0); 
 }
 
-文件：vnet/ip/ip4_input.c
-
-/* *INDENT-OFF* */
-VLIB_REGISTER_NODE (ip4_input_node) = {
-  .function = ip4_input,
-  .name = &quot;ip4-input&quot;,
-  .vector_size = sizeof (u32),
-  .n_errors = IP4_N_ERROR,
-  .error_strings = ip4_error_strings,
-  .n_next_nodes = IP4_INPUT_N_NEXT,
-  .next_nodes = {
-    [IP4_INPUT_NEXT_DROP] = &quot;error-drop&quot;,
-    [IP4_INPUT_NEXT_PUNT] = &quot;error-punt&quot;,
-    [IP4_INPUT_NEXT_LOOKUP] = &quot;ip4-lookup&quot;,
-    [IP4_INPUT_NEXT_LOOKUP_MULTICAST] = &quot;ip4-lookup-multicast&quot;,
-    [IP4_INPUT_NEXT_ICMP_ERROR] = &quot;ip4-icmp-error&quot;,
-  },
-
-  .format_buffer = format_ip4_header,
-  .format_trace = format_ip4_input_trace,
-};
-
-节点通过函数.function执行决定下一个节点是.next_nodes中的哪一个，
-然后通过名字关联下一个节点。
-当处理流程到ip4-input节点时执行ip4_input函数：
-ip4_input-&gt;ip4_input_inline-&gt;vnet_feature_arc_start (arc0, sw_if_index0, &amp;next0, p0);
-vnet_feature_arc_start函数从ip4-input所在的ip4-unicast类feature里找到优先级最高的feature 节点并执行
-
-</code></pre>
-
-<h2 id="3-在arc类上登记feature结点">3. 在arc类上登记feature结点</h2>
-
-<p>arc_name：为我们选定的feature结点要插入的地方</p>
-
-<p>node_name：为我们自己新注册的结点名</p>
-
-<p>runs_before：说明新结点必须比某个feature结点先执行，通过新结点后的流可能流入下个feature结点也可能到达其他路径</p>
-
-<pre><code class="language-c">/* 首先要注册一个node(plugin/gtpu/gtpu_decap.c) */
-VLIB_REGISTER_NODE (ip4_gtpu_bypass_node) = {
-  .name = &quot;ip4-gtpu-bypass&quot;,
-  .vector_size = sizeof (u32),
-
-  .n_next_nodes = IP_GTPU_BYPASS_N_NEXT,
-  .next_nodes = {
-    [IP_GTPU_BYPASS_NEXT_DROP] = &quot;error-drop&quot;,
-    [IP_GTPU_BYPASS_NEXT_GTPU] = &quot;gtpu4-input&quot;,
-  },
-
-  .format_buffer = format_ip4_header,
-  .format_trace = format_ip4_forward_next_trace,
-};
-
-VLIB_REGISTER_NODE (ip6_gtpu_bypass_node) = {
-  .name = &quot;ip6-gtpu-bypass&quot;,
-  .vector_size = sizeof (u32),
-
-  .n_next_nodes = IP_GTPU_BYPASS_N_NEXT,
-  .next_nodes = {
-    [IP_GTPU_BYPASS_NEXT_DROP] = &quot;error-drop&quot;,
-    [IP_GTPU_BYPASS_NEXT_GTPU] = &quot;gtpu6-input&quot;,
-  },
-
-  .format_buffer = format_ip6_header,
-  .format_trace = format_ip6_forward_next_trace,
-};
-
-这个只是将节点注册到vpp的节点管理链表里，并不会产生关联关系
-在node节点注册的后面，是由VLIB_INIT_FUNCTION (vnet_feature_init)宏注册到初始化函数中，在mian loop前被调用
-
-/* feature节点关联(plugin/gtpu/gtpu.c) */
-/* 关闭自动缩进，因为下面的宏对格式有严格要求 */
-/* *INDENT-OFF* */	
-VNET_FEATURE_INIT (ip4_gtpu_bypass, static) = {
-  .arc_name = &quot;ip4-unicast&quot;,
-  .node_name = &quot;ip4-gtpu-bypass&quot;,
-  .runs_before = VNET_FEATURES (&quot;ip4-lookup&quot;),
-};
-
-VNET_FEATURE_INIT (ip6_gtpu_bypass, static) = {
-  .arc_name = &quot;ip6-unicast&quot;,
-  .node_name = &quot;ip6-gtpu-bypass&quot;,
-  .runs_before = VNET_FEATURES (&quot;ip6-lookup&quot;),
-};
-
-VNET_FEATURE_INIT的执行会将节点添加到ip4-unicast类的feature链表里，
-.runs_before指定ip4_gtpu_bypass在ip4-lookup前执行，
-这个关联就是在给节点设置优先级，排在越前越先执行（已经端口使能了）
-
-/* 指定端口使能 */
-feature节点真正生效还需要在指定端口（网络接口）上使能
-（注意vnet_feature_arc_start (arc0, sw_if_index0, &amp;next0, p0)函数的第2个参数是端口索引）
-
-vnet_feature_enable_disable (arc_name, feature_name, sw_if_index, !is_del, 0, 0)函数
-就是在指定 sw_if_index端口上添加arc_name feature类的feature_name feature节点
-
-到现在为止，一个feature节点才正式注册成功
-
-</code></pre>
-
-<h2 id="5-不使用feature机制">5. 不使用feature机制</h2>
-
-<p>不使用feature机制的话，结点间的关系相对来说更加静态，只能在编译的时候确定结点间的关系，不能在运行的时候进行改变，可以插入节点的地方只能由系统提供的几个接口</p>
-
-<p>向这些入口登记函数后，后续的数据流将传到你定义的结点</p>
-
-<p>可能还有其他的一些插入结点的函数，这里只列出常用到的几个函数：</p>
-
-<pre><code class="language-c">L1
-
-vnet_hw_interface_rx_redirect_to_node (vnet_main_t *vnm, u32 hw_if_index, u32 node_index)
-将某个hw interface的rx数据重定向到某个结点，node_index为结点的index索引
-
-L2 L3
-
-ethernet_register_input_type (vlib_main_t *vm, ethernet_type_t type, u32 node_index)
-将在&quot;ethernet-input&quot;结点后插入特定type的结点，
-这里type包括ethernet_type(0x806, ARP)、ethernet_type (0x8100, VLAN)、ethernet_type (0x800, IP4)等二、三层协议
-具体支持的相关协议见src/vnet/ethernet/types.def文件
-
-L4
-
-ip4_register_protocol (u32 protocol, u32 node_index)
-将在&quot;ip4-local&quot;结点后插入特定protocol的结点，这里protocol包括ip_protocol (6, TCP)、ip_protocol (17, UDP)等四层协议。
-具体支持的相关协议见src/vnet/ip/protocols.def文件
-
-L5
-
-udp_register_dst_port (vlib_main_t * vm, udp_dst_port_t dst_port, u32 node_index, u8 is_ip4)
-将在&quot;ip4-udp-lookup&quot;结点后插入特定dst_port的结点，这里dst_port包括ip_port (WWW, 80)等五层应用端口。
-具体支持的相关端口见src/vnet/ip/ports.def文件
 
 </code></pre>
 
@@ -306,15 +218,15 @@ udp_register_dst_port (vlib_main_t * vm, udp_dst_port_t dst_port, u32 node_index
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a></li>
-        
-        <li><a href="/posts/vpp-sample-plugin/">vpp sample plugin</a></li>
+        <li><a href="/posts/vpp/">基于VPP&#43;DPDK开源框架开发UPF</a></li>
         
         <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
         
         <li><a href="/posts/kernel-dev/">kernel 字符设备驱动</a></li>
         
         <li><a href="/posts/affinity/">cpu亲和性</a></li>
+        
+        <li><a href="/posts/kernel-module/">kernel module编程</a></li>
         
     </ul>
 </div>
@@ -326,9 +238,7 @@ udp_register_dst_port (vlib_main_t * vm, udp_dst_port_t dst_port, u32 node_index
                                 
                                 <li><a href="https://workerwork.github.io/tags/vpp">vpp</a></li>
                                 
-                                <li><a href="https://workerwork.github.io/tags/plugin">plugin</a></li>
-                                
-                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                <li><a href="https://workerwork.github.io/tags/upf">upf</a></li>
                                 
                             </ul>
                             

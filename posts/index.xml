@@ -134,23 +134,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </item>
     
     <item>
-      <title>vpp feature节点以及数据走向控制</title>
-      <link>https://workerwork.github.io/posts/vpp-feature/</link>
-      <pubDate>Wed, 29 Apr 2020 16:04:24 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/posts/vpp-feature/</guid>
-      <description>1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
-这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
-2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
-通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
-如果选择按照feature机制来加入结点的话需要注意以下几点：
-VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
-1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  ip4-unicast arc
-文件：vnet/ip/ip4_forward.c /* Built-in ip4 unicast rx feature path definition */ /* *INDENT-OFF* */ VNET_FEATURE_ARC_INIT (ip4_unicast, static) = { .arc_name = &amp;quot;ip4-unicast&amp;quot;, /*arc 类 名字*/ .start_nodes = VNET_FEATURES (&amp;quot;ip4-input&amp;quot;, &amp;quot;ip4-input-no-checksum&amp;quot;), /*开始node*/ .</description>
-    </item>
-    
-    <item>
       <title>vpp 节点报文处理流程分析</title>
       <link>https://workerwork.github.io/posts/vpp-node-fw/</link>
       <pubDate>Wed, 29 Apr 2020 11:14:24 +0800</pubDate>
@@ -167,6 +150,18 @@ VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我�
       <guid>https://workerwork.github.io/posts/vpp-sample-plugin/</guid>
       <description>1. plugin_sample.c 在此文件中定义feature和cli
 #include &amp;lt;vnet/plugin/plugin.h&amp;gt; #include &amp;lt;plugin_sample/plugin_sample.h&amp;gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&amp;gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&amp;gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&amp;quot;ip4-unicast&amp;quot;, //挂载节点 &amp;quot;plugin_sample&amp;quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !</description>
+    </item>
+    
+    <item>
+      <title>vpp feature</title>
+      <link>https://workerwork.github.io/posts/vpp-feature/</link>
+      <pubDate>Tue, 28 Apr 2020 15:00:18 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/vpp-feature/</guid>
+      <description>1. 背景和概念  早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化,为此新版本增加了feature机制.
+ 每个feature是一个node，用户可以启用/停止某个或某些feature
+ 用户也可以自己写插件，把自定义node（自己的业务逻辑）加入到指定位置
+  2. 重要数据结构和操作函数 # # vnet_feature_arc_registration_t # ---------------------------------- # vpp将feature分成不同的组，每组feature称为一个arc # arc中的feature按照代码指定的顺序串接起来 # arc结构将记录这组feature的起始node和结束node # 系统初始化时完成每个feature的连接 # vnet/feature/feature.h +38 /** feature registration object */ typedef struct _vnet_feature_arc_registration { /** next registration in list of all registrations*/ struct _vnet_feature_arc_registration *next; /** Feature Arc name */ char *arc_name; /** Start nodes */ char **start_nodes; int n_start_nodes; /** End of the arc (optional, for consistency-checking) */ char *last_in_arc; /* Feature arc index, assigned by init function */ u8 feature_arc_index; u8 *arc_index_ptr; } vnet_feature_arc_registration_t; # VNET_FEATURE_ARC_INIT宏用来注册arc # ---------------------------------- # 在arc中指定的起始node中，必须调用vnet_feature_arc_start函数， # 才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature # 先初始化arc VNET_FEATURE_ARC_INIT (device_input, static) = { .</description>
     </item>
     
     <item>

@@ -103,12 +103,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/rust/</loc>
+    <loc>https://workerwork.github.io/tags/rust/</loc>
     <lastmod>2020-06-08T15:57:52+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/rust/</loc>
+    <loc>https://workerwork.github.io/categories/rust/</loc>
     <lastmod>2020-06-08T15:57:52+08:00</lastmod>
   </url>
   
@@ -158,12 +158,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/python/</loc>
+    <loc>https://workerwork.github.io/tags/python/</loc>
     <lastmod>2020-05-10T16:25:52+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/python/</loc>
+    <loc>https://workerwork.github.io/categories/python/</loc>
     <lastmod>2020-05-10T16:25:52+08:00</lastmod>
   </url>
   
@@ -218,11 +218,6 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/vpp-feature/</loc>
-    <lastmod>2020-04-29T16:04:24+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/posts/vpp-node-fw/</loc>
     <lastmod>2020-04-29T11:14:24+08:00</lastmod>
   </url>
@@ -230,6 +225,11 @@
   <url>
     <loc>https://workerwork.github.io/posts/vpp-sample-plugin/</loc>
     <lastmod>2020-04-28T17:25:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/vpp-feature/</loc>
+    <lastmod>2020-04-28T15:00:18+08:00</lastmod>
   </url>
   
   <url>

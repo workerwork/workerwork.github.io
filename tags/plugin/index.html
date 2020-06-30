@@ -105,37 +105,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-feature/">vpp feature节点以及数据走向控制</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月29日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. feature介绍 早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化，为此新版本增加了feature机制
-这里feature机制本质上来说还是结点，只不过该结点可以在运行的时候通过命令进行配置是否打开或关闭，从而影响数据流的走向
-2. 选择合适的arc类 对新加入的结点进行管理，新的feature(即我们新建的结点)必须属于某个arc类，并作用于某个interface实体
-通过set interface feature   arc  [disable]命令来开启或关闭该feature功能
-通常arc类的名字对应为其起点结点的名字，使用命令开启关闭feature功能能动态的改变数据的流向
-如果选择按照feature机制来加入结点的话需要注意以下几点：
-VPP提供的arc类比较多，我们需要自己选择合适的arc来插入我们的结点:
-1.nsh-output: 2.mpls-output: 3.mpls-input: 4.ip6-drop: 5.ip6-punt: 6.ip6-local: 7.ip6-output: 8.ip6-multicast: 9.ip6-unicast: 10.ip4-drop: 11.ip4-punt: 12.ip4-local: 13.ip4-output: 14.ip4-multicast: 15.ip4-unicast: 16.ethernet-output: 17.interface-output: 18.device-input:  ip4-unicast arc
-文件：vnet/ip/ip4_forward.c /* Built-in ip4 unicast rx feature path definition */ /* *INDENT-OFF* */ VNET_FEATURE_ARC_INIT (ip4_unicast, static) = { .arc_name = &quot;ip4-unicast&quot;, /*arc 类 名字*/ .start_nodes = VNET_FEATURES (&quot;ip4-input&quot;, &quot;ip4-input-no-checksum&quot;), /*开始node*/ .……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a>
                                 </h1>
                             </header>
