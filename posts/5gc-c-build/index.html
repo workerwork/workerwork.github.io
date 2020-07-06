@@ -323,41 +323,7 @@ gem install fpm
 
 <h2 id="3-关键文件">3. 关键文件</h2>
 
-<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/run.sh 
-#!/bin/bash -
-
-INSTALL_PATH=/home/baicells/5gc-c
-
-function init_net() {
-    if [[ -f network.conf ]];then
-        while read line
-        do
-            if [[ &quot;${line:0:1}&quot; != &quot;#&quot; ]]; then
-                [[ -z &quot;$line&quot; ]] &amp;&amp; continue
-                $line 2&gt;&amp;1&gt;/dev/null
-            fi
-        done &lt; network.conf
-    fi
-}
-
-function init_system() {
-    ulimit -c unlimited
-    export LD_LIBRARY_PATH=${INSTALL_PATH}/lib
-}
-
-function start_module() {
-    for module in amf smf ausf udm;do
-        cd $INSTALL_PATH/$module/${module}1
-        bin/$module -s -c config/$module.conf -l config/asn.log.properties &amp;
-    done
-}
-
-function init() {
-    init_system
-    init_net
-    start_module
-};init
-root@baicells-virtual-machine:~/5gc-c-build/source# cat /home/baicells/5gc-c/run.sh 
+<pre><code class="language-shell">root@baicells-virtual-machine:~/5gc-c-build/source# cat /home/baicells/5gc-c/run.sh 
 #!/bin/bash -
 
 INSTALL_PATH=/home/baicells/5gc-c
