@@ -323,7 +323,7 @@ gem install fpm
 
 <h2 id="3-关键文件">3. 关键文件</h2>
 
-<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/init.sh 
+<pre><code class="language-shell">root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# cat source/run.sh 
 #!/bin/bash -
 
 INSTALL_PATH=/home/baicells/5gc-c
@@ -357,7 +357,110 @@ function init() {
     init_net
     start_module
 };init
+root@baicells-virtual-machine:~/5gc-c-build/source# cat /home/baicells/5gc-c/run.sh 
+#!/bin/bash -
 
+INSTALL_PATH=/home/baicells/5gc-c
+action=$1
+module_take=${2:-&quot;amf smf ausf udm&quot;}
+param=$*
+param_num=$#
+
+function init_net() {
+    if [[ -f network.conf ]];then
+        while read line
+        do
+            if [[ &quot;${line:0:1}&quot; != &quot;#&quot; ]]; then
+                [[ -z &quot;$line&quot; ]] &amp;&amp; continue
+                $line 2&gt;&amp;1&gt;/dev/null
+            fi
+        done &lt; network.conf
+    fi
+}
+
+function init_system() {
+    ulimit -c unlimited
+    export LD_LIBRARY_PATH=${INSTALL_PATH}/lib
+}
+
+check_param() {
+    if [ $param_num != 1 ] &amp;&amp; [ $param_num != 2 ]; then
+        echo -e &quot;\033[31mInput error.\033[0m&quot;
+        echo -e &quot;\033[31mUsage: $0 {start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+        exit 1
+    else
+        if [ &quot;$action&quot; != &quot;start&quot; ] &amp;&amp; \
+		[ &quot;$action&quot; != &quot;stop&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;status&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;restart&quot; ]; then
+            echo -e &quot;\033[31mError action: $action\033[0m&quot;
+            echo -e &quot;\033[31mUsage: $0 {start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+            exit 2
+        fi
+        if  [ -n &quot;$module&quot; ]; then
+            if [ &quot;$module&quot; != &quot;amf&quot; ] &amp;&amp; [ &quot;$module&quot; != &quot;smf&quot; ]; then
+                echo -e &quot;\033[31mError module: $module\033[0m&quot;
+                echo -e &quot;\033[31mUsage: $0 {start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+                exit 3
+            fi
+        fi
+    fi
+}
+
+function start_module() {
+    for module in $module_take
+    do
+        cd $INSTALL_PATH/$module/${module}1
+        bin/$module -s -c config/$module.conf -l config/asn.log.properties &amp;
+    done
+}
+
+function stop_module() {
+    for module in $module_take
+    do
+    	pkill -9 $module
+    	sleep 1
+    done
+}
+
+function status_module() {
+    for module in $module_take
+    do
+        if [ -n &quot;$(pgrep $module)&quot; ]; then
+	    echo &quot;$module is running...&quot;
+	else
+	    echo &quot;$module is NOT running...&quot;
+        fi
+    done
+}
+
+function init() {
+    init_system
+    init_net
+}
+
+function main() {
+    check_param $param
+    case $action in 
+        start|restart)
+	    init
+	    stop_module
+	    start_module
+	    status_module
+	    echo
+	    ;;
+        stop)
+	    echo &quot;Stop $module_take...&quot;
+	    stop_module
+	    ;;
+	status)
+            status_module
+	    ;;
+	*)
+	    echo -e &quot;\033[31mError action: $action\033[0m&quot;
+	    echo -e &quot;\033[31mUsage: $0 {start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+	    exit
+	    ;;
+   esac
+};main
 
 </code></pre>
 
