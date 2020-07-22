@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>kvm xml模板 | WorkSpace</title>
-    <meta property="og:title" content="kvm xml模板 - WorkSpace">
+    <title>自建kvm虚拟机 | WorkSpace</title>
+    <meta property="og:title" content="自建kvm虚拟机 - WorkSpace">
     <meta property="og:type" content="article">
         
     <meta property="article:published_time" content="2020-07-22T10:35:52&#43;08:00">
@@ -17,7 +17,7 @@
     <meta property="article:modified_time" content="2020-07-22T10:35:52&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="kvm xml模板">
+    <meta name="description" content="自建kvm虚拟机">
         
     <meta name="author" content="dongfeng">
     <meta property="og:url" content="https://workerwork.github.io/posts/kvm2/">
@@ -74,7 +74,7 @@
                 <div class="res-cons">
                     <article class="post">
                         <header>
-                            <h1 class="post-title">kvm xml模板</h1>
+                            <h1 class="post-title">自建kvm虚拟机</h1>
                         </header>
                         <date class="post-meta meta-date">
                             2020年7月22日
@@ -97,7 +97,7 @@
 
 <h2 id="1-自定义虚拟机">1. 自定义虚拟机</h2>
 
-<pre><code># egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo
+<pre><code class="language-shell"># egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo
 # lsmod|grep kvm
 # yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块
 # yum -y install libvirt #虚拟化服务库
@@ -137,7 +137,7 @@ ifconfig vm 192.168.200.2/24
 
 <p>virsh define vm.xml</p>
 
-<pre><code>&lt;!-- #提示信息
+<pre><code class="language-shell">&lt;!-- #提示信息
 WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE 
 OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
   virsh edit win7-02
@@ -364,7 +364,7 @@ or other application using the libvirt API.
 <ul class="widget-list">
     
     <li>
-        <a href="https://workerwork.github.io/posts/kvm2/" title="kvm xml模板">kvm xml模板</a>
+        <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
     <li>
