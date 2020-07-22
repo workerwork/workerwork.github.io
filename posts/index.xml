@@ -6,10 +6,19 @@
     <description>Recent content in Posts on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 30 Jun 2020 17:18:27 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Jul 2020 10:35:52 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kvm xml模板</title>
+      <link>https://workerwork.github.io/posts/kvm2/</link>
+      <pubDate>Wed, 22 Jul 2020 10:35:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/kvm2/</guid>
+      <description>1. 自定义虚拟机 # egrep -q &amp;quot;(svm|vmx)&amp;quot; /proc/cpuinfo # lsmod|grep kvm # yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块 # yum -y install libvirt #虚拟化服务库 # systemctl start libvirtd # systemctl enable libvirtd # qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 /usr/libexec/qemu-kvm -name vm_NGC -m 4096 -smp 8 -hda vm_NGC.img -vnc :0 -net nic,model=virtio -net tap,ifname=tap0,vhost=on,script=no,downscript=no -net nic,model=virtio -net tap,ifname=tap1,vhost=on,script=no,downscript=no -cdrom ubuntu-18.04.4.iso 使用vnc连接: ip:5900 宿主机新建网桥 brctl addbr vm brctl show 添加tap网卡 brctl addif vm tap0 brctl show up网桥和网卡设备 ifconfig vm up ifconfig tap0 up 配置网桥地址 ifconfig vm 192.</description>
+    </item>
     
     <item>
       <title>DPDK-Devbind</title>

@@ -7,22 +7,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>python | WorkSpace</title>
-    <meta property="og:title" content="python - WorkSpace">
+    <title>kvm xml模板 | WorkSpace</title>
+    <meta property="og:title" content="kvm xml模板 - WorkSpace">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content="2020-07-22T10:35:52&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-07-22T10:35:52&#43;08:00">
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="python">
+    <meta name="description" content="kvm xml模板">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/tags/python/">
+    <meta property="og:url" content="https://workerwork.github.io/posts/kvm2/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
+        <link rel="stylesheet" href="/css/prism.css">
+    
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/python/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -31,7 +36,6 @@
     
     
 </head>
-
 
 <body>
 <header id="header" class="clearfix">
@@ -68,49 +72,283 @@
 
             <div class="col-8" id="main">
                 <div class="res-cons">
-                    
-                    <h3 class="archive-title">
-                        包含标签
-                        <span class="keyword">python</span>
-                        的文章
-                    </h3>
-                    
-
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/pypi/">编写pip包并上传到pypi</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月10日
-                            </date>
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">kvm xml模板</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年7月22日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
                             
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/python">python</a>
-                                
-                            </div>
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
                             
-                            <div class="post-content">
-                                1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件
-setup.py
-#!/usr/bin/env python # -*- coding:utf-8 -*- # Author: workerwork(workerwork@qq.com) # Description: from setuptools import setup, find_packages setup( name = 'workerwork', version = '0.0.1', keywords='wow', description = 'a library for wow Developer', license = 'MIT License', url = '', author = 'workerwork', author_email = 'workerwork@qq.com', packages = find_packages(), include_package_data = True, platforms = 'any', install_requires = [ 'requests&gt;=2.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/pypi/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
 
-                    
+<h2 id="1-自定义虚拟机">1. 自定义虚拟机</h2>
+
+<pre><code># egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo
+# lsmod|grep kvm
+# yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块
+# yum -y install libvirt #虚拟化服务库
+# systemctl start libvirtd
+# systemctl enable libvirtd
+
+# qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像
+
+/usr/libexec/qemu-kvm  -name vm_NGC  -m 4096  -smp 8   -hda  vm_NGC.img  -vnc :0  
+-net nic,model=virtio -net tap,ifname=tap0,vhost=on,script=no,downscript=no 
+-net nic,model=virtio -net tap,ifname=tap1,vhost=on,script=no,downscript=no  
+-cdrom ubuntu-18.04.4.iso
+
+使用vnc连接: ip:5900
+
+宿主机新建网桥
+brctl addbr vm
+brctl show
+
+添加tap网卡
+brctl addif vm tap0
+brctl show
+
+up网桥和网卡设备
+ifconfig vm up
+ifconfig tap0 up
+
+配置网桥地址
+ifconfig vm 192.168.200.1/24
+
+虚拟机配置网卡地址
+ifconfig vm 192.168.200.2/24
+
+</code></pre>
+
+<h2 id="2-vm-xml">2. vm.xml</h2>
+
+<p>virsh define vm.xml</p>
+
+<pre><code>&lt;!-- #提示信息
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE 
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh edit win7-02
+or other application using the libvirt API.
+--&gt;
+&lt;domain type='kvm'&gt; #用kvm创建的虚拟机称为domain，type定义使用哪个虚拟机管理程序，值可以是：xen、kvm、qemu、lxc、kqemu
+                    #第二个参数是id，它唯一的标示一个运行的虚拟机，不活跃的客户端没有id。 
+  &lt;name&gt;win7-02&lt;/name&gt;
+            #name参数为虚拟机定义了一个简短的名字，必须唯一
+  &lt;uuid&gt;6ce14f21-33ac-dc79-5444-f64ccc80ea17&lt;/uuid&gt;
+                    #uuid，全球唯一，linux下可以用uuidgen生成
+ &lt;title&gt;This is my first test kvm&lt;/title&gt;
+                    #title参数提供一个对虚拟机简短的说明，它不能包含换行符。
+  &lt;memory unit='KiB'&gt;2097152&lt;/memory&gt;
+                    #可以分配到的最大内存，内存单位由unit定义，单位可以是：K、KiB、M、MiB、G、GiB、T、TiB。默认是KiB。MiB 2048代表2G
+  &lt;currentMemory unit='KiB'&gt;2097152&lt;/currentMemory&gt;
+                    #实际分给给客户端的内存她小于memory的定义，如果没有定义，值和memory一致。
+  &lt;vcpu placement='static'&gt;1&lt;/vcpu&gt;
+                    #vcpu的内容是为虚拟机最多分配几个cpu
+  &lt;os&gt;
+    &lt;type arch='x86_64' machine='rhel6.5.0'&gt;hvm&lt;/type&gt;
+#arch指定虚拟机的CPU构架，machine指定机器的类型。hvm表明该OS被设计为直接运行在裸金属上面，需要全虚拟化。
+    &lt;boot dev='cdrom'/&gt;
+                #dev属性的值可以是：fd、hd、cdrom、network，boot的元素可以被设置多个用来建立一个启动优先规则。 
+  &lt;/os&gt;
+  &lt;features&gt; #Hypervisor的特性：
+    &lt;acpi/&gt;  #Hypervisors允许特定的CPU/机器特性打开或关闭，所有的特性都在fearures元素中，以下介绍一些在全虚拟化中常用的标记：
+    &lt;apic/&gt;  #acpi：用于电源管理      
+    &lt;pae/&gt;   #pae：扩展物理地址模式，使32位的客户端支持大于4GB的内存
+  &lt;/features&gt;
+  &lt;cpu mode='host-passthrough'&gt;
+    &lt;topology sockets='1' cores='4' threads='1'/&gt;
+  &lt;/cpu&gt;
+   
+  &lt;on_poweroff&gt;destroy&lt;/on_poweroff&gt;
+  #当客户端请求poweroff时执行特定的动作
+  &lt;on_reboot&gt;restart&lt;/on_reboot&gt;
+  #当客户端请求reboot时执行特定的动作
+  &lt;on_crash&gt;restart&lt;/on_crash&gt;
+  #当客户端崩溃时执行的动作
+ #每种状态下可以允许指定如下四种行为：
+         #destory：domain将会被完全终止，domain的所有资源会被释放
+         #restart：domain会被终止，然后以相同的配置重新启动
+         #preserver：domain会被终止，它的资源会被保留用来分析
+         #rename-restart：domain会被终止，然后以一个新名字被重新启动
+  
+ &lt;clock offset=&quot;localtime&quot; /&gt;
+         #客户端的时间初始化来自宿主机的时间，大多数操作系统期望硬件时钟保持UTC格式，UTC也是默认格式，然而Windows机器却期望它是'localtime'
+ #UTC：当引导时客户端时钟同步到UTC时钟
+         #localtime：当引导时客户端时钟同步到主机时钟所在的时区
+         #timezone：The guest clock will be synchronized to the requested timezone using the timezone attribute 
+  
+ &lt;devices&gt; #所有的设备都是一个名为devices元素的子设备
+    &lt;emulator&gt;/usr/libexec/qemu-kvm&lt;/emulator&gt;
+        #emulator元素指定模拟设备二进制文件的全路径
+    &lt;disk type='file' device='disk'&gt;
+      &lt;driver name='qemu' type='qcow2'/&gt;
+      &lt;source file='/data/vmdisk/win7-02.qcow2'/&gt;
+      &lt;target dev='vda' bus='virtio'/&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/&gt;
+    &lt;/disk&gt;
+    &lt;disk type='file' device='cdrom'&gt;
+      &lt;driver name='qemu' type='raw'/&gt;
+      &lt;source file='/iso/win7.iso'/&gt;
+      &lt;target dev='hda' bus='ide'/&gt;
+      &lt;readonly/&gt;
+      &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+    &lt;/disk&gt;
+    &lt;disk type='file' device='cdrom'&gt;
+      &lt;driver name='qemu' type='raw'/&gt;
+      &lt;source file='/iso/virtio-win-0.1-100.iso'/&gt;
+      &lt;target dev='hdb' bus='ide'/&gt;
+      &lt;readonly/&gt;
+      &lt;address type='drive' controller='0' bus='0' target='0' unit='1'/&gt;
+    &lt;/disk&gt;
+    &lt;disk type='file' device='floppy'&gt;
+      &lt;driver name='qemu' type='raw'/&gt;
+      &lt;source file='/iso/virtio-win-0.1.96_amd64.vfg'/&gt;
+      &lt;target dev='fda' bus='fdc'/&gt;
+      &lt;readonly/&gt;
+      &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+    &lt;/disk&gt;
+#所有的设备看起来就像一个disk、floppy、cdrom或者一个 paravirtualized driver，他们通过一个disk元素指定。
+#type特性包括:file,block,dir,network，device描述disk如何受到客户端OS的，特性包括：floppy、disk、cdrom、lun，默认是disk
+#source元素：在disk的type是file时，file属性指定一个合格的全路径文件映像作为客户端的磁盘，在disk的type是block时，dev属性指定一个主机设备的路径作为disk。
+   #在disk的type是dir时，dir属性指定一个全路径的目录作为disk，在disk的type是network时，protocol属性指定协议用来访问镜像，镜像的值可以是：nbd，rbd，sheepdog
+#dev属性表明本地磁盘在客户端上的实际名称，因为实际设备的名称指定并不能保证映射到客户端OS上的设备
+#bus属性指定了哪种类型的磁盘被模拟，值主要有：ide、scsi、virtio、xen、usb、sata
+#readonly元素：指定客户端不能修改设备。当一个disk含有type=cdrom，readonly则是默认值。
+(disk中virtio-win-0.1-100.iso和virtio-win-0.1.96_amd64.vfg是windows需要的驱动文件，linux系列无需定义)
+     
+&lt;controller type='usb' index='0'&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/&gt;
+    &lt;/controller&gt;
+    &lt;controller type='ide' index='0'&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/&gt;
+    &lt;/controller&gt;
+    &lt;controller type='fdc' index='0'/&gt;
+    &lt;controller type='virtio-serial' index='0'&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/&gt;
+    &lt;/controller&gt;
+     
+&lt;interface type='bridge'&gt;  #类型桥接
+      &lt;source bridge='br0'/&gt; #桥接的设备名字
+      &lt;model type='virtio'/&gt;
+    &lt;/interface&gt;
+     
+#串行端口
+&lt;serial type='file'&gt;
+      &lt;source path='/tmp/console.log'/&gt;
+      &lt;target port='0'/&gt;
+    &lt;/serial&gt;
+    &lt;serial type='pty'&gt;
+      &lt;target port='1'/&gt;
+    &lt;/serial&gt;
+    &lt;console type='file'&gt;
+      &lt;source path='/tmp/console.log'/&gt;
+      &lt;target type='serial' port='0'/&gt;
+    &lt;/console&gt;
+    &lt;channel type='spicevmc'&gt;
+      &lt;target type='virtio' name='com.redhat.spice.0'/&gt;
+      &lt;address type='virtio-serial' controller='0' bus='0' port='1'/&gt;
+    &lt;/channel&gt;
+    &lt;input type='tablet' bus='usb'/&gt;
+    &lt;input type='mouse' bus='ps2'/&gt;
+    #input元素：input元素含有一个强制的属性，type属性的值可以是mouse或tablet
+#bus属性指定一个明确的设备类型，值可以是：xen、ps2、usb。 
+&lt;graphics type='spice' port='6789' autoport='no' listen='0.0.0.0' keymap='en-us'&gt;
+      &lt;listen type='address' address='0.0.0.0'/&gt; #graphics元素：graphics含有一个强制的属性type，type的值可以是：sdl、vnc、rdp、desktop、spice
+      &lt;channel name='main' mode='insecure'/&gt;     #vnc则启动vnc服务，port属性指定tcp端口，如果是-1，则表示自动分配
+      &lt;channel name='display' mode='insecure'/&gt;  #vnc的端口自动分配的话是从5900向上递增。listen属性提供一个IP地址给服务器监听，可以单独在listen元素中设置
+      &lt;channel name='inputs' mode='insecure'/&gt;   #passwd属性提供一个vnc的密码
+      &lt;channel name='cursor' mode='insecure'/&gt;   #listen元素：listen元素专门针对vnc和spice设置监听端口等
+      &lt;channel name='playback' mode='insecure'/&gt; #它包含以下属性：type、address、network。type的值可以是address或network。
+      &lt;channel name='record' mode='insecure'/&gt;   #如果设置了type=address，那么address属性设置一个ip地址或者主机名来监听。
+      &lt;channel name='smartcard' mode='insecure'/&gt;#如果type=network，则network属性设置一个网络名称在libvirt‘s的网络配置文件中。
+      &lt;channel name='usbredir' mode='insecure'/&gt;
+      &lt;image compression='auto_glz'/&gt;
+      &lt;streaming mode='all'/&gt;
+      &lt;clipboard copypaste='yes'/&gt;
+    &lt;/graphics&gt;
+   
+  &lt;video&gt;
+      &lt;model type='qxl' ram='65536' vram='65536' heads='1'&gt;
+        &lt;acceleration accel3d='yes' accel2d='yes'/&gt;
+      &lt;/model&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+    &lt;/video&gt;
+    &lt;memballoon model='virtio'&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/&gt;
+    &lt;/memballoon&gt;
+  &lt;/devices&gt;
+&lt;/domain&gt;
+   #video元素：是描述声音设备的容器，为了向后完全兼容，如果没有设置video但是有graphics在xml配置文件中，这时libvirt会按照客户端类型增加一个默认的video
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/dpdk-devbind/">DPDK-Devbind</a></li>
+        
+        <li><a href="/posts/keepalived/">keepalived应用</a></li>
+        
+        <li><a href="/posts/eth-name/">网卡命名</a></li>
+        
+        <li><a href="/posts/remote-desktop/">ubuntu18.04使用xrdp远程桌面</a></li>
+        
+        <li><a href="/posts/rust-game/">使用rust语言&#43;SDL2库写游戏</a></li>
+        
+    </ul>
+</div>
 
 
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/kvm">kvm</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 
-
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
                 </div>
             </div>
-
             <div id="secondary">
     <section class="widget">
         <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
@@ -663,13 +901,28 @@ setup.py
 </footer>
 
 
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
 
 
 
 <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
-
 
 
 

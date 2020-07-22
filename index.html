@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm2/" title="kvm xml模板" >kvm xml模板</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年7月22日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 自定义虚拟机 # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo # lsmod|grep kvm # yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块 # yum -y install libvirt #虚拟化服务库 # systemctl start libvirtd # systemctl enable libvirtd # qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 /usr/libexec/qemu-kvm -name vm_NGC -m 4096 -smp 8 -hda vm_NGC.img -vnc :0 -net nic,model=virtio -net tap,ifname=tap0,vhost=on,script=no,downscript=no -net nic,model=virtio -net tap,ifname=tap1,vhost=on,script=no,downscript=no -cdrom ubuntu-18.04.4.iso 使用vnc连接: ip:5900 宿主机新建网桥 brctl addbr vm brctl show 添加tap网卡 brctl addif vm tap0 brctl show up网桥和网卡设备 ifconfig vm up ifconfig tap0 up 配置网桥地址 ifconfig vm 192.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind" >DPDK-Devbind</a>
                                 </h1>
                             </header>
@@ -290,29 +313,6 @@ setup.py
                             <p class="readmore"><a href="https://workerwork.github.io/posts/pypi/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境" >p4实践环境</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月6日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/p4">p4</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装ubuntu16.04(18.04)并更新依赖 # sudo apt update # sudo apt-get install automake cmake libjudy-dev libpcap-dev libboost-dev \ libboost-test-dev libboost-program-options-dev libboost-system-dev \ libboost-filesystem-dev libboost-thread-dev libevent-dev libtool \ flex bison pkg-config g++ libssl-dev -y # sudo apt-get install cmake g++ git automake libtool libgc-dev bison flex libfl-dev \ libgmp-dev libboost-dev libboost-iostreams-dev libboost-graph-dev \ llvm pkg-config python python-scapy python-ipaddr python-ply tcpdump curl -y # sudo apt-get install libreadline6 libreadline6-dev python-pip python-scapy -y # sudo pip install psutil # sudo pip install crcmod  2.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/p4/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -369,6 +369,10 @@ setup.py
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/kvm2/" title="kvm xml模板">kvm xml模板</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
     </li>
     
@@ -402,10 +406,6 @@ setup.py
     
     <li>
         <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
     </li>
     
 </ul>
@@ -454,7 +454,7 @@ setup.py
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(10)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
     </li>
     
     <li>

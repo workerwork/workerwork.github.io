@@ -7,22 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>python | WorkSpace</title>
-    <meta property="og:title" content="python - WorkSpace">
+    <title>linux | WorkSpace</title>
+    <meta property="og:title" content="linux - WorkSpace">
     <meta property="og:type" content="article">
         
         
     <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
-    <meta name="description" content="python">
+    <meta name="description" content="linux">
         
     <meta name="author" content="dongfeng">
-    <meta property="og:url" content="https://workerwork.github.io/tags/python/">
+    <meta property="og:url" content="https://workerwork.github.io/categories/linux/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/css/normalize.css">
     
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/tags/python/index.xml" title="WorkSpace" />
+    <link rel="alternate" type="application/rss+xml+xml" href="https://workerwork.github.io/categories/linux/index.xml" title="WorkSpace" />
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 
     
@@ -70,9 +70,9 @@
                 <div class="res-cons">
                     
                     <h3 class="archive-title">
-                        包含标签
-                        <span class="keyword">python</span>
-                        的文章
+                        分类
+                        <span class="keyword">linux</span>
+                        中的文章
                     </h3>
                     
 
@@ -80,31 +80,49 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/pypi/">编写pip包并上传到pypi</a>
+                                    <a href="https://workerwork.github.io/posts/local-yum/">搭建本地yum仓库</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
-                                2020年5月10日
+                                2019年8月28日
                             </date>
                             
                             <div class="post-meta meta-category">
                                 |
                                 
-                                    <a href="https://workerwork.github.io/categories/python">python</a>
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
                                 
                             </div>
                             
                             <div class="post-content">
-                                1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件
-setup.py
-#!/usr/bin/env python # -*- coding:utf-8 -*- # Author: workerwork(workerwork@qq.com) # Description: from setuptools import setup, find_packages setup( name = 'workerwork', version = '0.0.1', keywords='wow', description = 'a library for wow Developer', license = 'MIT License', url = '', author = 'workerwork', author_email = 'workerwork@qq.com', packages = find_packages(), include_package_data = True, platforms = 'any', install_requires = [ 'requests&gt;=2.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/pypi/">阅读全文</a></p>
+                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml . #精确分组 #createrepo . #createrepo --update  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
                             </div>
                         </article>
                     
 
                     
 
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://workerwork.github.io/categories/linux/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://workerwork.github.io/categories/linux/">1</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://workerwork.github.io/categories/linux/page/2/">2</a>
+    </li>
+    
+
+    
+</ol>
 
 
 

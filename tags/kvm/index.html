@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm2/">kvm xml模板</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年7月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 自定义虚拟机 # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo # lsmod|grep kvm # yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块 # yum -y install libvirt #虚拟化服务库 # systemctl start libvirtd # systemctl enable libvirtd # qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 /usr/libexec/qemu-kvm -name vm_NGC -m 4096 -smp 8 -hda vm_NGC.img -vnc :0 -net nic,model=virtio -net tap,ifname=tap0,vhost=on,script=no,downscript=no -net nic,model=virtio -net tap,ifname=tap1,vhost=on,script=no,downscript=no -cdrom ubuntu-18.04.4.iso 使用vnc连接: ip:5900 宿主机新建网桥 brctl addbr vm brctl show 添加tap网卡 brctl addif vm tap0 brctl show up网桥和网卡设备 ifconfig vm up ifconfig tap0 up 配置网桥地址 ifconfig vm 192.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kvm/">kvm虚拟机</a>
                                 </h1>
                             </header>
@@ -124,6 +147,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/kvm2/" title="kvm xml模板">kvm xml模板</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
     </li>
     
@@ -157,10 +184,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
     </li>
     
 </ul>
@@ -209,7 +232,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(10)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
     </li>
     
     <li>

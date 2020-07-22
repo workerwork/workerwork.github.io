@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm2/">kvm xml模板</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年7月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 自定义虚拟机 # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo # lsmod|grep kvm # yum -y install qemu-kvm #KVM主程序，KVM虚拟化模块 # yum -y install libvirt #虚拟化服务库 # systemctl start libvirtd # systemctl enable libvirtd # qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 /usr/libexec/qemu-kvm -name vm_NGC -m 4096 -smp 8 -hda vm_NGC.img -vnc :0 -net nic,model=virtio -net tap,ifname=tap0,vhost=on,script=no,downscript=no -net nic,model=virtio -net tap,ifname=tap1,vhost=on,script=no,downscript=no -cdrom ubuntu-18.04.4.iso 使用vnc连接: ip:5900 宿主机新建网桥 brctl addbr vm brctl show 添加tap网卡 brctl addif vm tap0 brctl show up网桥和网卡设备 ifconfig vm up ifconfig tap0 up 配置网桥地址 ifconfig vm 192.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/keepalived/">keepalived应用</a>
                                 </h1>
                             </header>
@@ -320,32 +343,29 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/local-yum/">搭建本地yum仓库</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml . #精确分组 #createrepo . #createrepo --update  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
+
+<ol class="page-navigator">
+    
+
+    
+    <li  class="current">
+        <a href="https://workerwork.github.io/categories/linux/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://workerwork.github.io/categories/linux/page/2/">2</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://workerwork.github.io/categories/linux/page/2/">下一页</a>
+    </li>
+    
+</ol>
 
 
 
@@ -365,6 +385,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kvm2/" title="kvm xml模板">kvm xml模板</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
@@ -400,10 +424,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/p4/" title="p4实践环境">p4实践环境</a>
     </li>
     
 </ul>
@@ -452,7 +472,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(10)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
     </li>
     
     <li>
