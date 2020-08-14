@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/openssh/">openssh8.1 rpm build</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月14日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 创建工作路径 mkdir -p /root/rpmbuild/{SOURCES,SPECS} cp openssh-8.1p1.tar.gz /root/rpmbuild/SOURCES/  2. 下载源码包 wget https://openbsd.hk/pub/OpenBSD/OpenSSH/portable/openssh-8.1p1.tar.gz  3. 制作准备 yum install rpm-build zlib-devel openssl-devel gcc perl-devel pam-devel unzip tar -zxf openssh-8.1p1.tar.gz cp ./openssh-8.1p1/contrib/redhat/openssh.spec . sed -i -e &quot;s/%define no_x11_askpass 0/%define no_x11_askpass 1/g&quot; openssh.spec sed -i -e &quot;s/%define no_gnome_askpass 0/%define no_gnome_askpass 1/g&quot; openssh.spec  4. 制作rpm包 rpmbuild -ba openssh.spec 如果出现 错误：构建依赖失败： openssl-devel &lt; 1.1 被 ?? 需要 解决方法： vi openssh.spec 注释掉 BuildRequires: openssl-devel &lt; 1.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kvm2/">自建kvm虚拟机</a>
                                 </h1>
                             </header>
@@ -318,31 +341,6 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/centos-iso/">制作CentOS ISO</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
-#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
-cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard 'us' # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/centos-iso/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -387,6 +385,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
@@ -420,10 +422,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
     </li>
     
 </ul>
@@ -472,7 +470,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
     </li>
     
     <li>
@@ -593,6 +591,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
     

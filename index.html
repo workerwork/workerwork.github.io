@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build" >openssh8.1 rpm build</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月14日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 创建工作路径 mkdir -p /root/rpmbuild/{SOURCES,SPECS} cp openssh-8.1p1.tar.gz /root/rpmbuild/SOURCES/  2. 下载源码包 wget https://openbsd.hk/pub/OpenBSD/OpenSSH/portable/openssh-8.1p1.tar.gz  3. 制作准备 yum install rpm-build zlib-devel openssl-devel gcc perl-devel pam-devel unzip tar -zxf openssh-8.1p1.tar.gz cp ./openssh-8.1p1/contrib/redhat/openssh.spec . sed -i -e &quot;s/%define no_x11_askpass 0/%define no_x11_askpass 1/g&quot; openssh.spec sed -i -e &quot;s/%define no_gnome_askpass 0/%define no_gnome_askpass 1/g&quot; openssh.spec  4. 制作rpm包 rpmbuild -ba openssh.spec 如果出现 错误：构建依赖失败： openssl-devel &lt; 1.1 被 ?? 需要 解决方法： vi openssh.spec 注释掉 BuildRequires: openssl-devel &lt; 1.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机" >自建kvm虚拟机</a>
                                 </h1>
                             </header>
@@ -288,31 +311,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi" >编写pip包并上传到pypi</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月10日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/python">python</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 首先创建项目，目录结构如下 worker_package/ ├── LICENSE ├── README.md ├── setup.py └── workerwork ├── __init__.py └── models.py  其中 worker_package/workerwork 是主代码目录，setup.py 是必备的打包文件
-setup.py
-#!/usr/bin/env python # -*- coding:utf-8 -*- # Author: workerwork(workerwork@qq.com) # Description: from setuptools import setup, find_packages setup( name = 'workerwork', version = '0.0.1', keywords='wow', description = 'a library for wow Developer', license = 'MIT License', url = '', author = 'workerwork', author_email = 'workerwork@qq.com', packages = find_packages(), include_package_data = True, platforms = 'any', install_requires = [ 'requests&gt;=2.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/pypi/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -369,6 +367,10 @@ setup.py
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
@@ -402,10 +404,6 @@ setup.py
     
     <li>
         <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
     </li>
     
 </ul>
@@ -454,7 +452,7 @@ setup.py
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
     </li>
     
     <li>
@@ -575,6 +573,8 @@ setup.py
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
     

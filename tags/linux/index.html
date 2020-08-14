@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/openssh/">openssh8.1 rpm build</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月14日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 创建工作路径 mkdir -p /root/rpmbuild/{SOURCES,SPECS} cp openssh-8.1p1.tar.gz /root/rpmbuild/SOURCES/  2. 下载源码包 wget https://openbsd.hk/pub/OpenBSD/OpenSSH/portable/openssh-8.1p1.tar.gz  3. 制作准备 yum install rpm-build zlib-devel openssl-devel gcc perl-devel pam-devel unzip tar -zxf openssh-8.1p1.tar.gz cp ./openssh-8.1p1/contrib/redhat/openssh.spec . sed -i -e &quot;s/%define no_x11_askpass 0/%define no_x11_askpass 1/g&quot; openssh.spec sed -i -e &quot;s/%define no_gnome_askpass 0/%define no_gnome_askpass 1/g&quot; openssh.spec  4. 制作rpm包 rpmbuild -ba openssh.spec 如果出现 错误：构建依赖失败： openssl-devel &lt; 1.1 被 ?? 需要 解决方法： vi openssh.spec 注释掉 BuildRequires: openssl-devel &lt; 1.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kvm2/">自建kvm虚拟机</a>
                                 </h1>
                             </header>
@@ -303,31 +326,6 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-node-graph/">vpp node-graph编排过程</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月30日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
-typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &lt;&lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -372,6 +370,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
@@ -405,10 +407,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
     </li>
     
 </ul>
@@ -457,7 +455,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
     </li>
     
     <li>
@@ -578,6 +576,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
     

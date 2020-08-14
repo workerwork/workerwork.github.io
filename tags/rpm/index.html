@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/openssh/">openssh8.1 rpm build</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月14日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 创建工作路径 mkdir -p /root/rpmbuild/{SOURCES,SPECS} cp openssh-8.1p1.tar.gz /root/rpmbuild/SOURCES/  2. 下载源码包 wget https://openbsd.hk/pub/OpenBSD/OpenSSH/portable/openssh-8.1p1.tar.gz  3. 制作准备 yum install rpm-build zlib-devel openssl-devel gcc perl-devel pam-devel unzip tar -zxf openssh-8.1p1.tar.gz cp ./openssh-8.1p1/contrib/redhat/openssh.spec . sed -i -e &quot;s/%define no_x11_askpass 0/%define no_x11_askpass 1/g&quot; openssh.spec sed -i -e &quot;s/%define no_gnome_askpass 0/%define no_gnome_askpass 1/g&quot; openssh.spec  4. 制作rpm包 rpmbuild -ba openssh.spec 如果出现 错误：构建依赖失败： openssl-devel &lt; 1.1 被 ?? 需要 解决方法： vi openssh.spec 注释掉 BuildRequires: openssl-devel &lt; 1.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/wcg-kernel/">WCG内核修改</a>
                                 </h1>
                             </header>
@@ -149,6 +172,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
@@ -182,10 +209,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi">编写pip包并上传到pypi</a>
     </li>
     
 </ul>
@@ -234,7 +257,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(11)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
     </li>
     
     <li>
@@ -355,6 +378,8 @@
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
     

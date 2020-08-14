@@ -6,7 +6,7 @@
     <description>Recent content in Categories on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 22 Jul 2020 10:35:52 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 14 Aug 2020 15:36:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>linux</title>
       <link>https://workerwork.github.io/categories/linux/</link>
-      <pubDate>Wed, 22 Jul 2020 10:35:52 +0800</pubDate>
+      <pubDate>Fri, 14 Aug 2020 15:36:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/categories/linux/</guid>
       <description></description>
@@ -102,7 +102,7 @@
     </item>
     
     <item>
-      <title>devops</title>
+      <title>DEVOPS</title>
       <link>https://workerwork.github.io/categories/devops/</link>
       <pubDate>Wed, 01 Apr 2020 15:57:51 +0800</pubDate>
       
