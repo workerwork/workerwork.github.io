@@ -130,6 +130,7 @@
 #只编译kernel rpm
 [root@wcg-9-73 rpmbuild]# rpmbuild -bb --without debug --without debuginfo --without tools --without perf --without doc SPECS/kernel.spec
 
+kernel-devel和kernel-headers用来开发ko模块,要用到Module.symvers
 </code></pre>
 
 <h2 id="5-单独编译kernel">5. 单独编译kernel</h2>
