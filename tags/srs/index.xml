@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>srs on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/srs/</link>
+    <description>Recent content in srs on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 15 Aug 2020 23:07:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/srs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>video server</title>
+      <link>https://workerwork.github.io/posts/video-server/</link>
+      <pubDate>Sat, 15 Aug 2020 23:07:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/video-server/</guid>
+      <description> 1. SRS介绍 SRS/3.0，OuXuli，是一个流媒体集群，支持RTMP/HLS/WebRTC/SRT/GB28181，高效、稳定、易用，简单而快乐。 SRS is a RTMP/HLS/WebRTC/SRT/GB28181 streaming cluster, high efficiency, stable and simple.
+项目地址: https://github.com/ossrs/srs
+2. 运行docker容器启动srs服务 sudo docker run -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3  3. 使用ffmpeg推流 ./pushflow.sh cat pushflow.sh #!/bin/bash while : do sudo ffmpeg -re -i dog.mp4 -vcodec copy -acodec copy -f flv -y rtmp://192.168.1.7:1935/live/livestream; sleep 1; done  4. 终端使用vlc播放器拉流 视频地址填写: rtmp://192.168.1.7:1935/live/livestream  </description>
+    </item>
+    
+  </channel>
+</rss>

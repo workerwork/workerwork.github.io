@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/video-server/">video server</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月15日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                 1. SRS介绍 SRS/3.0，OuXuli，是一个流媒体集群，支持RTMP/HLS/WebRTC/SRT/GB28181，高效、稳定、易用，简单而快乐。 SRS is a RTMP/HLS/WebRTC/SRT/GB28181 streaming cluster, high efficiency, stable and simple.
+项目地址: https://github.com/ossrs/srs
+2. 运行docker容器启动srs服务 sudo docker run -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3  3. 使用ffmpeg推流 ./pushflow.sh cat pushflow.sh #!/bin/bash while : do sudo ffmpeg -re -i dog.mp4 -vcodec copy -acodec copy -f flv -y rtmp://192.168.1.7:1935/live/livestream; sleep 1; done  4. 终端使用vlc播放器拉流 视频地址填写: rtmp://192.168.1.7:1935/live/livestream  ……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/video-server/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/openssh/">openssh8.1 rpm build</a>
                                 </h1>
                             </header>
@@ -298,34 +323,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/github-fast/">github加速</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月5日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
-使用 https 的时候，就是使用 https 协议复制仓库的时候
-git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.proxy 'socks5://127.0.0.1:1080' git config --global http.proxy 'vmess://127.0.0.1:1081' git config --global https.proxy 'vmess://127.0.0.1:1081'  也可以直接修改用户主目录下的 .gitconfig 文件
-[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
-git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
-git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -370,6 +367,10 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
     </li>
     
@@ -403,10 +404,6 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
     
     <li>
         <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
     </li>
     
 </ul>
@@ -455,7 +452,7 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
     </li>
     
     <li>
@@ -539,6 +536,8 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
+    <a href="https://workerwork.github.io/tags/ffmpeg/">ffmpeg</a>
+    
     <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
     
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
@@ -601,11 +600,17 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
     
+    <a href="https://workerwork.github.io/tags/server/">server</a>
+    
     <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/srs/">srs</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
     

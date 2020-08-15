@@ -80,6 +80,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/security/">CentOS7安全加固</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
+#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
+#查看空口令账号 awk -F: '($2==&quot;&quot;)' /etc/shadow #为空口令账号设定密码 passwd &lt;用户名&gt; #查看UID为零的账号，确认只有root账号 awk -F: '($3==0)' /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
+vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &lt;用户名&gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.d/common-auth 修改配置文件，添加 auth required pam_tally.so onerr=fail deny=3 unlock_time=300  4 ）限制用户su 限制能su到root的用户……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/security/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/centos-iso/">制作CentOS ISO</a>
                                 </h1>
                             </header>
@@ -169,6 +197,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
     </li>
     
@@ -202,10 +234,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
     </li>
     
 </ul>
@@ -254,7 +282,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
     </li>
     
     <li>
@@ -338,6 +366,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
+    <a href="https://workerwork.github.io/tags/ffmpeg/">ffmpeg</a>
+    
     <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
     
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
@@ -400,11 +430,17 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
     
+    <a href="https://workerwork.github.io/tags/server/">server</a>
+    
     <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/srs/">srs</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
     
