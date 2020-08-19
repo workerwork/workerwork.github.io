@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Unix domain socket | WorkSpace</title>
+    <meta property="og:title" content="Unix domain socket - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2020-08-19T15:29:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2020-08-19T15:29:51&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="Unix domain socket">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/uds/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">Unix domain socket</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2020年8月19日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/ipc">IPC</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-unix-domain-socket介绍">1. Unix domain socket介绍</h2>
+
+<p>Unix domain socket 又叫 IPC(inter-process communication 进程间通信) socket，用于实现同一主机上的进程间通信.
+socket 原本是为网络通讯设计的，但后来在 socket 的框架上发展出一种 IPC 机制，就是 UNIX domain socket.
+虽然网络 socket 也可用于同一台主机的进程间通讯(通过 loopback 地址 127.0.0.1)，但是 UNIX domain socket 用于
+IPC更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程.
+这是因为，IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的.
+UNIX domain socket 是全双工的，API 接口语义丰富，相比其它 IPC 机制有明显的优越性，目前已成为使用最广泛的 IPC 机制，
+比如 X Window 服务器和 GUI 程序之间就是通过 UNIX domain socket 通讯的.
+Unix domain socket 是 POSIX 标准中的一个组件，所以不要被名字迷惑，linux 系统也是支持它的.</p>
+
+<h2 id="2-c语言demo程序">2. C语言demo程序</h2>
+
+<p>下面是一个非常简单的服务器端程序，它从客户端读字符，然后将每个字符转换为大写并回送给客户端</p>
+
+<pre><code class="language-c">#include &lt;stdlib.h&gt;  
+#include &lt;stdio.h&gt;  
+#include &lt;stddef.h&gt;  
+#include &lt;sys/socket.h&gt;  
+#include &lt;sys/un.h&gt;  
+#include &lt;errno.h&gt;  
+#include &lt;string.h&gt;  
+#include &lt;unistd.h&gt;  
+#include &lt;ctype.h&gt;   
+ 
+#define MAXLINE 80  
+ 
+char *socket_path = &quot;server.socket&quot;;  
+ 
+int main(void)  
+{  
+    struct sockaddr_un serun, cliun;  
+    socklen_t cliun_len;  
+    int listenfd, connfd, size;  
+    char buf[MAXLINE];  
+    int i, n;  
+ 
+    if ((listenfd = socket(AF_UNIX, SOCK_STREAM, 0)) &lt; 0) {  
+        perror(&quot;socket error&quot;);  
+        exit(1);  
+    }  
+ 
+    memset(&amp;serun, 0, sizeof(serun));  
+    serun.sun_family = AF_UNIX;  
+    strcpy(serun.sun_path, socket_path);  
+    size = offsetof(struct sockaddr_un, sun_path) + strlen(serun.sun_path);  
+    unlink(socket_path);  
+    if (bind(listenfd, (struct sockaddr *)&amp;serun, size) &lt; 0) {  
+        perror(&quot;bind error&quot;);  
+        exit(1);  
+    }  
+    printf(&quot;UNIX domain socket bound\n&quot;);  
+      
+    if (listen(listenfd, 20) &lt; 0) {  
+        perror(&quot;listen error&quot;);  
+        exit(1);          
+    }  
+    printf(&quot;Accepting connections ...\n&quot;);  
+ 
+    while(1) {  
+        cliun_len = sizeof(cliun);         
+        if ((connfd = accept(listenfd, (struct sockaddr *)&amp;cliun, &amp;cliun_len)) &lt; 0){  
+            perror(&quot;accept error&quot;);  
+            continue;  
+        }  
+          
+        while(1) {  
+            n = read(connfd, buf, sizeof(buf));  
+            if (n &lt; 0) {  
+                perror(&quot;read error&quot;);  
+                break;  
+            } else if(n == 0) {  
+                printf(&quot;EOF\n&quot;);  
+                break;  
+            }  
+              
+            printf(&quot;received: %s&quot;, buf);  
+ 
+            for(i = 0; i &lt; n; i++) {  
+                buf[i] = toupper(buf[i]);  
+            }  
+            write(connfd, buf, n);  
+        }  
+        close(connfd);  
+    }  
+    close(listenfd);  
+    return 0;  
+} 
+
+#介绍一下这段代码
+int socket(int family, int type, int protocol);
+使用 UNIX domain socket 的过程和网络 socket 十分相似，也要先调用 socket() 创建一个 socket 文件描述符.
+family 指定为 AF_UNIX，使用 AF_UNIX 会在系统上创建一个 socket 文件，不同进程通过读写这个文件来实现通信。
+type 可以选择 SOCK_DGRAM 或 SOCK_STREAM。SOCK_STREAM 意味着会提供按顺序的、可靠、双向、面向连接的比特流。
+SOCK_DGRAM 意味着会提供定长的、不可靠、无连接的通信。
+protocol 参数指定为 0 即可。
+UNIX domain socket 与网络 socket 编程最明显的不同在于地址格式不同，用结构体 sockaddr_un 表示，
+网络编程的 socket 地址是 IP 地址加端口号，而 UNIX domain socket 的地址是一个 socket 类型的文件在文件系统
+中的路径，这个 socket 文件由 bind() 调用创建，如果调用 bind() 时该文件已存在，则 bind() 错误返回。
+因此，一般在调用 bind() 前会检查 socket 文件是否存在，如果存在就删除掉。
+网络 socket 编程类似，在 bind 之后要 listen，表示通过 bind 的地址（也就是 socket 文件）提供服务。
+接下来必须用 accept() 函数初始化连接。accept() 为每个连接创立新的套接字并从监听队列中移除这个连接。
+</code></pre>
+
+<p>下面是客户端程序，它接受用户的输入，并把字符串发送给服务器，然后接收服务器返回的字符串并打印：</p>
+
+<pre><code class="language-c">#include &lt;stdlib.h&gt;  
+#include &lt;stdio.h&gt;  
+#include &lt;stddef.h&gt;  
+#include &lt;sys/socket.h&gt;  
+#include &lt;sys/un.h&gt;  
+#include &lt;errno.h&gt;  
+#include &lt;string.h&gt;  
+#include &lt;unistd.h&gt;  
+ 
+#define MAXLINE 80  
+ 
+char *client_path = &quot;client.socket&quot;;  
+char *server_path = &quot;server.socket&quot;;  
+ 
+int main() {  
+    struct  sockaddr_un cliun, serun;  
+    int len;  
+    char buf[100];  
+    int sockfd, n;  
+ 
+    if ((sockfd = socket(AF_UNIX, SOCK_STREAM, 0)) &lt; 0){  
+        perror(&quot;client socket error&quot;);  
+        exit(1);  
+    }  
+      
+    // 一般显式调用bind函数，以便服务器区分不同客户端  
+    memset(&amp;cliun, 0, sizeof(cliun));  
+    cliun.sun_family = AF_UNIX;  
+    strcpy(cliun.sun_path, client_path);  
+    len = offsetof(struct sockaddr_un, sun_path) + strlen(cliun.sun_path);  
+    unlink(cliun.sun_path);  
+    if (bind(sockfd, (struct sockaddr *)&amp;cliun, len) &lt; 0) {  
+        perror(&quot;bind error&quot;);  
+        exit(1);  
+    }  
+ 
+    memset(&amp;serun, 0, sizeof(serun));  
+    serun.sun_family = AF_UNIX;  
+    strcpy(serun.sun_path, server_path);  
+    len = offsetof(struct sockaddr_un, sun_path) + strlen(serun.sun_path);  
+    if (connect(sockfd, (struct sockaddr *)&amp;serun, len) &lt; 0){  
+        perror(&quot;connect error&quot;);  
+        exit(1);  
+    }  
+ 
+    while(fgets(buf, MAXLINE, stdin) != NULL) {    
+         write(sockfd, buf, strlen(buf));    
+         n = read(sockfd, buf, MAXLINE);    
+         if ( n &lt; 0 ) {    
+            printf(&quot;the other side has been closed.\n&quot;);    
+         }else {    
+            write(STDOUT_FILENO, buf, n);    
+         }    
+    }   
+    close(sockfd);  
+    return 0;  
+}
+
+</code></pre>
+
+<p>与网络 socket 编程不同的是，UNIX domain socket 客户端一般要显式调用 bind 函数，而不依赖系统自动分配的地址。
+客户端 bind 一个自己指定的 socket 文件名的好处是，该文件名可以包含客户端的 pid 等信息以便服务器区分不同的客户端.</p>
+
+<p>分别把服务器端程序和客户端程序保存为 server.c 和 client.c 文件，并编译：</p>
+
+<pre><code class="language-shell">$ gcc server.c -o server
+$ gcc client.c -o client
+</code></pre>
+
+<h2 id="3-python语言demo程序">3. python语言demo程序</h2>
+
+<p>服务端</p>
+
+<pre><code class="language-python">#!/usr/bin/env python
+
+import socket
+import os
+
+server_address = &quot;socket.sock&quot;
+
+if os.path.exists(server_address):
+    raise Exception(&quot;The sock file is exist&quot;)
+
+server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+server_socket.bind(server_address)
+server_socket.listen(1)
+
+try:
+    while True:
+        print(&quot;Start accept!&quot;)
+
+        client_socket,client_address = server_socket.accept()
+    
+        while True:
+            print(&quot;Connect from:&quot;, client_address)
+
+            data = client_socket.recv(1024)
+            if not data:
+                print(&quot;Connection closed by client!\n&quot;)
+                break
+            else:
+                print(&quot;Received:&quot;, data)
+                print(&quot;Send back:&quot;, client_socket.sendall(data))
+
+    os.unlink(server_address)
+except Exception as e:
+    print(e)
+    if os.path.exists(server_address):
+        os.unlink(server_address)
+</code></pre>
+
+<p>客户端</p>
+
+<pre><code class="language-python">#!/usr/bin/env python
+
+import socket
+import os
+import time
+
+server_address = &quot;socket.sock&quot;
+
+if not os.path.exists(server_address):
+    raise Exception(&quot;The sock file is not exist&quot;)
+
+print(&quot;Connect to socket:&quot;, server_address)
+client_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+try:
+    client_socket.connect(server_address)
+except Exception as e:
+    print(e)
+    raise
+
+
+def send_test(client_socket, send_data):
+    time.sleep(1)
+    print(&quot;Send:&quot;, send_data)
+    client_socket.send(send_data)
+    time.sleep(1)
+    recv_data = client_socket.recv(1024)
+    print(&quot;Echo:&quot;, recv_data)
+
+
+print(&quot;Start communication!&quot;)
+send_data = b&quot;Hello, world!&quot;
+send_test(client_socket, send_data)
+send_data = b&quot;My name is Tom!&quot;
+send_test(client_socket, send_data)
+print(&quot;Close connection!&quot;)
+client_socket.close()
+
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/video-server/">video server</a></li>
+        
+        <li><a href="/posts/openssh/">openssh8.1 rpm build</a></li>
+        
+        <li><a href="/posts/kvm2/">自建kvm虚拟机</a></li>
+        
+        <li><a href="/posts/dpdk-devbind/">DPDK-Devbind</a></li>
+        
+        <li><a href="/posts/keepalived/">keepalived应用</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/socket">socket</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/ipc">IPC</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏">使用rust语言&#43;SDL2库写游戏</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title" style="color:red">日历</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a href="" title="时间如白驹过隙" target="_blank" style="color:red">
+                
+                    <img src="/index/img/2020.jpg">
+                
+            </a>
+        </li>
+        
+    </ul>
+</section>
+
+
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/dpdk/">dpdk(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ipc/">ipc(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ubuntu/">ubuntu(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/frp/">frp</a>
+    
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/github/">github</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/ha/">ha</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/ipc/">ipc</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/keepalived/">keepalived</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
+    
+    <a href="https://workerwork.github.io/tags/pip/">pip</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
+    
+    <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/server/">server</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/video/">video</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BB%A3%E7%90%86/">代理</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E7%BD%91%E5%8D%A1%E5%91%BD%E5%90%8D/">网卡命名</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.kdocs.cn/" title="在线文档">wps</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.youtube.com/" title="youtube">youtube</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://vimeo.com/" title="vimeo">vimeo</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.wikipedia.org/" title="维基">维基</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thepiratebay.org/index.html" title="海盗湾">海盗湾</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thekickasstorrents.to/" title="KickassTorrents">KickassTorrents</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.reddit.com/" title="reddit">reddit</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.imdb.com/" title="IMDB">IMDB</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.quora.com/" title="quora">quora</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.c114.com.cn/" title="c114">c114</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://news.cnblogs.com/" title="博客园">博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.csdn.net/" title="csdn">csdn</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://leetcode-cn.com/" title="leetcode">leetcode</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.ted.com/" title="ted">ted</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.sdnlab.com/" title="sdnlab">sdnlab</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.v2ex.com/" title="v2ex">v2ex</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.pinterest.com/" title="pinterest">pinterest</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://d.serctl.com/" title="d.serctl">d.serctl</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://g.widora.cn/" title="github代理下载">github代理下载</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://src.fedoraproject.org/" title="fedora源码包">fedora源码包</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/p4lang/tutorials" title="P4教程">P4教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://fd.io/" title="FD.io">FD.io</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.opennetworking.org/" title="ONF">ONF</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.zsythink.net/" title="网络博客4">网络博客4</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.netcan666.com/" title="netcan666">netcan666</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cikeblog.com/" title="cike">cike</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://wingwj.github.io/" title="wingwj">wingwj</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust视频教程">rust视频教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://kaisery.github.io/trpl-zh-cn/" title="rust中文教程">rust中文教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustcc.com/" title="rust中文社区索引">rust中文社区索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://doc.rust-lang.org/std/" title="rust标准库">rust标准库</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://danielkeep.github.io/tlborm/book/" title="rust宏">rust宏</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://docs.rs/" title="docs.rs">docs.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://lib.rs/" title="lib.rs">lib.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.redox-os.org/zh/" title="redox系统">redox系统</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitee.com/" title="gitee">gitee</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://192.168.10.79/" title="RSAS(admin/Nsfocus@123)">RSAS</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

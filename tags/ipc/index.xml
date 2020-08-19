@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IPC on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/ipc/</link>
+    <description>Recent content in IPC on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 19 Aug 2020 15:29:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/ipc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Unix domain socket</title>
+      <link>https://workerwork.github.io/posts/uds/</link>
+      <pubDate>Wed, 19 Aug 2020 15:29:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/uds/</guid>
+      <description>1. Unix domain socket介绍 Unix domain socket 又叫 IPC(inter-process communication 进程间通信) socket，用于实现同一主机上的进程间通信. socket 原本是为网络通讯设计的，但后来在 socket 的框架上发展出一种 IPC 机制，就是 UNIX domain socket. 虽然网络 socket 也可用于同一台主机的进程间通讯(通过 loopback 地址 127.0.0.1)，但是 UNIX domain socket 用于 IPC更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程. 这是因为，IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的. UNIX domain socket 是全双工的，API 接口语义丰富，相比其它 IPC 机制有明显的优越性，目前已成为使用最广泛的 IPC 机制， 比如 X Window 服务器和 GUI 程序之间就是通过 UNIX domain socket 通讯的. Unix domain socket 是 POSIX 标准中的一个组件，所以不要被名字迷惑，linux 系统也是支持它的.
+2. C语言demo程序 下面是一个非常简单的服务器端程序，它从客户端读字符，然后将每个字符转换为大写并回送给客户端
+#include &amp;lt;stdlib.h&amp;gt; #include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stddef.h&amp;gt; #include &amp;lt;sys/socket.</description>
+    </item>
+    
+  </channel>
+</rss>
