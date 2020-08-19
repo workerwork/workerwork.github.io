@@ -70,35 +70,6 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透" >frp内网穿透</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月14日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2. 内网穿透实现 测试服务器没有公网IP，想要让外网直接调用内网的服务，就需要用到内网穿透.
-和使用路由器与外网交互类似，需要有一个第三方拥有公网IP的服务器进行路由的中转，代替路由器的角色.
-由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了
-当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。
-从而实现在外网请求内网服务的需求
-3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # ./frps -c frps.ini # 前台直接启动，测试看日志方便 # nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp; # 后台运行  4.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/pypi/" title="编写pip包并上传到pypi" >编写pip包并上传到pypi</a>
                                 </h1>
                             </header>
@@ -323,6 +294,38 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
                         </article>
                     
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/affinity/" title="cpu亲和性" >cpu亲和性</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月20日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
+软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
+硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
+解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
+cpus_allowed用于控制进程可以在哪里处理器上运行
+sched_set_affinity() （用来修改位掩码）
+sched_get_affinity() （用来查看当前的位掩码）
+2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
+在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
+SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &lt;sched.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/affinity/">阅读全文</a></p>
+                        </article>
+                    
 
                     
 
@@ -383,10 +386,6 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
 <ul class="widget-list">
     
     <li>
-        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
-    </li>
-    
-    <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
     </li>
     
@@ -420,6 +419,10 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     
     <li>
         <a href="https://workerwork.github.io/posts/local-apt/" title="搭建本地apt仓库">搭建本地apt仓库</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/frp/" title="frp内网穿透">frp内网穿透</a>
     </li>
     
 </ul>
@@ -468,7 +471,7 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(12)</a>
     </li>
     
     <li>
@@ -552,8 +555,6 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
-    <a href="https://workerwork.github.io/tags/ffmpeg/">ffmpeg</a>
-    
     <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
     
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
@@ -616,17 +617,11 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     
     <a href="https://workerwork.github.io/tags/security/">security</a>
     
-    <a href="https://workerwork.github.io/tags/server/">server</a>
-    
     <a href="https://workerwork.github.io/tags/shell/">shell</a>
-    
-    <a href="https://workerwork.github.io/tags/srs/">srs</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
     <a href="https://workerwork.github.io/tags/upf/">upf</a>
-    
-    <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
     
