@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/shm/">Shared Memory</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月21日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/ipc">IPC</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. Shared Memory介绍 共享内存是System V版本的最后一个进程间通信方式。共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存， 共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。不同进程之间共享的内存通常为同一段物理内存。 进程可以将同一段物理内存连接到他们自己的地址空间中，所有的进程都可以访问共享内存中的地址。 如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程.
+特别提醒：共享内存并未提供同步机制，也就是说，在第一个进程结束对共享内存的写操作之前， 并无自动机制可以阻止第二个进程开始对它进行读取，所以我们通常需要用其他的机制来同步对共享内存的访问，例如信号量.
+2. C语言demo程序 //comm.h #ifndef _COMM_H__ #define _COMM_H__ #include&lt;stdio.h&gt; #include&lt;sys/types.h&gt; #include&lt;sys/ipc.h&gt; #include&lt;sys/shm.h&gt; #define PATHNAME &quot;.&quot; #define PROJ_ID 0x6666 int CreateShm(int size); int DestroyShm(int shmid); int GetShm(int size); #endif  //comm.c #include&quot;comm.h&quot; static int CommShm(int size,int flags) { key_t key = ftok(PATHNAME,PROJ_ID); if(key &lt; 0) { perror(&quot;ftok&quot;); return -1; } int shmid = 0; if((shmid = shmget(key,size,flags)) &lt; 0) { perror(&quot;shmget&quot;); return -2; } return shmid; } int DestroyShm(int shmid) { if(shmctl(shmid,IPC_RMID,NULL) &lt; 0) { perror(&quot;shmctl&quot;); return -1; } return 0; } int CreateShm(int size) { return CommShm(size,IPC_CREAT | IPC_EXCL | 0666); } int GetShm(int size) { return CommShm(size,IPC_CREAT); }  //client.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/shm/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/uds/">Unix domain socket</a>
                                 </h1>
                             </header>
@@ -296,35 +321,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/frp/">frp内网穿透</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年5月14日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 正常情况一个内网主机与外网服务器的交互 以访问google为例
-假设我们的主机IP是192.168.0.10，路由器LAN IP为192.168.0.1，WAN IP为211.22.145.234（这是一个公网IP), google 服务器 IP 为74.125.204.101。 1.主机构建HTTP请求数据包，目标IP为74.125.204.101，目标端口是80/443，源IP为192.168.0.10，源端口随机生成，假定为5000 2.主机检查目标IP地址，发现不在一个网段，数据包丢给默认网关192.168.0.1 3.路由器LAN口收到数据包，构建NAT映射，随机生成端口，假定为5500,这样映射就是：5500-&gt;192.168.0.10:5000． WIN口收到的数据包，如果目标端口是5500,则会转发给192.168.0.10的5000端口 4.路由器修改数据包的源端口为5500,源ＩＰ地址为211.22.145.234，使用WAN口将数据包发出去 5.google服务器收到请求，构建响应HTTP数据包，目标IP地址为211.22.145.234,目标端口是5500 6.路由器WAN口收到数据包，目标端口是5500,查询NAT表，发现对应的机器是192.168.0.10:5000， 所以修改目标IP为192.168.0.10，目标端口为5000，并通过LAN口发送给主机 7.主机收到数据包，完成一次通信  2. 内网穿透实现 测试服务器没有公网IP，想要让外网直接调用内网的服务，就需要用到内网穿透.
-和使用路由器与外网交互类似，需要有一个第三方拥有公网IP的服务器进行路由的中转，代替路由器的角色.
-由内网服务器主动请求公网服务器，建立一个长连接，这时公网服务器就可以随时随地的向内网服务器发送消息了
-当使用浏览器想要访问内网服务时，先将请求发送到公网服务器上，公网服务器再通过之前建立的长连接将请求发送到内网服务器中。
-从而实现在外网请求内网服务的需求
-3. 公网服务器设置 # wget https://github.com/fatedier/frp/releases/download/v0.14.1/frp_0.14.1_linux_amd64.tar.gz # sudo tar zxf frp_0.14.1_linux_amd64.tar.gz # cd frp_0.14.1_linux_amd64/ # sudo vim frps.ini # [common] bind_port = 8989 # frp服务的端口 vhost_http_port = 8889 # frp的http服务的端口 # 启动服务 # ./frps -c frps.ini # 前台直接启动，测试看日志方便 # nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp; # 后台运行  4.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/frp/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -373,6 +369,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
     </li>
     
@@ -406,10 +406,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     
     <li>
         <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏">使用rust语言&#43;SDL2库写游戏</a>
     </li>
     
 </ul>
@@ -454,7 +450,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/ipc/">ipc(1)</a>
+        <a href="https://workerwork.github.io/categories/ipc/">ipc(2)</a>
     </li>
     
     <li>
@@ -613,6 +609,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     <a href="https://workerwork.github.io/tags/server/">server</a>
     
     <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     

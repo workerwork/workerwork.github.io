@@ -6,10 +6,21 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 19 Aug 2020 15:29:51 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 21 Aug 2020 09:22:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Shared Memory</title>
+      <link>https://workerwork.github.io/posts/shm/</link>
+      <pubDate>Fri, 21 Aug 2020 09:22:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/shm/</guid>
+      <description>1. Shared Memory介绍 共享内存是System V版本的最后一个进程间通信方式。共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存， 共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。不同进程之间共享的内存通常为同一段物理内存。 进程可以将同一段物理内存连接到他们自己的地址空间中，所有的进程都可以访问共享内存中的地址。 如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程.
+特别提醒：共享内存并未提供同步机制，也就是说，在第一个进程结束对共享内存的写操作之前， 并无自动机制可以阻止第二个进程开始对它进行读取，所以我们通常需要用其他的机制来同步对共享内存的访问，例如信号量.
+2. C语言demo程序 //comm.h #ifndef _COMM_H__ #define _COMM_H__ #include&amp;lt;stdio.h&amp;gt; #include&amp;lt;sys/types.h&amp;gt; #include&amp;lt;sys/ipc.h&amp;gt; #include&amp;lt;sys/shm.h&amp;gt; #define PATHNAME &amp;quot;.&amp;quot; #define PROJ_ID 0x6666 int CreateShm(int size); int DestroyShm(int shmid); int GetShm(int size); #endif  //comm.c #include&amp;quot;comm.h&amp;quot; static int CommShm(int size,int flags) { key_t key = ftok(PATHNAME,PROJ_ID); if(key &amp;lt; 0) { perror(&amp;quot;ftok&amp;quot;); return -1; } int shmid = 0; if((shmid = shmget(key,size,flags)) &amp;lt; 0) { perror(&amp;quot;shmget&amp;quot;); return -2; } return shmid; } int DestroyShm(int shmid) { if(shmctl(shmid,IPC_RMID,NULL) &amp;lt; 0) { perror(&amp;quot;shmctl&amp;quot;); return -1; } return 0; } int CreateShm(int size) { return CommShm(size,IPC_CREAT | IPC_EXCL | 0666); } int GetShm(int size) { return CommShm(size,IPC_CREAT); }  //client.</description>
+    </item>
     
     <item>
       <title>Unix domain socket</title>
