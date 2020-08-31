@@ -127,6 +127,9 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 
 </code></pre>
 
+<p><details>
+<summary><mark><font color=darkred>libvppinfra</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra
 /.
 /usr
@@ -140,6 +143,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/libvppinfra/copyright
 /usr/lib/x86_64-linux-gnu/libvppinfra.so
 </code></pre>
+
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>libvppinfra-dev</font></mark></summary></p>
 
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L libvppinfra-dev 
 /.
@@ -251,6 +259,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/libvppinfra-dev/copyright
 </code></pre>
 
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp
 /.
 /etc
@@ -360,6 +373,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/lib/x86_64-linux-gnu/libvppapiclient.so
 /usr/lib/x86_64-linux-gnu/libvppcom.so
 </code></pre>
+
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-dev</font></mark></summary></p>
 
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-dev
 /.
@@ -1273,6 +1291,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/vpp/vppapigen_json.py
 </code></pre>
 
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-dbg</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-dbg 
 /.
 /usr
@@ -1452,6 +1475,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/vpp-dbg/copyright
 </code></pre>
 
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-plugin-core</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-plugin-core 
 /.
 /usr
@@ -1575,6 +1603,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/vpp/api/plugins/vxlan_gpe_ioam_export.api.json
 </code></pre>
 
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-plugin-dpdk</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-plugin-dpdk 
 /.
 /usr
@@ -1588,6 +1621,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/vpp-plugin-dpdk/changelog.Debian.gz
 /usr/share/doc/vpp-plugin-dpdk/copyright
 </code></pre>
+
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-api-python</font></mark></summary></p>
 
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-api-python 
 /.
@@ -1623,6 +1661,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/vpp-api-python/copyright
 </code></pre>
 
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>python3-vpp-api</font></mark></summary></p>
+
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L python3-vpp-api 
 /.
 /usr
@@ -1656,6 +1699,11 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /usr/share/doc/python3-vpp-api/changelog.Debian.gz
 /usr/share/doc/python3-vpp-api/copyright
 </code></pre>
+
+<p></details></p>
+
+<p><details>
+<summary><mark><font color=darkred>vpp-ext-deps</font></mark></summary></p>
 
 <pre><code class="language-shell">root@baicells:~/df/upf-vpp/build-root# dpkg -L vpp-ext-deps 
 /.
@@ -2642,6 +2690,35 @@ root@localhost:/home/ubuntu/work/upf-vpp# ll build/external/*.deb
 /opt/vpp/external/x86_64/share/dpdk/mk/exec-env/linuxapp
 /opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/include
 /opt/vpp/external/x86_64/share/dpdk/x86_64-nhm-linuxapp-gcc/lib
+</code></pre>
+
+<p></details></p>
+
+<h2 id="4-查看vpp和vpp-cli的链接库">4. 查看vpp和vpp-cli的链接库</h2>
+
+<pre><code class="language-shell">root@UPF:/usr/lib/x86_64-linux-gnu# ldd /usr/bin/vpp
+	linux-vdso.so.1 (0x00007fff89b90000)
+	libvlibmemory.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libvlibmemory.so.0.0.1 (0x00007f6314c7c000)
+	libvnet.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libvnet.so.0.0.1 (0x00007f63139b2000)
+	libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f63137ae000)
+	libvlib.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libvlib.so.0.0.1 (0x00007f631348b000)
+	libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f631326c000)
+	libvppinfra.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libvppinfra.so.0.0.1 (0x00007f6312f58000)
+	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f6312b67000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f63151c7000)
+	libsvm.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libsvm.so.0.0.1 (0x00007f6312937000)
+	libcrypto.so.1.1 =&gt; /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1 (0x00007f631246c000)
+	libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007f63120ce000)
+	libuuid.so.1 =&gt; /lib/x86_64-linux-gnu/libuuid.so.1 (0x00007f6311ec7000)
+	librt.so.1 =&gt; /lib/x86_64-linux-gnu/librt.so.1 (0x00007f6311cbf000)
+
+root@UPF:/usr/lib/x86_64-linux-gnu# ldd /usr/bin/vppctl
+	linux-vdso.so.1 (0x00007ffe791c5000)
+	libvppinfra.so.0.0.1 =&gt; /usr/lib/x86_64-linux-gnu/libvppinfra.so.0.0.1 (0x00007f5fd283b000)
+	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f5fd244a000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f5fd2d54000)
+	libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007f5fd20ac000)
+
 </code></pre>
 
                         </div>
