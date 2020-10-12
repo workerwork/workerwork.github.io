@@ -104,10 +104,12 @@
 
 <h2 id="2-运行docker容器启动srs服务">2. 运行docker容器启动srs服务</h2>
 
-<pre><code class="language-shell">sudo docker run -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3
+<pre><code class="language-shell">sudo docker run -d -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3
 </code></pre>
 
 <h2 id="3-使用ffmpeg推流">3. 使用ffmpeg推流</h2>
+
+<p>需要安装ffmpeg</p>
 
 <pre><code class="language-shell">./pushflow.sh
 
@@ -124,6 +126,14 @@ done
 <h2 id="4-终端使用vlc播放器拉流">4. 终端使用vlc播放器拉流</h2>
 
 <p>视频地址填写: rtmp://192.168.1.7:1935/live/livestream</p>
+
+<h2 id="5-使用live555支持rtsp">5. 使用live555支持rtsp</h2>
+
+<p>需要添加网关以指定监听地址
+可以使用ffmpeg来转换视频源格式</p>
+
+<pre><code class="language-shell">ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.264
+</code></pre>
 
                         </div>
 						<br>

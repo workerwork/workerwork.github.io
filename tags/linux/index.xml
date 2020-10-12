@@ -63,7 +63,10 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
       <guid>https://workerwork.github.io/posts/video-server/</guid>
       <description>1. SRS介绍 SRS/3.0，OuXuli，是一个流媒体集群，支持RTMP/HLS/WebRTC/SRT/GB28181，高效、稳定、易用，简单而快乐。 101 SRS is a RTMP/HLS/WebRTC/SRT/GB28181 streaming cluster, high efficiency, stable and simple.
 项目地址: https://github.com/ossrs/srs
-2. 运行docker容器启动srs服务 sudo docker run -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3  3. 使用ffmpeg推流 ./pushflow.sh cat pushflow.sh #!/bin/bash while : do sudo ffmpeg -re -i dog.mp4 -vcodec copy -acodec copy -f flv -y rtmp://192.168.1.7:1935/live/livestream sleep 1 done  4. 终端使用vlc播放器拉流 视频地址填写: rtmp://192.168.1.7:1935/live/livestream</description>
+2. 运行docker容器启动srs服务 sudo docker run -d -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3  3. 使用ffmpeg推流 需要安装ffmpeg
+./pushflow.sh cat pushflow.sh #!/bin/bash while : do sudo ffmpeg -re -i dog.mp4 -vcodec copy -acodec copy -f flv -y rtmp://192.168.1.7:1935/live/livestream sleep 1 done  4. 终端使用vlc播放器拉流 视频地址填写: rtmp://192.168.1.7:1935/live/livestream
+5. 使用live555支持rtsp 需要添加网关以指定监听地址 可以使用ffmpeg来转换视频源格式
+ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.</description>
     </item>
     
     <item>
