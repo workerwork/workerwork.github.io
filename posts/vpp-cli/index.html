@@ -204,6 +204,36 @@ show interfaces address	查看接口ip
 show bridge-domain	查看bridge 接口情况
 </code></pre>
 
+<pre><code class="language-shell">1.查询路由
+ show ip fib
+ show ip6 fib
+ show l2fib
+ 
+2.查询用户信息
+show upf session up seid X debug
+
+打开调试开关
+set upf log level 255 
+set upf log level 0
+
+3.trace
+trace add dpdk-input 200
+show trace max 100
+clear trace
+
+4.接口抓包：
+接口收包
+ pcap rx trace on max 100 intfc GigabitEthernet1/0/0 file 1234.pcap 
+ pcap rx trace off
+接口发出的包
+ pcap tx trace on max 100 intfc GigabitEthernet1/0/0 file 1234.pcap 
+ pcap tx trace off
+
+5.统计
+clear upf dbgcnt
+show upf dbgcnt
+</code></pre>
+
                         </div>
 						<br>
 						<br>
