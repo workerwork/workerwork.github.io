@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-feature/" title="vpp feature" >vpp feature</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 背景和概念  早期的VPP本身的node框架比较固定，各个node之间逻辑连接已经固化,为此新版本增加了feature机制.
+ 每个feature是一个node，用户可以启用/停止某个或某些feature
+ 用户也可以自己写插件，把自定义node（自己的业务逻辑）加入到指定位置
+  2. 重要数据结构和操作函数 # # vnet_feature_arc_registration_t # ---------------------------------- # vpp将feature分成不同的组，每组feature称为一个arc # arc中的feature按照代码指定的顺序串接起来 # arc结构将记录这组feature的起始node和结束node # 系统初始化时完成每个feature的连接 # vnet/feature/feature.h +38 /** feature registration object */ typedef struct _vnet_feature_arc_registration { /** next registration in list of all registrations*/ struct _vnet_feature_arc_registration *next; /** Feature Arc name */ char *arc_name; /** Start nodes */ char **start_nodes; int n_start_nodes; /** End of the arc (optional, for consistency-checking) */ char *last_in_arc; /* Feature arc index, assigned by init function */ u8 feature_arc_index; u8 *arc_index_ptr; } vnet_feature_arc_registration_t; # VNET_FEATURE_ARC_INIT宏用来注册arc # ---------------------------------- # 在arc中指定的起始node中，必须调用vnet_feature_arc_start函数， # 才能正式进入feature机制业务流程，该函数会将下一跳强行指定为arc中的下一个feature # 先初始化arc VNET_FEATURE_ARC_INIT (device_input, static) = { .……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-feature/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/wcg-deps/" title="WCG-deps-install" >WCG-deps-install</a>
                                 </h1>
                             </header>
@@ -358,6 +384,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
@@ -391,10 +421,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
     </li>
     
 </ul>
@@ -475,7 +501,7 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
     </li>
     
     <li>
@@ -508,6 +534,8 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     

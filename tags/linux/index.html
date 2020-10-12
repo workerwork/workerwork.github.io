@@ -80,6 +80,42 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-cli/">vpp-cli命令行总结</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年9月17日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 介绍 vpp网络协议栈配备了一组调试命令。访问CLI（具有适当权限）的最简单方法是使用vppctl命令:
+sudo vppctl &lt;cli command&gt;  CLI解析器匹配静态的关键字字符串后，调用动作执行函数。 你可以通过在代码源文件中搜索VLIB_CLI_COMMAND宏的来查找CLI命令的源代码.
+2. 调试和Telnet CLI 使用unix交互式参数或启动配置选项启用调试CLI。 这会导致VPP不以守护进程的情况启动，并在运行它的终端上显示命令行界面.
+使用cli-listen localhost:5002选项启用Telnet CLI，这将导致VPP侦听localhost地址端口5002上的TCP连接。 然后，Telnet客户端可以连接到此端口（例如，telnet localhost 5002）并将收到命令行提示符。
+以下配置将启用这两种机制：
+unix { interactive cli-listen localhost:5002 }  CLI以横幅图形（可以禁用）和命令行提示符提示CLI开始。对于VPP的发布版本，命令行提示符通常为“vpp”， 对于启用了调试功能的开发版本，命令行提示符为“DBGvpp＃”,可以通过unix cli-prompt设置命令行提示符， 并通过unix cli-no-banner来禁止横幅.
+3. CLI特征  &lt;-或-&gt; 左右光标键，在命令行内移动光标。 Ctrl-左/右将向左或向右搜索下一个单词的开头。 Home / end将光标跳转到行的开头和结尾。 可以使用exit命令关闭CLI。 或者，空输入行上的^ D也将关闭会话。关闭调试会话也将关闭VPP  4. 命令行参数与配置文件 VPP网络协议栈可以在命令行或配置文件中提供配置参数。 您可以通过搜索VLIB_CONFIG_FUNCTION宏在源代码中找到命令行参数解析器的相关代码。 调用VLIB_CONFIG_FUNCTION（foo_config，“foo”）将使函数foo_config接收名为“foo”的参数块中给出的所有参数， 例如：“foo {arg1 arg2 arg3 &hellip;}”
+VPP应用程序必须能够找到自己的可执行映像。确保这一点最简单方法是通过给出其绝对路径来调用VPP应用程序;
+例如：/usr/bin/vpp 。
+在启动时，VPP应用程序通过解析自己的ELF段以生成初始化，配置和退出处理程序的列表
+配置文件：
+还可以在启动配置文件中提供命令行参数，配置文件的路径在命令行上提供给VPP应用程序。
+配置文件的格式是一个简单的文本文件，其内容与命令行相同，但是能够使用换行符使内容更加易于阅读。 例如：
+unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } api-trace { on } dpdk { dev 0000:03:00.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-cli/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/shm/">Shared Memory</a>
                                 </h1>
                             </header>
@@ -298,29 +334,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/rust-game/">使用rust语言&#43;SDL2库写游戏</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月8日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/rust">rust</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -369,6 +382,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
@@ -402,10 +419,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
     </li>
     
 </ul>
@@ -486,7 +499,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
     </li>
     
     <li>
@@ -519,6 +532,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     

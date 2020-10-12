@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/rust-game/">使用rust语言&#43;SDL2库写游戏</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月8日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/rust">rust</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/frp/">frp内网穿透</a>
                                 </h1>
                             </header>
@@ -314,31 +337,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/kernel-module/">kernel module编程</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月17日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. Linux Kernel Module是什么 Linux Kernel Module是一段可以在运行时被加载到Linux Kernel中的代码，可以使用Kernel Functions。Linux Kernel Module的用途很广，最常见的例子就是Device Driver，也就是设备驱动程序。
-如果没有Linux Kernel Module，每一行修改Kernel代码，每一个新增的Kernel功能特性，都需要重新编译Kernel，大大浪费了时间和效率。
-2. kernel module编程 [root@localhost test]# ll 总用量 16 -rw-r--r--. 1 root root 728 4月 17 10:28 hello.c -rw-r--r--. 1 root root 229 4月 17 10:24 Makefile -rw-r--r--. 1 root root 190 4月 17 10:26 mymax.c -rw-r--r--. 1 root root 70 4月 17 10:17 mymax.h  [root@localhost test]# cat hello.c #include &lt;linux/init.h&gt;	/* Needed for the module-macros */ #include &lt;linux/module.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-module/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -391,6 +389,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
@@ -424,10 +426,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面">ubuntu18.04使用xrdp远程桌面</a>
     </li>
     
 </ul>
@@ -508,7 +506,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(5)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
     </li>
     
     <li>
@@ -541,6 +539,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     
