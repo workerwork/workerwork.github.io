@@ -70,6 +70,33 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/drone/" title="使用docker-compose搭建drone服务器" >使用docker-compose搭建drone服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. docker-compose介绍 docker-compose文档：https://docs.docker.com/compose/
+drone文档：https://docs.drone.io/
+2. 安装docker-compose yum -y install epel-release yum -y install python-pip pip install --upgrade pip pip install docker-compose #安装补全工具 yum install bash-completion curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose &gt; /etc/bash_completion.d/docker-compose  3. 建立工作路径 mkdir docker-workspace cd docker-workspace  4. 创建docker-compose.yaml version: '2' services: #gogs: #image: gogs/gogs:latest #ports: # - &quot;10022:22&quot; # - 3000:3000 #volumes: # - /vagrant/gogs-data:/data #restart: always #mysql: #image: mysql:latest #ports: # - 3306:3306 #volumes: # - /vagrant/mysql-data:/var/lib/mysql #restart: always #environment: # - MYSQL_ROOT_PASSWORD=baicells # - MYSQL_DATABASE=gogs drone-server: image: drone/drone:latest ports: - 8000:8000 - 9000:9000 volumes: - /var/lib/drone:/var/lib/drone restart: always environment: # 开启注册，此配置允许任何人自注册和登录系统 - DRONE_OPEN=true #直接配置172.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/drone/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器" >搭建jenkins服务器</a>
                                 </h1>
                             </header>
@@ -334,7 +361,15 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/page/5/">5</a>
     </li>
     
+    <li >
+        <a href="https://workerwork.github.io/page/6/">6</a>
+    </li>
+    
 
+    
+    <li class="next">
+        <a href="https://workerwork.github.io/page/6/">下一页</a>
+    </li>
     
 </ol>
 
@@ -356,6 +391,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
@@ -393,10 +432,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
         <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -409,6 +444,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <li>
         <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/crash/">crash(1)</a>
     </li>
     
     <li>
@@ -497,6 +536,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/crash/">crash</a>
     
     <a href="https://workerwork.github.io/tags/deb/">deb</a>
     
@@ -597,6 +638,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmcore/">vmcore</a>
     
     <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
     

@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析" >vpp编译分析</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月15日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载源码 git clone http://192.168.9.105:60080/UPF/upf-vpp.git  2. 编译选项 1.make install-dep #install software dependencies 2.make wipe(wipe-release) #wipe all products 3.make build(build-release) #build binaries 4.make install-ext-deps #install external development dependencies(about dpdk) 5.make pkg-deb #build DEB packages  3. deb包 root@localhost:/home/ubuntu/work/upf-vpp# ll build-root/*.deb -rw-r--r-- 1 root root 184920 Jun 22 19:33 build-root/libvppinfra_19.08.1-21~g512cdac9c-dirty_amd64.deb -rw-r--r-- 1 root root 145112 Jun 22 19:33 build-root/libvppinfra-dev_19.08.1-21~g512cdac9c-dirty_amd64.deb -rw-r--r-- 1 root root 22456 Jun 22 19:33 build-root/python3-vpp-api_19.08.1-21~g512cdac9c-dirty_amd64.deb -rw-r--r-- 1 root root 3313088 Jun 22 19:33 build-root/vpp_19.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-debs/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/remote-desktop/" title="ubuntu18.04使用xrdp远程桌面" >ubuntu18.04使用xrdp远程桌面</a>
                                 </h1>
                             </header>
@@ -290,30 +313,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-sample-plugin/" title="vpp sample plugin" >vpp sample plugin</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月28日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. plugin_sample.c 在此文件中定义feature和cli
-#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点 &quot;plugin_sample&quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -346,6 +345,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
         <a href="https://workerwork.github.io/page/5/">5</a>
     </li>
     
+    <li >
+        <a href="https://workerwork.github.io/page/6/">6</a>
+    </li>
+    
 
     
     <li class="next">
@@ -372,6 +375,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
@@ -409,10 +416,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
         <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -425,6 +428,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/crash/">crash(1)</a>
     </li>
     
     <li>
@@ -513,6 +520,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/crash/">crash</a>
     
     <a href="https://workerwork.github.io/tags/deb/">deb</a>
     
@@ -613,6 +622,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmcore/">vmcore</a>
     
     <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
     

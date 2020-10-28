@@ -80,6 +80,33 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vmcore/">Linux 内核调试 kdump vmcore</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年10月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/crash">crash</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. kdump介绍 linux内核发送崩溃时，kdump会生成一个内核转储文件vmcore。 可以通过分析vmcore分析出内核崩溃的原因.
+crash是一个被广泛应用的内核奔溃转储文件分析工具.
+使用crash调试内核转储文件，需要安装crash工具和内核调试工具kernel-debuginfo.
+2. 安装kdump crash kexec-tools 一般在系统镜像文件中就有相对应的rpm包
+3. 配置kdump vim /boot/grub/menu.lst： 设置 crashkernel=auto vim /etc/kdump.conf： path /var/crash （core文件产生的目录）  4. 启动kdump systemctl start kdump  5. 安装kernel-debuginfo 下载内核版本对应的文件 kernel-debuginfo-3.10.0-957.el7.x86_64.rpm kernel-debuginfo-common-x86_64-3.10.0-957.el7.x86_64.rpm  6. 分析vmcore abrt-cli list crash /usr/lib/debug/lib/modules/3.10.0-957.el7.x86_64/vmlinux vmcore crash&gt; bt PID: 7473 TASK: ffff9027d874bf40 CPU: 0 COMMAND: &quot;cat&quot; #0 [ffff9026d0ea3638] machine_kexec at ffffffffbd060b2a #1 [ffff9026d0ea3698] __crash_kexec at ffffffffbd113402 #2 [ffff9026d0ea3768] crash_kexec at ffffffffbd1134f0 #3 [ffff9026d0ea3780] oops_end at ffffffffbd717778 #4 [ffff9026d0ea37a8] no_context at ffffffffbd706f98 #5 [ffff9026d0ea37f8] __bad_area_nosemaphore at ffffffffbd70702f #6 [ffff9026d0ea3848] bad_area_nosemaphore at ffffffffbd7071a0 #7 [ffff9026d0ea3858] __do_page_fault at ffffffffbd71a730 #8 [ffff9026d0ea38c0] do_page_fault at ffffffffbd71a925 #9 [ffff9026d0ea38f0] page_fault at ffffffffbd716768 [exception RIP: strcmp+32] RIP: ffffffffbd353d20 RSP: ffff9026d0ea39a0 RFLAGS: 00010202 RAX: 000000000000002f RBX: ffff90240da5a080 RCX: 0000000000000000 RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9026cd27fc11 RBP: ffff9026d0ea39a0 R8: 00000000004b1de2 R9: ffff9026cd27fc10 R10: ffff90253fc01d00 R11: ffffc0428c349fc0 R12: 0000000000000001 R13: ffff9026cd27fc10 R14: 0000000000000001 R15: ffff9027c16f1580 ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018 #10 [ffff9026d0ea39a8] send_log at ffffffffc0c22fd5 [xx] #11 [ffff9026d0ea3ac0] user_file at ffffffffc0c0c571 [xx] #12 [ffff9026d0ea3f00] sys_open at ffffffffc0c56670 [xxt] #13 [ffff9026d0ea3f50] system_call_fastpath at ffffffffbd71f7d5 RIP: 00007f2e860c2a30 RSP: 00007fff6d8755a8 RFLAGS: 00010202 RAX: 0000000000000002 RBX: 00007fff6d875868 RCX: 000000000060bc60 RDX: 1fffffffffff0000 RSI: 0000000000000000 RDI: 00007fff6d876293 RBP: 0000000000001000 R8: 0000000000000000 R9: 0000000000000000 R10: 00007fff6d875020 R11: 0000000000000246 R12: 0000000000402644 R13: 0000000000010000 R14: 0000000000000000 R15: 0000000000000000 ORIG_RAX: 0000000000000002 CS: 0033 SS: 002b crash&gt; dis -l ffffffffbd353d20 /usr/src/debug/kernel-3.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/vmcore/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-cli/">vpp-cli命令行总结</a>
                                 </h1>
                             </header>
@@ -313,30 +340,6 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/remote-desktop/">ubuntu18.04使用xrdp远程桌面</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月11日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/ubuntu">ubuntu</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 执行下面的脚本安装 http://www.c-nergy.be/downloads/install-xrdp-3.0.zip
-root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bash ##################################################################################################### # Script_Name : install-xrdp-3.0.sh # Description : Perform a custom installation of xrdp # on ubuntu 18.04 and later # Date : May 2019 # written by : Griffon # Web Site :http://www.c-nergy.be - http://www.c-nergy.be/blog # Version : 3.0 # History : 3.0 - Added support for Ubuntu 19.04 # - New code for Look'n feel using xsessionrc method # - New code for enabling Sound Redirection - compiling from source # - Removed -g parameter # : 2.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/remote-desktop/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -385,6 +388,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
     </li>
     
@@ -420,10 +427,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
         <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-debs/" title="vpp编译分析">vpp编译分析</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -436,6 +439,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     
     <li>
         <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/crash/">crash(1)</a>
     </li>
     
     <li>
@@ -524,6 +531,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/crash/">crash</a>
     
     <a href="https://workerwork.github.io/tags/deb/">deb</a>
     
@@ -624,6 +633,8 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     <a href="https://workerwork.github.io/tags/video/">video</a>
     
     <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmcore/">vmcore</a>
     
     <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
     

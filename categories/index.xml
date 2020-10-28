@@ -6,10 +6,19 @@
     <description>Recent content in Categories on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 17 Sep 2020 17:37:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 28 Oct 2020 11:42:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>crash</title>
+      <link>https://workerwork.github.io/categories/crash/</link>
+      <pubDate>Wed, 28 Oct 2020 11:42:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/categories/crash/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>vpp</title>
