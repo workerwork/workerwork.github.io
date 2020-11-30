@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器" >使用caddy搭建文件服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
+2. 下载caddy 从官网下载caddy，下载时选择需要的插件
+3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.log errors errors.log } 192.168.9.105:80 { proxy / http://192.168.103.147:80 } 192.168.9.105:5566 { gzip root test }  5. 运行caddy caddy &amp;  6.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/drone/" title="使用docker-compose搭建drone服务器" >使用docker-compose搭建drone服务器</a>
                                 </h1>
                             </header>
@@ -306,29 +331,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
                             <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年1月21日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/hugo">hugo</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                this is the first test for hugo!……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/my-first-post/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -393,6 +395,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
@@ -426,10 +432,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <li>
         <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
 </ul>
@@ -471,7 +473,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
     </li>
     
     <li>
@@ -630,6 +632,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

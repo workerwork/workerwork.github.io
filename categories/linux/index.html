@@ -80,6 +80,40 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/system-map/">Linux 内核符号表</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年11月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 什么是符号(symbols) 什么是Symbol?
+其实就是kernel中的变量(VariableName)或函数名称(Function Name)
+这样可以方便程序员在写程序时可以直接参照这一份Symbol的索引文件，找到所需要的kernel信息，
+这一份Symbol的索引文件又称为kernel symbol table
+2. 内核符号表(Kernel Symbol Table) 内核符号表，就是在内核的内部函数或变量中，可供外部引用的函数和变量的符号表.
+其实就是一个索引文件，它存在的目的就是让外部软件可以知道kernel文件内部实际分配的位置.
+编译内核时，System.map文件用于存放内核符号表信息
+System.map文件位于/或者/boot、/usr/src/linux/下
+3. kallsyms 内核启动时候创建,供oops时定位错误，文件大小总为0，包含当前内核导出的、可供使用的变量或者函数；它只是内核数据的简单表示形式.
+/proc/kallsyms是一个在启动时由Linux kernel实时产生的文件，当系统有任何变更时，它就会马上做出修正
+可以理解为动态的符号表
+4. 符号类型    符号类型 名称 说明     A Absolute 符号的值是绝对值，并且在进一步链接过程中不会被改变   B BSS 符号在未初始化数据区或区（section）中，即在BSS段中   C Common 符号是公共的。公共符号是未初始化的数据。在链接时，多个公共符号可能具有同一名称。如果该符号定义在其他地方，则公共符号被看作是未定义的引用   D Data 符号在已初始化数据区中   G Global 符号是在小对象已初始化数据区中的符号。某些目标文件的格式允许对小数据对象（例如一个全局整型变量）可进行更有效的访问   I Inderect 符号是对另一个符号的间接引用   N Debugging 符号是一个调试符号   R Read only 符号在一个只读数据区中   S Small 符号是小对象未初始化数据区中的符号   T Text 符号是代码区中的符号   U Undefined 符号是外部的，并且其值为0（未定义   - Stabs 符号是a.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/system-map/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/video-server/">video server</a>
                                 </h1>
                             </header>
@@ -316,31 +350,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/centos-good/">CentOS7系统优化</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月30日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                                    <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# cat /etc/resolv.conf #查看修改后的DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# systemctl restart network #重启网卡，生效  2.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -385,6 +394,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
@@ -418,10 +431,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <li>
         <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
 </ul>
@@ -463,7 +472,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
     </li>
     
     <li>
@@ -622,6 +631,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

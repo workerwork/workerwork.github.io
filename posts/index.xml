@@ -6,10 +6,30 @@
     <description>Recent content in Posts on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 28 Oct 2020 11:42:51 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Nov 2020 12:09:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux 内核符号表</title>
+      <link>https://workerwork.github.io/posts/system-map/</link>
+      <pubDate>Mon, 30 Nov 2020 12:09:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/system-map/</guid>
+      <description>1. 什么是符号(symbols) 什么是Symbol?
+其实就是kernel中的变量(VariableName)或函数名称(Function Name)
+这样可以方便程序员在写程序时可以直接参照这一份Symbol的索引文件，找到所需要的kernel信息，
+这一份Symbol的索引文件又称为kernel symbol table
+2. 内核符号表(Kernel Symbol Table) 内核符号表，就是在内核的内部函数或变量中，可供外部引用的函数和变量的符号表.
+其实就是一个索引文件，它存在的目的就是让外部软件可以知道kernel文件内部实际分配的位置.
+编译内核时，System.map文件用于存放内核符号表信息
+System.map文件位于/或者/boot、/usr/src/linux/下
+3. kallsyms 内核启动时候创建,供oops时定位错误，文件大小总为0，包含当前内核导出的、可供使用的变量或者函数；它只是内核数据的简单表示形式.
+/proc/kallsyms是一个在启动时由Linux kernel实时产生的文件，当系统有任何变更时，它就会马上做出修正
+可以理解为动态的符号表
+4. 符号类型    符号类型 名称 说明     A Absolute 符号的值是绝对值，并且在进一步链接过程中不会被改变   B BSS 符号在未初始化数据区或区（section）中，即在BSS段中   C Common 符号是公共的。公共符号是未初始化的数据。在链接时，多个公共符号可能具有同一名称。如果该符号定义在其他地方，则公共符号被看作是未定义的引用   D Data 符号在已初始化数据区中   G Global 符号是在小对象已初始化数据区中的符号。某些目标文件的格式允许对小数据对象（例如一个全局整型变量）可进行更有效的访问   I Inderect 符号是对另一个符号的间接引用   N Debugging 符号是一个调试符号   R Read only 符号在一个只读数据区中   S Small 符号是小对象未初始化数据区中的符号   T Text 符号是代码区中的符号   U Undefined 符号是外部的，并且其值为0（未定义   - Stabs 符号是a.</description>
+    </item>
     
     <item>
       <title>Linux 内核调试 kdump vmcore</title>

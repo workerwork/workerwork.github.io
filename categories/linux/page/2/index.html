@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/centos-good/">CentOS7系统优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                                    <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# cat /etc/resolv.conf #查看修改后的DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# systemctl restart network #重启网卡，生效  2.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/security/">CentOS7安全加固</a>
                                 </h1>
                             </header>
@@ -197,6 +222,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
@@ -230,10 +259,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名">网卡命名</a>
     </li>
     
 </ul>
@@ -275,7 +300,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(13)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
     </li>
     
     <li>
@@ -434,6 +459,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
