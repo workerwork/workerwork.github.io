@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年1月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1 前言 1.1 术语    英文缩写 英文全称 中文全称     eGW enterprise gateway 企业网关   OMC operation and maintenance center 操作管理中心    1.2 目的 本文档用来指导安装部署业务网关
+2 安装指导 2.1 安装系统 系统版本要求：centos7.2
+安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
+2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/my-first-post/" title="My First Post" >My First Post</a>
                                 </h1>
                             </header>
@@ -150,6 +176,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
@@ -183,10 +213,6 @@
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
 </ul>
@@ -228,7 +254,7 @@
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
     </li>
     
     <li>
@@ -330,6 +356,8 @@
     
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
     <a href="https://workerwork.github.io/tags/ha/">ha</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -355,6 +383,8 @@
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
@@ -389,6 +419,8 @@
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/keepalived/">keepalived应用</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 监控脚本 在Master节点和Slave节点 /etc/keepalived目录下添加check_nginx.sh 文件，用于检测Nginx的存活状况
+#!/bin/bash #时间变量，用于记录日志 d=`date --date today +%Y%m%d_%H:%M:%S` #计算nginx进程数量 n=`ps -C nginx --no-heading|wc -l` #如果进程为0，则尝试启动nginx，并且再次检测nginx进程数量， #如果还为0，说明nginx无法启动，此时需要关闭keepalived if [ $n -eq &quot;0&quot; ]; then #如果挂掉了，就启动nginx #注意nginx.conf配置文件的位置 #尝试重新启动nginx /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf sleep 3 #睡眠3秒 n2=`ps -C nginx --no-heading|wc -l` if [ $n2 -eq &quot;0&quot; ]; then #把nginx宕机时间写入日志 echo &quot;$d nginx down,keepalived will stop&quot; &gt;&gt; /usr/local/nginx/logs/check_ng.log #启动失败，将keepalived服务杀死。将vip漂移到其它备份节点 service keepalived stop fi fi  授权: chmod 755 /etc/keepalived/check_nginx.sh
+2. 非抢占模式 在Master 节点 /etc/keepalived目录下，配置keepalived.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/keepalived/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/eth-name/">网卡命名</a>
                                 </h1>
                             </header>
@@ -304,29 +329,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/wcg-deps/">WCG-deps-install</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ########################################################## # wcg-deps-install.sh # version:1.0 # update:20181120 ########################################################## DIR=&quot;/home/wcg/WCG-deps&quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;&amp; rpm -Uvh *.rpm --force --nodeps &amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;&amp; rpm -Uvh *.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-deps/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -379,6 +381,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
@@ -412,10 +418,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
 </ul>
@@ -457,7 +459,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
     </li>
     
     <li>
@@ -559,6 +561,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
     <a href="https://workerwork.github.io/tags/ha/">ha</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -584,6 +588,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
@@ -618,6 +624,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

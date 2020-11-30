@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/wcg-kernel/" title="WCG内核修改" >WCG内核修改</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月14日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/kernel">kernel</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 下载源代码包 从 http://vault.centos.org 下载内核源代码RPM包
+2. 安装源代码包 [root@wcg-9-73 df]# rpm -ivh kernel-3.10.0-1062.el7.src.rpm  执行命令后会生成/root/rpmbuild路径,包含SPECS和SOURCES
+3. 修改源码 [root@wcg-9-73 df]# cd /root/rpmbuild/SOURCES [root@wcg-9-73 SOURCES]# xz -d linux-3.10.0-1062.el7.tar.xz [root@wcg-9-73 SOURCES]# tar -xvf linux-3.10.0-1062.el7.tar #将修改后的代码替换 [root@wcg-9-73 SOURCES]# cd linux-3.10.0-1062.el7/ [root@wcg-9-73 linux-3.10.0-1062.el]# cd net/ipv4/ [root@wcg-9-73 ipv4]# rm -rf udp.c &amp;&amp; cp -rf /root/df/udp.c . [root@wcg-9-73 ipv4]# cd ../../include/uapi/linux/ [root@wcg-9-73 linux]# rm -rf udp.h &amp;&amp; cp -rf /root/df/udp.h . [root@wcg-9-73 linux]# cd ../../../ [root@wcg-9-73 SOURCES]# tar -cvf linux-3.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-kernel/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C" >Build 5GC-C</a>
                                 </h1>
                             </header>
@@ -254,30 +279,6 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
                             <p class="readmore"><a href="https://workerwork.github.io/posts/security/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD" >EPC的CI/CD</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月29日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
-2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}') - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot; - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff - cd /root/df/caddy/yum.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -342,6 +343,10 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
@@ -375,10 +380,6 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
 </ul>
@@ -420,7 +421,7 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
     </li>
     
     <li>
@@ -522,6 +523,8 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
     <a href="https://workerwork.github.io/tags/ha/">ha</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -547,6 +550,8 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
@@ -581,6 +586,8 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

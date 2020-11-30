@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gso on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/gso/</link>
+    <description>Recent content in gso on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 30 Nov 2020 17:03:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/gso/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>网卡offload GSO</title>
+      <link>https://workerwork.github.io/posts/gso/</link>
+      <pubDate>Mon, 30 Nov 2020 17:03:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/gso/</guid>
+      <description> 1. GSO和TSO TSO(TCP Segmentation Offload): 是一种利用网卡来对大数据包进行自动分段，降低CPU负载的技术。 其主要是延迟分段
+GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送到网卡之前判断网卡是否支持TSO，如果网卡支持TSO则让网卡分段，否则协议栈分完段再交给驱动
+如果TSO开启，GSO会自动开启
+驱动程序在注册网卡设备的时候默认开启GSO: NETIF_F_GSO
+驱动程序会根据网卡硬件是否支持来设置TSO: NETIF_F_TSO
+可以通过ethtool -K来开关GSO/TSO
+2. 开启关系 GSO开启， TSO开启: 协议栈推迟分段，并直接传递大数据包到网卡，让网卡自动分段 GSO开启， TSO关闭: 协议栈推迟分段，在最后发送到网卡前才执行分段 GSO关闭， TSO开启: 同GSO开启， TSO开启 GSO关闭， TSO关闭: 不推迟分段，在tcp_sendmsg中直接发送MSS大小的数据包  对紧急数据包或GSO/TSO都不开启的情况，才不会推迟发送， 默认使用当前MSS
+开启GSO后，tcp_send_mss返回mss和单个skb的GSO大小，为mss的整数倍
+3. 包处理流程图 </description>
+    </item>
+    
+  </channel>
+</rss>

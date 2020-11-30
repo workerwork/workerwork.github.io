@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用" >keepalived应用</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 监控脚本 在Master节点和Slave节点 /etc/keepalived目录下添加check_nginx.sh 文件，用于检测Nginx的存活状况
+#!/bin/bash #时间变量，用于记录日志 d=`date --date today +%Y%m%d_%H:%M:%S` #计算nginx进程数量 n=`ps -C nginx --no-heading|wc -l` #如果进程为0，则尝试启动nginx，并且再次检测nginx进程数量， #如果还为0，说明nginx无法启动，此时需要关闭keepalived if [ $n -eq &quot;0&quot; ]; then #如果挂掉了，就启动nginx #注意nginx.conf配置文件的位置 #尝试重新启动nginx /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf sleep 3 #睡眠3秒 n2=`ps -C nginx --no-heading|wc -l` if [ $n2 -eq &quot;0&quot; ]; then #把nginx宕机时间写入日志 echo &quot;$d nginx down,keepalived will stop&quot; &gt;&gt; /usr/local/nginx/logs/check_ng.log #启动失败，将keepalived服务杀死。将vip漂移到其它备份节点 service keepalived stop fi fi  授权: chmod 755 /etc/keepalived/check_nginx.sh
+2. 非抢占模式 在Master 节点 /etc/keepalived目录下，配置keepalived.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/keepalived/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/eth-name/" title="网卡命名" >网卡命名</a>
                                 </h1>
                             </header>
@@ -293,31 +318,6 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
                             <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-node-graph/" title="vpp node-graph编排过程" >vpp node-graph编排过程</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月30日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/vpp">vpp</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
-2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
-typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &lt;&lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -382,6 +382,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
@@ -415,10 +419,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
 </ul>
@@ -460,7 +460,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
     </li>
     
     <li>
@@ -562,6 +562,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
     <a href="https://workerwork.github.io/tags/ha/">ha</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -587,6 +589,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
@@ -621,6 +625,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     

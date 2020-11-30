@@ -80,6 +80,37 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gso/">网卡offload GSO</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年11月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                 1. GSO和TSO TSO(TCP Segmentation Offload): 是一种利用网卡来对大数据包进行自动分段，降低CPU负载的技术。 其主要是延迟分段
+GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送到网卡之前判断网卡是否支持TSO，如果网卡支持TSO则让网卡分段，否则协议栈分完段再交给驱动
+如果TSO开启，GSO会自动开启
+驱动程序在注册网卡设备的时候默认开启GSO: NETIF_F_GSO
+驱动程序会根据网卡硬件是否支持来设置TSO: NETIF_F_TSO
+可以通过ethtool -K来开关GSO/TSO
+2. 开启关系 GSO开启， TSO开启: 协议栈推迟分段，并直接传递大数据包到网卡，让网卡自动分段 GSO开启， TSO关闭: 协议栈推迟分段，在最后发送到网卡前才执行分段 GSO关闭， TSO开启: 同GSO开启， TSO开启 GSO关闭， TSO关闭: 不推迟分段，在tcp_sendmsg中直接发送MSS大小的数据包  对紧急数据包或GSO/TSO都不开启的情况，才不会推迟发送， 默认使用当前MSS
+开启GSO后，tcp_send_mss返回mss和单个skb的GSO大小，为mss的整数倍
+3. 包处理流程图 ……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/gso/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/system-map/">Linux 内核符号表</a>
                                 </h1>
                             </header>
@@ -318,38 +349,6 @@ git config --global -l  在使用 git 开头的路径时，也就是在使用 ss
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/affinity/">cpu亲和性</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月20日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
-软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
-硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
-解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
-cpus_allowed用于控制进程可以在哪里处理器上运行
-sched_set_affinity() （用来修改位掩码）
-sched_get_affinity() （用来查看当前的位掩码）
-2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
-在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
-SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &lt;sched.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/affinity/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -394,6 +393,10 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
@@ -427,10 +430,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <li>
         <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用">keepalived应用</a>
     </li>
     
 </ul>
@@ -472,7 +471,7 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(14)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
     </li>
     
     <li>
@@ -574,6 +573,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     
     <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
     
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
     <a href="https://workerwork.github.io/tags/ha/">ha</a>
     
     <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
@@ -599,6 +600,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/linux/">linux</a>
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
@@ -633,6 +636,8 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
     
     <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
     
