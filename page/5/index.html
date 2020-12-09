@@ -70,6 +70,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/security/" title="CentOS7安全加固" >CentOS7安全加固</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月30日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 账号和口令 1 ）禁用或删除无用账号 减少系统无用账号，降低安全风险
+#删除不必要的账号 userdel &lt;用户名&gt; #锁定不必要的账号 passwd -l &lt;用户名&gt; #解锁必要的账号 passwd -u &lt;用户名&gt;  2 ）检查特殊账号 检查是否存在空口令和root权限的账号
+#查看空口令账号 awk -F: '($2==&quot;&quot;)' /etc/shadow #为空口令账号设定密码 passwd &lt;用户名&gt; #查看UID为零的账号，确认只有root账号 awk -F: '($3==0)' /etc/passwd  3 ）添加口令策略 加强口令的复杂度，降低被猜解的可能性
+vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最长使用天数 PASS_MIN_DAYS 0 #新建用户的密码最短使用天数 PASS_WARN_AGE 7 #新建用户的密码到期提前提醒天数 #或者使用chage命令修改用户设置 #将此用户的密码最长使用天数设为30，最短使用天数设为0，密码2000年1月1日过期，过期前七天警告用户 chage -m 0 -M 30 -E 2000-01-01 -W 7 &lt;用户名&gt; #设置连续输错三次密码，账号锁定五分钟 vi /etc/pam.d/common-auth 修改配置文件，添加 auth required pam_tally.so onerr=fail deny=3 unlock_time=300  4 ）限制用户su 限制能su到root的用户……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/security/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD" >EPC的CI/CD</a>
                                 </h1>
                             </header>
@@ -302,33 +330,6 @@ custom solutions 最完整的方式，从零开始二进制搭建
                             <p class="readmore"><a href="https://workerwork.github.io/posts/kubernetes-deploy/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/auto-epc/" title="AUTO-EPC" >AUTO-EPC</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年2月20日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">DEVOPS</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                AUTO-EPC 使用方法 1 安装本地yum源 在ssh终端任意路径下，使用root用户执行
-wget http://192.168.9.105:60080/dongfeng/local-yum/raw/master/install-local-repo.sh | sh  2 软件安装和升级 2.1 一般版本安装和升级 如果是初始安装,执行
-yum install [rpm包名]  如果是升级，执行
-yum update [rpm包名]  2.2 特定版本安装和升级 在本地文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 中存有历史版本文件，取出升级即可
-EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm baicells-epc-signaltrace-1.0.0-2.x86_64_20190219_aa985a04ab.rpm baicells-epc-ovsdb-agent-1.0.1-1.x86_64_20190219_e3f0eca7eb.rpm baicells-epc-ovs-rest-1.0.0-2.x86_64_20190219_0c410e6e7d.rpm baicells-epc-openapi-2.0.0-1.x86_64_20190219_52edfb20ba.rpm baicells-epc-gwsc-1.0.0-2.x86_64_20190219_379c4f0e4b.rpm baicells-epc-base-2.0.0-1.x86_64_20190219_d0b3e89484.rpm baicells-epc-c-2.0.0-1.x86_64_20190219_d0b55fsf32.rpm baicells-epc-ovs-1.0.0-1.x86_64_20190219_d1333f1f34.rpm  EPC各组件代码仓库  base库 http://192.168.9.105:60080/dongfeng/epc-base ui库 http://192.168.9.105:60080/dongfeng/epc-ui onos库 http://192.168.9.105:60080/baicells/onos/src/softcn ovs-rest库 http://192.168.9.105:60080/baicells/ovs-rest ovsdb-config-agent库 http://192.168.9.105:60080/baicells/ovsdb-config-agent openapi库 http://192.168.9.105:60080/dongfeng/openapi signaltrace库 http://192.168.9.105:60080/dongfeng/signaltrace epc-c库 http://192.168.9.105:60080/dongfeng/epc-c ovs库 http://192.168.9.105:60080/dongfeng/ovs  RPM包构造方法  开发在git代码托管服务器http://192.168.9.105:60080 上提交更新代码 由web钩子触发后台drone自动使用fpm进行rpm打包 打包好的rpm包自动拷贝到文件共享服务器http://192.168.9.105:8888/files/EPC-VERSION/ 并自动更新本地yum仓库  RPM打包版本 版本说明 以baicells-epc-ui-3.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -393,6 +394,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
@@ -426,10 +431,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <li>
         <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/dpdk-devbind/" title="DPDK-Devbind">DPDK-Devbind</a>
     </li>
     
 </ul>
@@ -483,7 +484,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/rust/">rust(1)</a>
+        <a href="https://workerwork.github.io/categories/rust/">rust(2)</a>
     </li>
     
     <li>
@@ -546,6 +547,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
     
     <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/doc/">doc</a>
     
     <a href="https://workerwork.github.io/tags/docker/">docker</a>
     

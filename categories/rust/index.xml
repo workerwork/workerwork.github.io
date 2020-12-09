@@ -6,10 +6,19 @@
     <description>Recent content in rust on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 08 Jun 2020 15:57:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 09 Dec 2020 14:07:52 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/rust/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>rustdoc 范例</title>
+      <link>https://workerwork.github.io/posts/rustdoc/</link>
+      <pubDate>Wed, 09 Dec 2020 14:07:52 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/rustdoc/</guid>
+      <description>1. rust doc /// A human being is represented here pub struct Person { /// A person must have a name, no matter how much Juliet may hate it name: String, } impl Person { /// Returns a person with the name given them /// /// # Arguments /// /// * `name` - A string slice that holds the name of the person /// /// # Example /// /// ``` /// // You can have rust code between fences inside the comments /// // If you pass --test to Rustdoc, it will even test it for you!</description>
+    </item>
     
     <item>
       <title>使用rust语言&#43;SDL2库写游戏</title>
