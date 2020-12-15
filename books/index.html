@@ -434,6 +434,18 @@ http://xstarcd.github.io/wiki/shell/exec_redirect.html
 
 <h3 id="lib-x86-64-linux-gnu-ld-2-31-so-bin-ln-s-lib-x86-64-linux-gnu-ld-2-31-so-lib64-ld-linux-x86-64-so-2">/lib/x86_64-linux-gnu/ld-2.31.so /bin/ln -s /lib/x86_64-linux-gnu/ld-2.31.so /lib64/ld-linux-x86-64.so.2</h3>
 
+<h3 id="查看某个文件属于哪个安装包">查看某个文件属于哪个安装包</h3>
+
+<pre><code>dpkg-query -S $(which grub-install)
+或 dpkg -s $(which grub-install)
+</code></pre>
+
+<h3 id="查看包内容">查看包内容</h3>
+
+<pre><code>dpkg -L iperf3
+dpkg-deb -c deepin.com.wechat_2.6.8.65deepin0_i386.deb
+</code></pre>
+
                         </div>
 						<br>
 						<br>
