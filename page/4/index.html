@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm/" title="kvm虚拟机" >kvm虚拟机</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月15日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96">虚拟化</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 检查CPU是否支持kvm # egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes!&quot;  2. 配置yum源 # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo　//基础源 # wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo　//epel源 # yum clean all　//清空yum缓存  3. 安装虚拟机管理工具和依赖 # yum -y install qemu-kvm //KVM主程序，KVM虚拟化模块 # yum -y install virt-install //安装虚拟机的工具 # 这个包主要安装了virt-install、virt-clone和virt-xml命令，分别用于安装虚拟机系统、克隆虚拟机和编辑虚拟机的xml配置文件。 # yum -y install virt-manager //KVM图形化管理工具 # yum -y install libvirt //虚拟化服务库 # libvirt是用于管理虚拟化平台的开源的API（libvirt API），后台程序（libvirtd进程）和管理工具（virsh工具集）。 # 它可以用于管理KVM、Xen、VMware ESX，QEMU和其他虚拟化技术。这些API在云计算的解决方案中广泛使用。 # libvirtd进程主要实现远程代理、本地环境初始化、根据环境注册各种Driver（qemu、xen、storage）的实现。 # virsh工具集主要用于管理、操作虚拟主机。 # yum -y install libguestfs-tools //虚拟机的系统管理工具 # libguestfs -tools是一组Linux下的C语言的API，用来访问虚拟机的磁盘映像文件。 # 该工具包内包含的工具有virt-cat、virt-df、virt-list、virt-copy-in、virt-copy-out、 # virt-edit、guestfs、guestmount、virt-list-filesystems、virt-list-partitions等工具。 # 该工具可以在不启动KVM guest主机的情况下，直接查看guest主机内的文内容，也可以直接向img镜像中写入文件和复制文件到外面的物理机， # 也可以将guest的镜像文件挂载，功能相当强大 # yum -y install libvirt-python //python调用libvirt虚拟化服务的api接口库文件  4.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/kvm/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/self-kernel/" title="linux内核定制" >linux内核定制</a>
                                 </h1>
                             </header>
@@ -250,31 +273,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
                             <p class="readmore"><a href="https://workerwork.github.io/posts/vpp/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/centos-good/" title="CentOS7系统优化" >CentOS7系统优化</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月30日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8">安全</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 修改ip地址、网关、主机名、DNS等 [root@localhost ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 #网卡名字 BOOTPROTO=static #静态IP地址获取状态 如：DHCP表示自动获取IP地址 IPADDR=192.168.1.113 #IP地址 NETMASK=255.255.255.0 #子网掩码 ONBOOT=yes#引导时是否激活 GATEWAY=192.168.1.1 [root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0 DEVICE=eth0 BOOTPROTO=static IPADDR=192.168.1.113 NETMASK=255.255.255.0 ONBOOT=yes GATEWAY=192.168.1.1 [root@localhost ~]# vi /etc/sysconfig/network HOSTNAME=c64 #修改主机名，重启生效 GATEWAY=192.168.1.1 #修改默认网关,如果上面eth0里面不配置网关的话，默认就使用这里的网关了。 [root@localhost ~]# cat /etc/sysconfig/network HOSTNAME=c64 GATEWAY=192.168.1.1 我们也可以用 hostnamec64 来临时修改主机名，重新登录生效 修改DNS [root@localhost ~]# vi /etc/resolv.conf #修改DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# cat /etc/resolv.conf #查看修改后的DNS信息 nameserver 114.114.114.114 nameserver 8.8.8.8 [root@localhost ~]# systemctl restart network #重启网卡，生效  2.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/centos-good/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -339,6 +337,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
     </li>
     
@@ -372,10 +374,6 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     
     <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
 </ul>
@@ -417,7 +415,7 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(16)</a>
     </li>
     
     <li>
@@ -480,6 +478,10 @@ root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├�
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
+    
+    <a href="https://workerwork.github.io/tags/core/">core</a>
+    
+    <a href="https://workerwork.github.io/tags/coredump/">coredump</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     

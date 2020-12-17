@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/dpdk-devbind/">DPDK-Devbind</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/dpdk">dpdk</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                dpdk-devbind.py #! /usr/bin/env python # SPDX-License-Identifier: BSD-3-Clause # Copyright(c) 2010-2014 Intel Corporation # import sys import os import getopt import subprocess from os.path import exists, abspath, dirname, basename # The PCI base class for all devices network_class = {'Class': '02', 'Vendor': None, 'Device': None, 'SVendor': None, 'SDevice': None} encryption_class = {'Class': '10', 'Vendor': None, 'Device': None, 'SVendor': None, 'SDevice': None} intel_processor_class = {'Class': '0b', 'Vendor': '8086', 'Device': None, 'SVendor': None, 'SDevice': None} cavium_sso = {'Class': '08', 'Vendor': '177d', 'Device': 'a04b,a04d', 'SVendor': None, 'SDevice': None} cavium_fpa = {'Class': '08', 'Vendor': '177d', 'Device': 'a053', 'SVendor': None, 'SDevice': None} cavium_pkx = {'Class': '08', 'Vendor': '177d', 'Device': 'a0dd,a049', 'SVendor': None, 'SDevice': None} cavium_tim = {'Class': '08', 'Vendor': '177d', 'Device': 'a051', 'SVendor': None, 'SDevice': None} cavium_zip = {'Class': '12', 'Vendor': '177d', 'Device': 'a037', 'SVendor': None, 'SDevice': None} avp_vnic = {'Class': '05', 'Vendor': '1af4', 'Device': '1110', 'SVendor': None, 'SDevice': None} network_devices = [network_class, cavium_pkx, avp_vnic] crypto_devices = [encryption_class, intel_processor_class] eventdev_devices = [cavium_sso, cavium_tim] mempool_devices = [cavium_fpa] compress_devices = [cavium_zip] # global dict ethernet devices present.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/dpdk-devbind/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/keepalived/">keepalived应用</a>
                                 </h1>
                             </header>
@@ -305,30 +328,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-sample-plugin/">vpp sample plugin</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. plugin_sample.c 在此文件中定义feature和cli
-#include &lt;vnet/plugin/plugin.h&gt; #include &lt;plugin_sample/plugin_sample.h&gt; plugin_sample_main_t plugin_sample_main; //开关实现 int plugin_sample_enable_disable(u32 sw_if_index, //index int enable_disable)	//开关标识 { vnet_sw_interface_t *sw; int ret = 0; /* Utterly wrong? */ if (pool_is_free_index (plugin_sample_main.vnet_main-&gt;interface_main.sw_interfaces, //vnet_main结构中的interface_main结构中的sw接口 sw_if_index)) //接口索引 return VNET_API_ERROR_INVALID_SW_IF_INDEX; /* Not a physical port? */ sw = vnet_get_sw_interface(plugin_sample_main.vnet_main,	//vnet_main结构 sw_if_index);	if (sw-&gt;type != VNET_SW_INTERFACE_TYPE_HARDWARE) return VNET_API_ERROR_INVALID_SW_IF_INDEX; vnet_feature_enable_disable(&quot;ip4-unicast&quot;, //挂载节点 &quot;plugin_sample&quot;, sw_if_index, enable_disable, 0, 0); return ret; } static clib_error_t* plugin_sample_enable_disable_command_fn(vlib_main_t* vm,	//vlib_main结构 unformat_input_t *input, vlib_cli_command_t *cmd) { u32 sw_if_index = ~0;	//~0 取反= 1 int enable_disable = 1; while(unformat_check_input(input) !……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-sample-plugin/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -381,6 +380,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
     </li>
     
@@ -414,10 +417,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
 </ul>
@@ -459,7 +458,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(16)</a>
     </li>
     
     <li>
@@ -522,6 +521,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
+    
+    <a href="https://workerwork.github.io/tags/core/">core</a>
+    
+    <a href="https://workerwork.github.io/tags/coredump/">coredump</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     

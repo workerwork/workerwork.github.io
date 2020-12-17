@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>coredump on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/coredump/</link>
+    <description>Recent content in coredump on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 17 Dec 2020 10:27:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/coredump/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>linux coredump设置</title>
+      <link>https://workerwork.github.io/posts/core/</link>
+      <pubDate>Thu, 17 Dec 2020 10:27:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/core/</guid>
+      <description>1. core 在Linux下程序不寻常退出时，内核会在当前工作目录下生成一个core文件（是一个内存映像，同时加上调试信息，编译时需要加上 -g -Wall）。 使用gdb来查看core文件，可以指示出导致程序出错的代码所在文件和行数。  2. core文件的生成开关和大小限制 1.1 使用ulimit -c命令可查看core文件的生成开关 若结果为0，则表示关闭了此功能，不会生成core文件  1.2 使用ulimit -c filesize命令，可以限制core文件的大小（filesize的单位为kbyte） 如果生成的信息超过此大小，将会被裁剪，最终生成一个不完整的core文件或者根本就不生成。 如果生成被裁减的core文件，调试此core文件的时候，gdb也会提示错误。 用以下命令来表示core文件的大小不受限制. $ ulimit -c unlimited 用以下命令来阻止系统生成core文件: $ ulimit -c 0 备注:ulimit命令设置后只对一个终端有效，所以另起终端后需要重新设置。  3. 设置 Core Dump 的核心转储文件目录和命名规则 2.1 /proc/sys/kernel/core_uses_pid 可以控制产生的 core 文件的文件名中是否添加 pid 作为扩展 ， 文件内容为1，表示添加pid作为扩展名，生成的core文件格式为core.xxxx；为0则表示生成的core文件同一命名为core。 $ echo &amp;quot;1&amp;quot; &amp;gt; /proc/sys/kernel/core_uses_pid  2.2 /proc/sys/kernel/core_pattern 可以设置格式化的 core 文件保存位置或文件名 $ echo &amp;quot;/corefile/core-%e-%p-%t&amp;quot; &amp;gt; /proc/sys/kernel/core_pattern 说明:将会控制所产生的 core 文件会存放到 /corefile 目录下，产生的文件名为 core- 命令名 -pid- 时间戳 以下是参数列表: %p - insert pid into filename 添加pid %u - insert current uid into filename 添加当前uid %g - insert current gid into filename 添加当前gid %s - insert signal that caused the coredump into the filename 添加导致产生core的信号 %t - insert UNIX time that the coredump occurred into filename 添加core文件生成时的unix时间 %h - insert hostname where the coredump happened into filename 添加主机名 %e - insert coredumping executable name into filename 添加命令名  2.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置" >linux coredump设置</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月17日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. core 在Linux下程序不寻常退出时，内核会在当前工作目录下生成一个core文件（是一个内存映像，同时加上调试信息，编译时需要加上 -g -Wall）。 使用gdb来查看core文件，可以指示出导致程序出错的代码所在文件和行数。  2. core文件的生成开关和大小限制 1.1 使用ulimit -c命令可查看core文件的生成开关 若结果为0，则表示关闭了此功能，不会生成core文件  1.2 使用ulimit -c filesize命令，可以限制core文件的大小（filesize的单位为kbyte） 如果生成的信息超过此大小，将会被裁剪，最终生成一个不完整的core文件或者根本就不生成。 如果生成被裁减的core文件，调试此core文件的时候，gdb也会提示错误。 用以下命令来表示core文件的大小不受限制. $ ulimit -c unlimited 用以下命令来阻止系统生成core文件: $ ulimit -c 0 备注:ulimit命令设置后只对一个终端有效，所以另起终端后需要重新设置。  3. 设置 Core Dump 的核心转储文件目录和命名规则 2.1 /proc/sys/kernel/core_uses_pid 可以控制产生的 core 文件的文件名中是否添加 pid 作为扩展 ， 文件内容为1，表示添加pid作为扩展名，生成的core文件格式为core.xxxx；为0则表示生成的core文件同一命名为core。 $ echo &quot;1&quot; &gt; /proc/sys/kernel/core_uses_pid  2.2 /proc/sys/kernel/core_pattern 可以设置格式化的 core 文件保存位置或文件名 $ echo &quot;/corefile/core-%e-%p-%t&quot; &gt; /proc/sys/kernel/core_pattern 说明:将会控制所产生的 core 文件会存放到 /corefile 目录下，产生的文件名为 core- 命令名 -pid- 时间戳 以下是参数列表: %p - insert pid into filename 添加pid %u - insert current uid into filename 添加当前uid %g - insert current gid into filename 添加当前gid %s - insert signal that caused the coredump into the filename 添加导致产生core的信号 %t - insert UNIX time that the coredump occurred into filename 添加core文件生成时的unix时间 %h - insert hostname where the coredump happened into filename 添加主机名 %e - insert coredumping executable name into filename 添加命令名  2.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/core/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例" >rustdoc 范例</a>
                                 </h1>
                             </header>
@@ -319,29 +342,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
                             <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机" >自建kvm虚拟机</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年7月22日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 自定义虚拟机 egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes&quot; lsmod|grep kvm # centos yum install -y qemu-kvm #KVM主程序，KVM虚拟化模块 yum install -y libvirt #虚拟化服务库 yum install -y bridge-utils ln -s /usr/libexec/qemu-kvm /usr/bin/qemu-kvm # ubuntu apt install qemu qemu-kvm apt install libvirt-bin apt install bridge-utils ln -s /usr/bin/qemu-system-x86_64 /usr/bin/qemu-kvm systemctl start libvirtd systemctl enable libvirtd qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 qemu-kvm -name vm_NGC -m 4096 -cpu host -enable-kvm -smp 8 -hda vm_NGC.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -402,6 +402,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
     </li>
     
@@ -435,10 +439,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     
     <li>
         <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/kvm2/" title="自建kvm虚拟机">自建kvm虚拟机</a>
     </li>
     
 </ul>
@@ -480,7 +480,7 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(15)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(16)</a>
     </li>
     
     <li>
@@ -543,6 +543,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
     <a href="https://workerwork.github.io/tags/cli/">cli</a>
+    
+    <a href="https://workerwork.github.io/tags/core/">core</a>
+    
+    <a href="https://workerwork.github.io/tags/coredump/">coredump</a>
     
     <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
     
