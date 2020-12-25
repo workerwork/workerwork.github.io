@@ -143,15 +143,19 @@
 #gcc -c test.c   //将test.c编译成test.o
 #gcc -o testfun.o test.o -o test //将testfun.o和test.o链接成test
 
-以上两种方法相比较，第一中方法编译时需要所有文件重新编译，而第二种方法可以只重新编译修改的文件，未修改的文件不用重新编译。
+以上两种方法相比较，第一中方法编译时需要所有文件重新编译，
+而第二种方法可以只重新编译修改的文件，未修改的文件不用重新编译。
 </code></pre>
 
 <h2 id="3-库文件链接">3. 库文件链接</h2>
 
-<pre><code>开发软件时，完全不使用第三方函数库的情况是比较少见的，通常来讲都需要借助许多函数库的支持才能够完成相应的功能。从程序员的角度看，函数库实际上就是一些头文件（.h）和库文件（so、或lib、dll）的集合。。虽然Linux下的大多数函数都默认将头文件放到/usr/include/目录下，而库文件则放到/usr/lib/目录下；Windows所使用的库文件主要放在Visual Stido的目录下的include和lib，以及系统文件夹下。但也有的时候，我们要用的库不再这些目录下，所以GCC在编译时必须用自己的办法来查找所需要的头文件和库文件。
-
-例如我们的程序test.c是在linux上使用c连接mysql，这个时候我们需要去mysql官网下载MySQL Connectors的C库，下载下来解压之后，有一个include文件夹，里面包含mysql connectors的头文件，还有一个lib文件夹，里面包含二进制so文件libmysqlclient.so
-
+<pre><code>开发软件时，完全不使用第三方函数库的情况是比较少见的，通常来讲都需要借助许多函数库的支持才能够完成相应的功能。
+从程序员的角度看，函数库实际上就是一些头文件（.h）和库文件（so、或lib、dll）的集合。。
+虽然Linux下的大多数函数都默认将头文件放到/usr/include/目录下，而库文件则放到/usr/lib/目录下；
+Windows所使用的库文件主要放在Visual Stido的目录下的include和lib，以及系统文件夹下。
+但也有的时候，我们要用的库不再这些目录下，所以GCC在编译时必须用自己的办法来查找所需要的头文件和库文件。
+例如我们的程序test.c是在linux上使用c连接mysql，这个时候我们需要去mysql官网下载MySQL Connectors的C库，
+下载下来解压之后，有一个include文件夹，里面包含mysql connectors的头文件，还有一个lib文件夹，里面包含二进制so文件libmysqlclient.so
 其中inclulde文件夹的路径是/usr/dev/mysql/include,lib文件夹是/usr/dev/mysql/lib
 
 </code></pre>
@@ -170,13 +174,15 @@
 <pre><code>gcc –L /usr/dev/mysql/lib –lmysqlclient test.o –o test
 </code></pre>
 
-<p>Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾）和静态链接库（通常以.a结尾），二者的区别仅在于程序执行时所需的代码是在运行时动态加载的，还是在编译时静态加载的。</p>
+<p>Linux下的库文件分为两大类分别是动态链接库（通常以.so结尾）和静态链接库（通常以.a结尾），
+二者的区别仅在于程序执行时所需的代码是在运行时动态加载的，还是在编译时静态加载的。</p>
 
 <h3 id="3-3-强制链接时使用静态链接库">3.3 强制链接时使用静态链接库</h3>
 
-<p>默认情况下， GCC在链接时优先使用动态链接库，只有当动态链接库不存在时才考虑使用静态链接库，如果需要的话可以在编译时加上-static选项，强制使用静态链接库。</p>
-
-<p>在/usr/dev/mysql/lib目录下有链接时所需要的库文件libmysqlclient.so和libmysqlclient.a，为了让GCC在链接时只用到静态链接库，可以使用下面的命令:</p>
+<p>默认情况下， GCC在链接时优先使用动态链接库，只有当动态链接库不存在时才考虑使用静态链接库，
+如果需要的话可以在编译时加上-static选项，强制使用静态链接库。
+在/usr/dev/mysql/lib目录下有链接时所需要的库文件libmysqlclient.so和libmysqlclient.a，
+为了让GCC在链接时只用到静态链接库，可以使用下面的命令:</p>
 
 <pre><code>gcc –L /usr/dev/mysql/lib –static –lmysqlclient test.o –o test
 </code></pre>
@@ -199,9 +205,11 @@
 <li>默认的动态库搜索路径/usr/lib</li>
 </ol>
 
-<p>有关环境变量：
-LIBRARY_PATH环境变量：指定程序静态链接库文件搜索路径
-LD_LIBRARY_PATH环境变量：指定程序动态链接库文件搜索路径</p>
+<p>有关环境变量：</p>
+
+<p>LIBRARY_PATH环境变量：指定程序静态链接库文件搜索路径</p>
+
+<p>LD_LIBRARY_PATH环境变量：指定程序动态链接库文件搜索路径</p>
 
                         </div>
 						<br>
