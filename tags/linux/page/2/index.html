@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm2/">自建kvm虚拟机</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年7月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 自定义虚拟机 egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes&quot; lsmod|grep kvm # centos yum install -y qemu-kvm #KVM主程序，KVM虚拟化模块 yum install -y libvirt #虚拟化服务库 yum install -y bridge-utils ln -s /usr/libexec/qemu-kvm /usr/bin/qemu-kvm # ubuntu apt install qemu qemu-kvm apt install libvirt-bin apt install bridge-utils ln -s /usr/bin/qemu-system-x86_64 /usr/bin/qemu-kvm systemctl start libvirtd systemctl enable libvirtd qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 qemu-kvm -name vm_NGC -m 4096 -cpu host -enable-kvm -smp 8 -hda vm_NGC.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/dpdk-devbind/">DPDK-Devbind</a>
                                 </h1>
                             </header>
@@ -305,29 +328,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月29日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 以sample例子来分析vpp节点对报文的处理流程 vpp/src/examples/sample-plugin/sample $ll total 56 -rw-rw-r-- 1 ych ych 886 Apr 1 17:34 CMakeLists.txt -rw-rw-r-- 1 ych ych 17933 Apr 1 17:34 node.c -rw-rw-r-- 1 ych ych 712 Apr 1 17:34 sample_all_api_h.h -rw-rw-r-- 1 ych ych 1068 Apr 1 17:34 sample.api -rw-rw-r-- 1 ych ych 6569 Apr 1 17:34 sample.c -rw-rw-r-- 1 ych ych 1135 Apr 1 17:34 sample.h -rw-rw-r-- 1 ych ych 960 Apr 1 17:34 sample_msg_enum.h -rw-rw-r-- 1 ych ych 5512 Apr 1 17:34 sample_test.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-fw/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -380,6 +380,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
     </li>
     
@@ -413,10 +417,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
     </li>
     
 </ul>
@@ -458,7 +458,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(16)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(17)</a>
     </li>
     
     <li>
@@ -557,6 +557,8 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
     
     <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/gcc/">gcc</a>
     
     <a href="https://workerwork.github.io/tags/git/">git</a>
     

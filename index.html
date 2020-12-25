@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译" >linux gcc编译</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月25日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 常用编译命令选项 假设源程序文件名为test.c 1. 无选项编译链接 用法：#gcc test.c 作用：将test.c预处理、汇编、编译并链接形成可执行文件。这里未指定输出文件，默认输出为a.out。 2. 选项 -o 用法：#gcc test.c -o test 作用：将test.c预处理、汇编、编译并链接形成可执行文件test。-o选项用来指定输出文件的文件名。 3. 选项 -E 用法：#gcc -E test.c -o test.i 作用：将test.c预处理输出test.i文件。 4. 选项 -S 用法：#gcc -S test.i 作用：将预处理输出文件test.i汇编成test.s文件。 5. 选项 -c 用法：#gcc -c test.s 作用：将汇编输出文件test.s编译输出test.o文件。 6. 无选项链接 用法：#gcc test.o -o test 作用：将编译输出文件test.o链接成最终可执行文件test。 7. 选项-O 用法：#gcc -O1 test.c -o test 作用：使用编译优化级别1编译程序。级别为1~3，级别越大优化效果越好，但编译时间越长。  2. 多源文件的编译方法 如果有多个源文件，基本上有两种编译方法： [假设有两个源文件为test.c和testfun.c] 1. 多个文件一起编译 用法：#gcc testfun.c test.c -o test 作用：将testfun.c和test.c分别编译后链接成test可执行文件。 2. 分别编译各个源文件，之后对编译后输出的目标文件链接。 用法： #gcc -c testfun.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/gcc/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置" >linux coredump设置</a>
                                 </h1>
                             </header>
@@ -319,29 +342,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
                             <p class="readmore"><a href="https://workerwork.github.io/posts/video-server/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build" >openssh8.1 rpm build</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年8月14日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 创建工作路径 mkdir -p /root/rpmbuild/{SOURCES,SPECS} cp openssh-8.1p1.tar.gz /root/rpmbuild/SOURCES/  2. 下载源码包 wget https://openbsd.hk/pub/OpenBSD/OpenSSH/portable/openssh-8.1p1.tar.gz  3. 制作准备 yum install rpm-build zlib-devel openssl-devel gcc perl-devel pam-devel unzip tar -zxf openssh-8.1p1.tar.gz cp ./openssh-8.1p1/contrib/redhat/openssh.spec . sed -i -e &quot;s/%define no_x11_askpass 0/%define no_x11_askpass 1/g&quot; openssh.spec sed -i -e &quot;s/%define no_gnome_askpass 0/%define no_gnome_askpass 1/g&quot; openssh.spec  4. 制作rpm包 rpmbuild -ba openssh.spec 如果出现 错误：构建依赖失败： openssl-devel &lt; 1.1 被 ?? 需要 解决方法： vi openssh.spec 注释掉 BuildRequires: openssl-devel &lt; 1.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/openssh/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -402,6 +402,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
     </li>
     
@@ -435,10 +439,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     
     <li>
         <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/openssh/" title="openssh8.1 rpm build">openssh8.1 rpm build</a>
     </li>
     
 </ul>
@@ -480,7 +480,7 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(16)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(17)</a>
     </li>
     
     <li>
@@ -579,6 +579,8 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     <a href="https://workerwork.github.io/tags/frp/">frp</a>
     
     <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/gcc/">gcc</a>
     
     <a href="https://workerwork.github.io/tags/git/">git</a>
     
