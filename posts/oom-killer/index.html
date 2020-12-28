@@ -141,6 +141,14 @@ overcommit_memory=2， 表示内核允许分配超过所有物理内存和交换
 
 <p><img src="/oom-killer/img/3.png" alt="" /></p>
 
+<h2 id="3-如何fix">3.如何fix</h2>
+
+<pre><code>1.加大系统内存；
+2.修改redis.conf配置，设置自己服务器合理的maxmemory，保证机器有20%~30%的闲置内存，并使用适当的回收策略；
+maxmemory 512mb
+maxmemory-policy volatile-lru
+</code></pre>
+
                         </div>
 						<br>
 						<br>
