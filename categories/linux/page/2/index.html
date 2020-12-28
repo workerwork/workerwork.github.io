@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/local-apt/">搭建本地apt仓库</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月25日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装工具 #apt-get install dpkg-dev #这个比较全 apt-get install gnupg apt-get install rng-tools  2. 搜集软件和依赖 # 查询依赖关系 root@localhost:~/df/packages# apt-cache depends nginx nginx |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras |Depends: nginx-core |Depends: nginx-full |Depends: nginx-light Depends: nginx-extras # 下载 sudo rm -rf /var/cache/apt/archives/* # 清空缓存目录，这一步也可以不做 sudo apt-get -d install &lt;包名&gt; root@localhost:~/df/packages# sudo apt-get install --reinstall -d `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;` root@localhost:~/df/packages# sudo apt-get download `apt-cache depends nginx | grep depends | cut -d: f2 |tr -d &quot;&lt;&gt;&quot;`  3.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/local-apt/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/frp/">frp内网穿透</a>
                                 </h1>
                             </header>
@@ -311,6 +334,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
     </li>
     
@@ -344,10 +371,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
     </li>
     
 </ul>
@@ -389,7 +412,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(17)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
     </li>
     
     <li>
@@ -529,6 +552,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
+    <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
+    
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
@@ -540,6 +565,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
     
     <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/redis/">redis</a>
     
     <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
     

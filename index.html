@@ -70,6 +70,30 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer" >oom killer</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. redis报错 MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk. Commands that may modify the data set are disabled. Please check Redis logs for details about the error.  redis数据不能写入磁盘了 修正方式：
+1.改redis-conf配置文件中的 stop-writes-on-bgsave-error 为 no,保证redis正常运行 2.修改/etc/sysctl.conf 中vm.overcommit_memory 的值为 1，再使用sysctl -p使修改生效，然后重启redis overcommit_memory=0， 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存，内存申请允许；否则，内存申请失败，并把错误返回给应用进程。 overcommit_memory=1， 表示内核允许分配所有的物理内存，而不管当前的内存状态如何。 overcommit_memory=2， 表示内核允许分配超过所有物理内存和交换空间总和的内存 3.查看磁盘占用情况，检查磁盘是否写满 4.查看内存占用，检查是否配额充足,有可能进程被oom-killer干掉了  2. oom-killer Linux 内核有个机制叫OOM killer(Out Of Memory killer)，该机制会监控那些占用内存过大， 尤其是瞬间占用内存很快的进程，然后防止内存耗尽而自动把该进程杀掉。 内核检测到系统内存不足、挑选并杀掉某个进程的过程可以参考内核源代码linux/mm/oom_kill.c， 当系统内存不足的时候，out_of_memory()被触发，然后调用select_bad_process()选择一个”bad”进程杀掉。 如何判断和选择一个”bad进程呢？linux选择”bad”进程是通过调用oom_badness()， 挑选的算法和想法都很简单很朴实：最bad的那个进程就是那个最占用内存的进程。  如何查看……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/oom-killer/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译" >linux gcc编译</a>
                                 </h1>
                             </header>
@@ -314,34 +338,6 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
                             <p class="readmore"><a href="https://workerwork.github.io/posts/uds/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/video-server/" title="video server" >video server</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年8月19日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. SRS介绍 SRS/3.0，OuXuli，是一个流媒体集群，支持RTMP/HLS/WebRTC/SRT/GB28181，高效、稳定、易用，简单而快乐。 101 SRS is a RTMP/HLS/WebRTC/SRT/GB28181 streaming cluster, high efficiency, stable and simple.
-项目地址: https://github.com/ossrs/srs
-2. 运行docker容器启动srs服务 sudo docker run -d -p 1935:1935 -p 1985:1985 -p 8080:8080 ossrs/srs:3  3. 使用ffmpeg推流 需要安装ffmpeg
-./pushflow.sh cat pushflow.sh #!/bin/bash while : do sudo ffmpeg -re -i dog.mp4 -vcodec copy -acodec copy -f flv -y rtmp://192.168.1.7:1935/live/livestream sleep 1 done  4. 终端使用vlc播放器拉流 视频地址填写: rtmp://192.168.1.7:1935/live/livestream
-5. 使用live555支持rtsp 需要添加网关以指定监听地址 可以使用ffmpeg来转换视频源格式
-ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/video-server/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -402,6 +398,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
     </li>
     
@@ -435,10 +435,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     
     <li>
         <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
     </li>
     
 </ul>
@@ -480,7 +476,7 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(17)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
     </li>
     
     <li>
@@ -620,6 +616,8 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
+    <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
+    
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
@@ -631,6 +629,8 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
     
     <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/redis/">redis</a>
     
     <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
     

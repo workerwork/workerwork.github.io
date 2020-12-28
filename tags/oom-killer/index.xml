@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>oom killer on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/oom-killer/</link>
+    <description>Recent content in oom killer on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 28 Dec 2020 11:20:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/oom-killer/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>oom killer</title>
+      <link>https://workerwork.github.io/posts/oom-killer/</link>
+      <pubDate>Mon, 28 Dec 2020 11:20:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/oom-killer/</guid>
+      <description>1. redis报错 MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk. Commands that may modify the data set are disabled. Please check Redis logs for details about the error.  redis数据不能写入磁盘了 修正方式：
+1.改redis-conf配置文件中的 stop-writes-on-bgsave-error 为 no,保证redis正常运行 2.修改/etc/sysctl.conf 中vm.overcommit_memory 的值为 1，再使用sysctl -p使修改生效，然后重启redis overcommit_memory=0， 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存，内存申请允许；否则，内存申请失败，并把错误返回给应用进程。 overcommit_memory=1， 表示内核允许分配所有的物理内存，而不管当前的内存状态如何。 overcommit_memory=2， 表示内核允许分配超过所有物理内存和交换空间总和的内存 3.查看磁盘占用情况，检查磁盘是否写满 4.查看内存占用，检查是否配额充足,有可能进程被oom-killer干掉了  2. oom-killer Linux 内核有个机制叫OOM killer(Out Of Memory killer)，该机制会监控那些占用内存过大， 尤其是瞬间占用内存很快的进程，然后防止内存耗尽而自动把该进程杀掉。 内核检测到系统内存不足、挑选并杀掉某个进程的过程可以参考内核源代码linux/mm/oom_kill.c， 当系统内存不足的时候，out_of_memory()被触发，然后调用select_bad_process()选择一个”bad”进程杀掉。 如何判断和选择一个”bad进程呢？linux选择”bad”进程是通过调用oom_badness()， 挑选的算法和想法都很简单很朴实：最bad的那个进程就是那个最占用内存的进程。  如何查看</description>
+    </item>
+    
+  </channel>
+</rss>

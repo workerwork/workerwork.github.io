@@ -80,6 +80,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-node-graph/">vpp node-graph编排过程</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. vpp node graph VPP处理报文时是沿着一个有向图进行处理的，每一个功能单元称之为节点(node)
+2. 数据结构 静态数据结构 节点全局管理结构vlib_node_main_t
+typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为索引 */ vlib_node_t **nodes; /* Node index hashed by node name. */ /* 根据节点名字进行hash，可以根据节点名字进行hash表查找 * 只有main线程才会委会该hash表 */ uword *node_by_name; u32 flags; /* 该标志表示Runtime信息已经被初始化过了 */ #define VLIB_NODE_MAIN_RUNTIME_STARTED (1 &lt;&lt; 0) /* Nodes segregated by type for cache locality. Does not apply to nodes of type VLIB_NODE_TYPE_INTERNAL. */ vlib_node_runtime_t *nodes_by_type[VLIB_N_NODE_TYPE]; /* Node runtime indices for input nodes with pending interrupts.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-node-graph/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-node-fw/">vpp 节点报文处理流程分析</a>
                                 </h1>
                             </header>
@@ -331,6 +356,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
     </li>
     
@@ -364,10 +393,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/video-server/" title="video server">video server</a>
     </li>
     
 </ul>
@@ -409,7 +434,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(17)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
     </li>
     
     <li>
@@ -549,6 +574,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
+    <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
+    
     <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
     
     <a href="https://workerwork.github.io/tags/p4/">p4</a>
@@ -560,6 +587,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
     
     <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/redis/">redis</a>
     
     <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
     
