@@ -70,6 +70,40 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架" >xfrm框架</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 简介 IPsec协议帮助IP层建立安全可信的数据包传输通道。
+当前已经有了如StrongSwan、OpenSwan等比较成熟的解决方案，而它们都使用了Linux内核中的XFRM框架进行报文接收发送.
+XFRM的正确读音是transform(转换), 这表示内核协议栈收到的IPsec报文需要经过转换才能还原为原始报文；
+同样地，要发送的原始报文也需要转换为IPsec报文才能发送出去.
+2. XFRM实例 IPsec中有两个重要概念：
+安全关联(Security Association)和安全策略(Security Policy)，这两类信息都需要存放在内核XFRM。
+核XFRM使用netns_xfrm这个结构来组织这些信息，它也被称为xfrm instance(实例)。
+从它的名字也可以看出来，这个实例是与network namespace相关的，每个命名空间都有这样的一个实例，实例间彼此独立。
+所以同一台主机上的不同容器可以互不干扰地使用XFRM
+struct net { ...... #ifdef CONFIG_XFRM struct netns_xfrm	xfrm; #endif ...... }  3. Netlink通道 上面提到了Security Association和Security Policy信息，这些信息一般是由用户态IPsec进程(eg. StrongSwan)
+下发到内核XFRM的，这个下发的通道在network namespace初始化时创建。
+static int __net_init xfrm_user_net_init(struct net *net) { struct sock *nlsk; struct netlink_kernel_cfg cfg = { .groups	= XFRMNLGRP_MAX, .input	= xfrm_netlink_rcv, }; nlsk = netlink_kernel_create(net, NETLINK_XFRM, &amp;cfg); ...... return 0; }  这样，当用户下发IPsec配置时，内核便可以调用 xfrm_netlink_rcv() 来接收.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/xfrm/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer" >oom killer</a>
                                 </h1>
                             </header>
@@ -313,31 +347,6 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
                             <p class="readmore"><a href="https://workerwork.github.io/posts/shm/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket" >Unix domain socket</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年8月19日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/ipc">IPC</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. Unix domain socket介绍 Unix domain socket 又叫 IPC(inter-process communication 进程间通信) socket，用于实现同一主机上的进程间通信. socket 原本是为网络通讯设计的，但后来在 socket 的框架上发展出一种 IPC 机制，就是 UNIX domain socket. 虽然网络 socket 也可用于同一台主机的进程间通讯(通过 loopback 地址 127.0.0.1)，但是 UNIX domain socket 用于 IPC更有效率：不需要经过网络协议栈，不需要打包拆包、计算校验和、维护序号和应答等，只是将应用层数据从一个进程拷贝到另一个进程. 这是因为，IPC机制本质上是可靠的通讯，而网络协议是为不可靠的通讯设计的. UNIX domain socket 是全双工的，API 接口语义丰富，相比其它 IPC 机制有明显的优越性，目前已成为使用最广泛的 IPC 机制， 比如 X Window 服务器和 GUI 程序之间就是通过 UNIX domain socket 通讯的. Unix domain socket 是 POSIX 标准中的一个组件，所以不要被名字迷惑，linux 系统也是支持它的.
-2. C语言demo程序 下面是一个非常简单的服务器端程序，它从客户端读字符，然后将每个字符转换为大写并回送给客户端
-#include &lt;stdlib.h&gt; #include &lt;stdio.h&gt; #include &lt;stddef.h&gt; #include &lt;sys/socket.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/uds/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -398,6 +407,10 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
     </li>
     
@@ -431,10 +444,6 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
     </li>
     
 </ul>
@@ -476,7 +485,7 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(19)</a>
     </li>
     
     <li>
@@ -594,6 +603,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <a href="https://workerwork.github.io/tags/ipc/">ipc</a>
     
+    <a href="https://workerwork.github.io/tags/ipsec/">ipsec</a>
+    
     <a href="https://workerwork.github.io/tags/iso/">iso</a>
     
     <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
@@ -652,6 +663,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
+    <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
+    
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/tso/">tso</a>
@@ -673,6 +686,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
     
     <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/xfrm/">xfrm</a>
     
     <a href="https://workerwork.github.io/tags/yum/">yum</a>
     

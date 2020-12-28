@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ipsec on WorkSpace</title>
+    <link>https://workerwork.github.io/tags/ipsec/</link>
+    <description>Recent content in ipsec on WorkSpace</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 28 Dec 2020 15:20:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://workerwork.github.io/tags/ipsec/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>xfrm框架</title>
+      <link>https://workerwork.github.io/posts/xfrm/</link>
+      <pubDate>Mon, 28 Dec 2020 15:20:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/xfrm/</guid>
+      <description>1. 简介 IPsec协议帮助IP层建立安全可信的数据包传输通道。
+当前已经有了如StrongSwan、OpenSwan等比较成熟的解决方案，而它们都使用了Linux内核中的XFRM框架进行报文接收发送.
+XFRM的正确读音是transform(转换), 这表示内核协议栈收到的IPsec报文需要经过转换才能还原为原始报文；
+同样地，要发送的原始报文也需要转换为IPsec报文才能发送出去.
+2. XFRM实例 IPsec中有两个重要概念：
+安全关联(Security Association)和安全策略(Security Policy)，这两类信息都需要存放在内核XFRM。
+核XFRM使用netns_xfrm这个结构来组织这些信息，它也被称为xfrm instance(实例)。
+从它的名字也可以看出来，这个实例是与network namespace相关的，每个命名空间都有这样的一个实例，实例间彼此独立。
+所以同一台主机上的不同容器可以互不干扰地使用XFRM
+struct net { ...... #ifdef CONFIG_XFRM struct netns_xfrm	xfrm; #endif ...... }  3. Netlink通道 上面提到了Security Association和Security Policy信息，这些信息一般是由用户态IPsec进程(eg. StrongSwan)
+下发到内核XFRM的，这个下发的通道在network namespace初始化时创建。
+static int __net_init xfrm_user_net_init(struct net *net) { struct sock *nlsk; struct netlink_kernel_cfg cfg = { .groups	= XFRMNLGRP_MAX, .input	= xfrm_netlink_rcv, }; nlsk = netlink_kernel_create(net, NETLINK_XFRM, &amp;amp;cfg); ...... return 0; }  这样，当用户下发IPsec配置时，内核便可以调用 xfrm_netlink_rcv() 来接收.</description>
+    </item>
+    
+  </channel>
+</rss>

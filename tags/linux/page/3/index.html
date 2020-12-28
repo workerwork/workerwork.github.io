@@ -80,6 +80,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/github-fast/">github加速</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月5日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 给git设置socks5/vmess代理 前提是开启代理服务，可以使用V2rayL: https://github.com/jiangxufeng/v2rayL 和 ghelper
+使用 https 的时候，就是使用 https 协议复制仓库的时候
+git config --global http.proxy 'socks5://127.0.0.1:1080' git config --global https.proxy 'socks5://127.0.0.1:1080' git config --global http.proxy 'vmess://127.0.0.1:1081' git config --global https.proxy 'vmess://127.0.0.1:1081'  也可以直接修改用户主目录下的 .gitconfig 文件
+[http] proxy = socks5://127.0.0.1:1080 [https] proxy = socks5://127.0.0.1:1080 [http] proxy = vmess://127.0.0.1:1081 [https] proxy = vmess://127.0.0.1:1081  取消代理
+git config --global --unset http.proxy git config --global --unset https.proxy  查看已有代理
+git config --global -l  在使用 git 开头的路径时，也就是在使用 ssh 通道时……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/github-fast/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-node-graph/">vpp node-graph编排过程</a>
                                 </h1>
                             </header>
@@ -356,6 +384,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
     </li>
     
@@ -389,10 +421,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
     </li>
     
 </ul>
@@ -434,7 +462,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(19)</a>
     </li>
     
     <li>
@@ -552,6 +580,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/ipc/">ipc</a>
     
+    <a href="https://workerwork.github.io/tags/ipsec/">ipsec</a>
+    
     <a href="https://workerwork.github.io/tags/iso/">iso</a>
     
     <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
@@ -610,6 +640,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
+    <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
+    
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/tso/">tso</a>
@@ -631,6 +663,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
     
     <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/xfrm/">xfrm</a>
     
     <a href="https://workerwork.github.io/tags/yum/">yum</a>
     

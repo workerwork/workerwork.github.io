@@ -80,6 +80,40 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/xfrm/">xfrm框架</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 简介 IPsec协议帮助IP层建立安全可信的数据包传输通道。
+当前已经有了如StrongSwan、OpenSwan等比较成熟的解决方案，而它们都使用了Linux内核中的XFRM框架进行报文接收发送.
+XFRM的正确读音是transform(转换), 这表示内核协议栈收到的IPsec报文需要经过转换才能还原为原始报文；
+同样地，要发送的原始报文也需要转换为IPsec报文才能发送出去.
+2. XFRM实例 IPsec中有两个重要概念：
+安全关联(Security Association)和安全策略(Security Policy)，这两类信息都需要存放在内核XFRM。
+核XFRM使用netns_xfrm这个结构来组织这些信息，它也被称为xfrm instance(实例)。
+从它的名字也可以看出来，这个实例是与network namespace相关的，每个命名空间都有这样的一个实例，实例间彼此独立。
+所以同一台主机上的不同容器可以互不干扰地使用XFRM
+struct net { ...... #ifdef CONFIG_XFRM struct netns_xfrm	xfrm; #endif ...... }  3. Netlink通道 上面提到了Security Association和Security Policy信息，这些信息一般是由用户态IPsec进程(eg. StrongSwan)
+下发到内核XFRM的，这个下发的通道在network namespace初始化时创建。
+static int __net_init xfrm_user_net_init(struct net *net) { struct sock *nlsk; struct netlink_kernel_cfg cfg = { .groups	= XFRMNLGRP_MAX, .input	= xfrm_netlink_rcv, }; nlsk = netlink_kernel_create(net, NETLINK_XFRM, &amp;cfg); ...... return 0; }  这样，当用户下发IPsec配置时，内核便可以调用 xfrm_netlink_rcv() 来接收.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/xfrm/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/oom-killer/">oom killer</a>
                                 </h1>
                             </header>
@@ -311,34 +345,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/eth-name/">网卡命名</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月30日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 背景 服务器通常有多块网卡，有板载集成的，同时也有插在PCIe插槽的.
-Linux系统的命名原来是eth0,eth1这样的形式，但是这个编号往往不一定准确对应网卡接口的物理顺序.
-为解决这类问题，dell开发了biosdevname方案.
-systemd v197版本中将dell的方案作了进一步的一般化拓展.
-linux内核启动过程中，会默认给网卡以ethX方式随机命名，然后再通过systemd去rename成其他名称.
-2. rename流程 step1 依据/usr/lib/udev/rules.d/60-net.rules， 查看是否有ifcfg-xx配置文件（路径在/etc/sysconfig/network-scripts/), 是否有定义了指定MAC地址的配置文件（ifcfg-xx ，xx必须和配置文件的内容DEVICE一致），如果有，则命名改网卡； step2 依据/usr/lib/udev/rules.d/71-biosdevname.rules，如果biosdevname使能了（安装了biosdevname这个包，且内核启动参数显式设置为1）， 且网卡没有在step1中定义，则按照biosdevname命名规则rename网卡；（注意，如果没有安装biosdevname这个包，就没有这个文件） step3, 依据/lib/udev/rules.d/75-net-description.rules，将udev工具会根据device属性将填写网卡的属性命名，可能一个网卡会有多个维度的名称; step4，udev 根据step3中的赋值，按照指定的scheme规则，去给在step1 step2中没有命名的网卡命名; 强调：这个step顺序是在我们没有自定义自己的rules的前提下，如果用户自定义了自己的rules，则用户自定义为优先级最高  3. 命令策略(scheme规则) 1.如果从BIOS中能够取到可用的，板载网卡的索引号，则使用这个索引号命名，例如: eno1，如不能则尝试2 2.如果从BIOS中能够取到可以用的，网卡所在的PCI-E热插拔插槽(注：pci槽位号)的索引号，则使用这个索引号命名，例如: ens1，如不能则尝试3 3.如果能拿到设备所连接的物理位置（PCI总线号+槽位号？）信息，则使用这个信息命名，例如:enp2s0，如不能则尝试4 4.传统的kernel命名方法，例如: eth0，这种命名方法的结果不可预知的，即可能第二块网卡对应eth0，第一块网卡对应eth1 5.使用网卡的MAC地址来命名，这个方法一般不使用 同一个网卡通常同时具有多个维度的名称，systemd在选取的时候，按照有先后次序，使用先命中的 顺序可以简单理解为(eno1-ens1-enp1) root@Bai5gc:/sys/class/net/eth1# udevadm info /sys/class/net/eth1 P: /devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: DEVPATH=/devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: ID_BUS=pci E: ID_MODEL_FROM_DATABASE=Ethernet Connection X552 10 GbE Backplane E: ID_MODEL_ID=0x15ab E: ID_NET_DRIVER=ixgbe E: ID_NET_LINK_FILE=/lib/systemd/network/99-default.link E: ID_NET_NAME_MAC=enxb4a9fca897e7 E: ID_NET_NAME_ONBOARD=eno3 E: ID_NET_NAME_PATH=enp3s0f0 E: ID_PATH=pci-0000:03:00.0 E: ID_PATH_TAG=pci-0000_03_00_0 E: ID_PCI_CLASS_FROM_DATABASE=Network controller E: ID_PCI_SUBCLASS_FROM_DATABASE=Ethernet controller E: ID_VENDOR_FROM_DATABASE=Intel Corporation E: ID_VENDOR_ID=0x8086 E: IFINDEX=3 E: INTERFACE=eth1 E: SUBSYSTEM=net E: SYSTEMD_ALIAS=/sys/subsystem/net/devices/eth1 E: TAGS=:systemd: E: USEC_INITIALIZED=5061037 E: net.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/eth-name/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -383,6 +389,10 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
     </li>
     
@@ -416,10 +426,6 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     
     <li>
         <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket">Unix domain socket</a>
     </li>
     
 </ul>
@@ -461,7 +467,7 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(18)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(19)</a>
     </li>
     
     <li>
@@ -579,6 +585,8 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     
     <a href="https://workerwork.github.io/tags/ipc/">ipc</a>
     
+    <a href="https://workerwork.github.io/tags/ipsec/">ipsec</a>
+    
     <a href="https://workerwork.github.io/tags/iso/">iso</a>
     
     <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
@@ -637,6 +645,8 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
+    <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
+    
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
     <a href="https://workerwork.github.io/tags/tso/">tso</a>
@@ -658,6 +668,8 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
     
     <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/xfrm/">xfrm</a>
     
     <a href="https://workerwork.github.io/tags/yum/">yum</a>
     
