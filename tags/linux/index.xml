@@ -6,10 +6,23 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 30 Dec 2020 14:30:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Dec 2020 15:05:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>EXPORT SYMBOL</title>
+      <link>https://workerwork.github.io/posts/export-symbol/</link>
+      <pubDate>Wed, 30 Dec 2020 15:05:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/export-symbol/</guid>
+      <description>1. 背景 EXPORT_SYMBOL只出现在2.6内核中，在2.4内核默认的非static 函数和变量都会自动导入到kernel 空间的， 都不用EXPORT_SYMBOL() 做标记的。2.6就必须用EXPORT_SYMBOL() 来导出来（因为2.6默认不导出所有的符号）
+2. EXPORT_SYMBOL的作用 EXPORT_SYMBOL标签内定义的函数或者符号对全部内核代码公开， 不用修改内核代码就可以在您的内核模块中直接调用，即使用EXPORT_SYMBOL可以将一个函数以符号的方式导出给其他模块使用
+EXPORT_SYMBOL(符号名); 可以导出static函数到符号表中 EXPORT_SYMBOL_GPL(符号名) //用于GPL协议认证的模块 EXPORT_SYMBOL_GPL的符号必须要用MODULE_LICENSE(&amp;quot;GPL&amp;quot;)或者用MODULE_LICENSE(&amp;quot;Dual BSD/GPL&amp;quot;)之后才能在模块中引用。 而且MODULE_LICENSE(&amp;quot;char&amp;quot;)中的char不可以是任意字符，否则错误和没有MODULE_LICENSE效果一样。  这里要和System.map做一下对比： System.map 中的是连接时的函数地址。连接完成以后，在2.6内核运行过程中，是不知道哪个符号在哪个地址的。 EXPORT_SYMBOL 的符号，是把这些符号和对应的地址保存起来，在内核运行的过程中，可以找到这些符号对应的地址。 而模块在加载过程中，其本质就是能动态连接到内核，如果在模块中引用了内核或其它模块的符号， 就要EXPORT_SYMBOL这些符号，这样才能找到对应的地址连接
+3. 使用方法  在模块函数定义之后使用EXPORT_SYMBOL（函数名） 在掉用该函数的模块中使用extern对之声明 首先加载定义该函数的模块，再加载调用该函数的模块  另外，在编译调用某导出函数的模块时，往往会有WARNING: &amp;ldquo;＊＊＊＊&amp;rdquo; [＊＊＊＊＊＊＊＊＊＊] undefined! 使用dmesg命令后会看到相同的信息。开始我以为只要有这个错误就不能加载模块，后来上网查了一下， 发现这主要是因为在编译连接的时候还没有和内核打交道，当然找不到symbol了，但是由于你生成的是一个内核模块， 所以LD不提示error，而是给出一个warning，寄希望于在insmod的时候，内核能够把这个symbol连接上
+1.EXPORT_SYMBOL EXPORT_SYMBOL( my_pub_func); 在预编译阶段会解析为: extern void *__crc_my_pub_func __attribute__((weak)); static const unsigned long __kcrctab_my_pub_func __attribute__((__used__)) __attribute__((section(&amp;quot;__kcrctab&amp;quot; &amp;quot;&amp;quot;), unused)) = (unsigned long) &amp;amp;__crc_my_pub_func; static const char __kstrtab_my_pub_func[] __attribute__((section(&amp;quot;__ksymtab_strings&amp;quot;))) = &amp;quot;&amp;quot; &amp;quot;my_pub_func&amp;quot;; static const struct kernel_symbol __ksymtab_my_pub_func __attribute__((__used__)) __attribute__((section(&amp;quot;__ksymtab&amp;quot; &amp;quot;&amp;quot;), unused)) = { (unsigned long)&amp;amp;my_pub_func, __kstrtab_my_pub_func }; 很显然__ksymtab_my_pub_func存储了my_pub_func的地址和符号信息,该符号对应的地址 只有insmod后才会确定; __ksymtab_my_pub_func会链接到__ksymtab section,__ksymtab section中的所有内容就构成了 内核&amp;quot;导出&amp;quot;的符号表,这个表在insmod 时候会用到.</description>
+    </item>
     
     <item>
       <title>vpp和linux内核协议栈通信</title>

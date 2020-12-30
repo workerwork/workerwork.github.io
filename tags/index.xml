@@ -6,7 +6,7 @@
     <description>Recent content in Tags on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 30 Dec 2020 14:30:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Dec 2020 15:05:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>kernel</title>
       <link>https://workerwork.github.io/tags/kernel/</link>
-      <pubDate>Wed, 30 Dec 2020 14:30:52 +0800</pubDate>
+      <pubDate>Wed, 30 Dec 2020 15:05:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/kernel/</guid>
       <description></description>
@@ -23,9 +23,27 @@
     <item>
       <title>linux</title>
       <link>https://workerwork.github.io/tags/linux/</link>
-      <pubDate>Wed, 30 Dec 2020 14:30:52 +0800</pubDate>
+      <pubDate>Wed, 30 Dec 2020 15:05:51 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>module</title>
+      <link>https://workerwork.github.io/tags/module/</link>
+      <pubDate>Wed, 30 Dec 2020 15:05:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/module/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>symbol</title>
+      <link>https://workerwork.github.io/tags/symbol/</link>
+      <pubDate>Wed, 30 Dec 2020 15:05:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/tags/symbol/</guid>
       <description></description>
     </item>
     
@@ -467,15 +485,6 @@
       <pubDate>Mon, 20 Apr 2020 16:17:52 +0800</pubDate>
       
       <guid>https://workerwork.github.io/tags/cpu/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>module</title>
-      <link>https://workerwork.github.io/tags/module/</link>
-      <pubDate>Fri, 17 Apr 2020 10:33:52 +0800</pubDate>
-      
-      <guid>https://workerwork.github.io/tags/module/</guid>
       <description></description>
     </item>
     

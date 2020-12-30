@@ -281,33 +281,6 @@ drone文档：https://docs.drone.io/
                             <p class="readmore"><a href="https://workerwork.github.io/posts/drone/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/jenkins/" title="搭建jenkins服务器" >搭建jenkins服务器</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月29日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                 1. jenkins介绍 jenkins官网：https://jenkins.io/zh/
-项目源码：https://github.com/jenkinsci/jenkins
-2. docker安装jenkins 1 ）下载jenkins的docker镜像 docker pull jenkins  2 ）创建jenkins存储目录 mkdir /home/var/jenkins  3 ）cd进入/home/var/目录，设置jenkins文件夹的归属用户UID为1000 chown -R 1000:1000 jenkins/  4 ）使用jenkins镜像创建容器 docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins --privileged=true -v /home/var/jenkins:/var/jenkins_home jenkins  5 ）使用 ip:8080执行图像界面安装 ……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/jenkins/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -372,6 +345,10 @@ drone文档：https://docs.drone.io/
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL">EXPORT SYMBOL</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
     </li>
     
@@ -405,10 +382,6 @@ drone文档：https://docs.drone.io/
     
     <li>
         <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
     </li>
     
 </ul>
@@ -450,7 +423,7 @@ drone文档：https://docs.drone.io/
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(19)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(20)</a>
     </li>
     
     <li>
@@ -629,6 +602,8 @@ drone文档：https://docs.drone.io/
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
     
     <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
+    
+    <a href="https://workerwork.github.io/tags/symbol/">symbol</a>
     
     <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
     
