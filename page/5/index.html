@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/debootstrap/" title="创建ubuntu基础镜像" >创建ubuntu基础镜像</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年3月23日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装debootstrap ubuntu操作系统：apt install debootstrap centos操作系统：yum install debootstrap  2. 构建基础Ubuntu的rootfs mkdir /mnt/rootfs debootstrap --verbose --arch=amd64 bionic /mnt/rootfs http://mirrors.aliyun.com/ubuntu 说明：bionic为ubuntu代号，/mnt/rootfs为存放rootfs目录  3. 配置rootfs #切换根 chroot . #安装依赖包 apt-get -y update apt-get -y upgrade apt-get -y install vim locales iproute2 gzip curl sudo tar zip unzip telnet openssl gcc make openssh-server openssh-client #创建用户 useradd -m dongfeng echo &quot;root:baicells&quot; | chpasswd echo &quot;dongfeng:baicells&quot; | chpasswd #配置sshd mkdir /run/sshd mkdir /var/run/sshd sshd -D echo UseDNS no &gt;&gt; /etc/ssh/sshd_config #其他配置 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime dpkg-reconfigure locales rm -Rf /tmp/* &amp;&amp; apt clean #清理系统 rm -rf boot/ dev/ media/ mnt/ proc/ srv/ sys/echo &gt; root/.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/debootstrap/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/gitlab/" title="ubuntu搭建gitlab服务器" >ubuntu搭建gitlab服务器</a>
                                 </h1>
                             </header>
@@ -283,32 +308,6 @@ drone文档：https://docs.drone.io/
                             <p class="readmore"><a href="https://workerwork.github.io/posts/jenkins/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器" >使用gogs搭建git服务器</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月29日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                 1. gogs介绍 gogs官网：https://gogs.io/ 项目源码：https://github.com/gogs/gogs
-2. docker安装gogs 1 ）下载gogs的docker镜像 docker pull gogs/gogs  2 ）创建gogs存储目录 mkdir -p /var/gogs  3 ）使用gogs镜像创建容器 docker run -d --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs  4 ）使用 ip:10080执行图像界面安装 ……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/gogs/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -373,6 +372,10 @@ drone文档：https://docs.drone.io/
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
     </li>
     
@@ -406,10 +409,6 @@ drone文档：https://docs.drone.io/
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
 </ul>
@@ -479,7 +478,7 @@ drone文档：https://docs.drone.io/
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
     </li>
     
     <li>

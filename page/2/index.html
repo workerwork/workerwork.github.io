@@ -70,6 +70,31 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory" >Shared Memory</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年8月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/ipc">IPC</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. Shared Memory介绍 共享内存是System V版本的最后一个进程间通信方式。共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存， 共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。不同进程之间共享的内存通常为同一段物理内存。 进程可以将同一段物理内存连接到他们自己的地址空间中，所有的进程都可以访问共享内存中的地址。 如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程.
+特别提醒：共享内存并未提供同步机制，也就是说，在第一个进程结束对共享内存的写操作之前， 并无自动机制可以阻止第二个进程开始对它进行读取，所以我们通常需要用其他的机制来同步对共享内存的访问，例如信号量.
+2. C语言demo程序 //comm.h #ifndef _COMM_H__ #define _COMM_H__ #include&lt;stdio.h&gt; #include&lt;sys/types.h&gt; #include&lt;sys/ipc.h&gt; #include&lt;sys/shm.h&gt; #define PATHNAME &quot;.&quot; #define PROJ_ID 0x6666 int CreateShm(int size); int DestroyShm(int shmid); int GetShm(int size); #endif  //comm.c #include&quot;comm.h&quot; static int CommShm(int size,int flags) { key_t key = ftok(PATHNAME,PROJ_ID); if(key &lt; 0) { perror(&quot;ftok&quot;); return -1; } int shmid = 0; if((shmid = shmget(key,size,flags)) &lt; 0) { perror(&quot;shmget&quot;); return -2; } return shmid; } int DestroyShm(int shmid) { if(shmctl(shmid,IPC_RMID,NULL) &lt; 0) { perror(&quot;shmctl&quot;); return -1; } return 0; } int CreateShm(int size) { return CommShm(size,IPC_CREAT | IPC_EXCL | 0666); } int GetShm(int size) { return CommShm(size,IPC_CREAT); }  //client.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/shm/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/uds/" title="Unix domain socket" >Unix domain socket</a>
                                 </h1>
                             </header>
@@ -289,29 +314,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
                             <p class="readmore"><a href="https://workerwork.github.io/posts/remote-desktop/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/rust-game/" title="使用rust语言&#43;SDL2库写游戏" >使用rust语言&#43;SDL2库写游戏</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月8日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/rust">rust</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装rust curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  2. 设置rust国内源 #当前用户目录下 /linuxidc/.cargo/ 的.cargo 文件夹，进入.cargo 当前目录，在当前目下创建 config 文件 source.crates-io] registry = &quot;https://github.com/rust-lang/crates.io-index&quot; replace-with = 'ustc' [source.ustc] registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;  3. 安装SDL库 dnf install SDL2 dnf install SDL2-devel dnf install SDL2_image-devel dnf install SDL2_gfx-devel dnf install SDL2_mixer-devel dnf install SDL2_ttf-devel  4. 创建rust项目 cargo new testSDL cd testSDL 编辑cargo.toml，加入sdl2依赖 [dongfeng@localhost testSDL]$ cat Cargo.toml [package] name = &quot;testsdl&quot; version = &quot;0.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/rust-game/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -376,6 +378,10 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
     </li>
     
@@ -409,10 +415,6 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
 </ul>
@@ -482,7 +484,7 @@ root@dongfeng-virtual-machine:/home/dongfeng# cat Install-xrdp-3.0.sh #!/bin/bas
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
     </li>
     
     <li>

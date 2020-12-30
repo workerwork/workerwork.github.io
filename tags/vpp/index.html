@@ -80,6 +80,41 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/vpp-kernel/">vpp和linux内核协议栈通信</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年12月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 背景介绍 基于VPP开发一款网络设备，除使用VPP框架实现端口数据报文转发外，还需要对设备进行配置和管理， 比较常用的是要实现ssh、web等相关服务，另外，由于VPP并未实现dhcp server的功能，控制面可能还需移植isc-dhcp类似的dhcp server。 相关的用户态程序是基于Linux内核的socket来收发包的，因此，需要实现VPP和Linux内核协议栈通信的方法， 可以将访问控制面的报文由VPP上送至Linux协议的协议栈。
+2. 实现原理 VPP和Linux内核协议栈通信有两种方法，分别是基于Linux的TAP/TUN和VETH两种机制， 对这两种机制不了解的朋友，建议先阅读下如下两个衔接的内容：
+TUN/TAP：https://segmentfault.com/a/1190000009249039
+VETH：https://segmentfault.com/a/1190000009251098
+基于TAP/TUN的方法：
+如上图，PC的地址是192.168.1.2，Linux Kernel的管理接口地址是192.168.1.1，需要PC通过VPP可以ping同Linux内核的192.168.1.1地址
+技术原理图如上，物理网卡对应VPP中的GE4/0/0，VPP创建tap接口，使用l2 bridge机制将GE4/0/0和tap桥接，进入GE4/0/0的报文通过l2 bridge转发到TAP， VPP的TAP相当于用户态进程，另一端对应的是Linux内核中的TAP接口，报文通过TAP机制重入到Linux内核，实现了VPP到控制面的通信
+实现命令:
+vpp#set int l2 bridge GigabitEthernet4/0/0 1 vpp#set int state GigabitEthernet4/0/0 up vpp#tap connect lstack vpp#set int l2 bridge tap-0 1 vpp#set int state tap-0 up  上述操作完成后，在linux后台，ifconfig发现多了一个lstack接口，给lstack接口配置好IP地址，就可以实现PC和设备的通信了。
+基于VETH方法：
+VETH技术原理如上图，通过在vpp上创建host-interface的方式实现，使用VETH方式的效率更高，实际使用时推荐此种方法
+配置步骤如下
+linux后台配置： ~# ip netns add ns0 ~# ip link add vpp0 type veth peer name vethns0 ~# ip link set vethns0 netns ns0 ~# ip netns exec ns0 ip link set lo up ~# ip netns exec ns0 ip link set vethns0 up ~# ip netns exec ns0 ip addr add 192.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-kernel/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vpp-cli/">vpp-cli命令行总结</a>
                                 </h1>
                             </header>
@@ -293,6 +328,10 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
     </li>
     
@@ -326,10 +365,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
 </ul>
@@ -399,7 +434,7 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
     </li>
     
     <li>

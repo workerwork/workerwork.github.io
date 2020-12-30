@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/p4/">p4实践环境</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年5月6日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/p4">p4</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装ubuntu16.04(18.04)并更新依赖 # sudo apt update # sudo apt-get install automake cmake libjudy-dev libpcap-dev libboost-dev \ libboost-test-dev libboost-program-options-dev libboost-system-dev \ libboost-filesystem-dev libboost-thread-dev libevent-dev libtool \ flex bison pkg-config g++ libssl-dev -y # sudo apt-get install cmake g++ git automake libtool libgc-dev bison flex libfl-dev \ libgmp-dev libboost-dev libboost-iostreams-dev libboost-graph-dev \ llvm pkg-config python python-scapy python-ipaddr python-ply tcpdump curl -y # sudo apt-get install libreadline6 libreadline6-dev python-pip python-scapy -y # sudo pip install psutil # sudo pip install crcmod  2.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/p4/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/github-fast/">github加速</a>
                                 </h1>
                             </header>
@@ -311,31 +334,6 @@ SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_s
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/centos-iso/">制作CentOS ISO</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 复制光盘文件 1）挂载iso镜像 #创建目录用于挂载光盘 mkdir /root/centos7 #挂载iso镜像 mount -o loop CentOS-7.0-1406-x86_64-DVD.iso /root/centos7  2）复制光盘文件到编辑目录进行编辑 因为挂载上iso镜像是只读的，如果要编辑，需要将文件复制出来，再编辑。
-#首先创建编辑目录： mkdir /root/centos7_iso #复制光盘文件： cp -rf /root/centos7/* /root/centos7_iso/ #diskinfo treeinfo文件需单独拷贝下： cp /root/centos7/.discinfo /root/centos7_iso/ cp /root/centos7/.treeinfo /root/centos7_iso/  2. 编辑ks.cfg文件 系统安装的时候，按照ks.cfg文件的内容进行安装，我们把ks.cfg文件放到isolinux目录下：
-cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM64T #version=DEVEL # Install OS instead of upgrade install # Keyboard layouts keyboard 'us' # Root password rootpw --iscrypted $1$JtB/A66X$GCT7X3FCJVAPGd3sEY0mx0 # System language lang en_US # System authorization information auth --useshadow --passalgo=sha512 # Use cdrom installation media cdrom # Use text mode install #text graphical # SELinux configuration selinux --disabled # Do not configure the X Window System skipx #firstboot --enable #ignoredisk --only-use=sda # Firewall configuration firewall --disabled # Network information network --bootproto=dhcp --device=eth0 --onboot=no network --hostname=localhost.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/centos-iso/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -360,7 +358,15 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
         <a href="https://workerwork.github.io/tags/linux/page/3/">3</a>
     </li>
     
+    <li >
+        <a href="https://workerwork.github.io/tags/linux/page/4/">4</a>
+    </li>
+    
 
+    
+    <li class="next">
+        <a href="https://workerwork.github.io/tags/linux/page/4/">下一页</a>
+    </li>
     
 </ol>
 
@@ -382,6 +388,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
@@ -417,10 +427,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
 </ul>
@@ -490,7 +496,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
     </li>
     
     <li>

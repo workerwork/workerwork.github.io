@@ -70,6 +70,32 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gogs/" title="使用gogs搭建git服务器" >使用gogs搭建git服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                 1. gogs介绍 gogs官网：https://gogs.io/ 项目源码：https://github.com/gogs/gogs
+2. docker安装gogs 1 ）下载gogs的docker镜像 docker pull gogs/gogs  2 ）创建gogs存储目录 mkdir -p /var/gogs  3 ）使用gogs镜像创建容器 docker run -d --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs  4 ）使用 ip:10080执行图像界面安装 ……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/gogs/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/centos-iso/" title="制作CentOS ISO" >制作CentOS ISO</a>
                                 </h1>
                             </header>
@@ -309,6 +335,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
     </li>
     
@@ -342,10 +372,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <li>
         <a href="https://workerwork.github.io/posts/vpp-cli/" title="vpp-cli命令行总结">vpp-cli命令行总结</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/shm/" title="Shared Memory">Shared Memory</a>
     </li>
     
 </ul>
@@ -415,7 +441,7 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/vpp/">vpp(6)</a>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
     </li>
     
     <li>
