@@ -6,10 +6,23 @@
     <description>Recent content in linux on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 30 Dec 2020 15:05:51 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 07 Jan 2021 11:06:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>二进制瘦身</title>
+      <link>https://workerwork.github.io/posts/sub-bin/</link>
+      <pubDate>Thu, 07 Jan 2021 11:06:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/sub-bin/</guid>
+      <description>1. 符号表信息和调试信息 符号表信息（symbols）和调试信息（debug info）是由不同段区分的。
+使用 readelf -S binfile 可以查看ELF文件的所有段。
+调试信息相关的段：
+# readelf -S a.out | grep debug [27] .debug_aranges PROGBITS 0000000000000000 000016d0 [28] .debug_info PROGBITS 0000000000000000 00001700 [29] .debug_abbrev PROGBITS 0000000000000000 00001a0f [30] .debug_line PROGBITS 0000000000000000 00001adb [31] .debug_str PROGBITS 0000000000000000 00001bd2  符号表相关的段：
+# readelf -S a.out | grep tab [32] .symtab SYMTAB 0000000000000000 00001e18 [33] .strtab STRTAB 0000000000000000 00002670 [34] .shstrtab STRTAB 0000000000000000 00002a8f  注： 下文中提及的符号表相关段将不包括 .</description>
+    </item>
     
     <item>
       <title>EXPORT SYMBOL</title>

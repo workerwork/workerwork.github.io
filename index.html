@@ -70,6 +70,33 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身" >二进制瘦身</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2021年1月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 符号表信息和调试信息 符号表信息（symbols）和调试信息（debug info）是由不同段区分的。
+使用 readelf -S binfile 可以查看ELF文件的所有段。
+调试信息相关的段：
+# readelf -S a.out | grep debug [27] .debug_aranges PROGBITS 0000000000000000 000016d0 [28] .debug_info PROGBITS 0000000000000000 00001700 [29] .debug_abbrev PROGBITS 0000000000000000 00001a0f [30] .debug_line PROGBITS 0000000000000000 00001adb [31] .debug_str PROGBITS 0000000000000000 00001bd2  符号表相关的段：
+# readelf -S a.out | grep tab [32] .symtab SYMTAB 0000000000000000 00001e18 [33] .strtab STRTAB 0000000000000000 00002670 [34] .shstrtab STRTAB 0000000000000000 00002a8f  注： 下文中提及的符号表相关段将不包括 .……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/sub-bin/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL" >EXPORT SYMBOL</a>
                                 </h1>
                             </header>
@@ -321,33 +348,6 @@ System.map文件位于/或者/boot、/usr/src/linux/下
                             <p class="readmore"><a href="https://workerwork.github.io/posts/system-map/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore" >Linux 内核调试 kdump vmcore</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年10月28日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/crash">crash</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. kdump介绍 linux内核发送崩溃时，kdump会生成一个内核转储文件vmcore。 可以通过分析vmcore分析出内核崩溃的原因.
-crash是一个被广泛应用的内核奔溃转储文件分析工具.
-使用crash调试内核转储文件，需要安装crash工具和内核调试工具kernel-debuginfo.
-2. 安装kdump crash kexec-tools 一般在系统镜像文件中就有相对应的rpm包
-3. 配置kdump vim /boot/grub/menu.lst： 设置 crashkernel=auto vim /etc/kdump.conf： path /var/crash （core文件产生的目录）  4. 启动kdump systemctl start kdump  5. 安装kernel-debuginfo 下载内核版本对应的文件 kernel-debuginfo-3.10.0-957.el7.x86_64.rpm kernel-debuginfo-common-x86_64-3.10.0-957.el7.x86_64.rpm  6. 分析vmcore abrt-cli list crash /usr/lib/debug/lib/modules/3.10.0-957.el7.x86_64/vmlinux vmcore crash&gt; bt PID: 7473 TASK: ffff9027d874bf40 CPU: 0 COMMAND: &quot;cat&quot; #0 [ffff9026d0ea3638] machine_kexec at ffffffffbd060b2a #1 [ffff9026d0ea3698] __crash_kexec at ffffffffbd113402 #2 [ffff9026d0ea3768] crash_kexec at ffffffffbd1134f0 #3 [ffff9026d0ea3780] oops_end at ffffffffbd717778 #4 [ffff9026d0ea37a8] no_context at ffffffffbd706f98 #5 [ffff9026d0ea37f8] __bad_area_nosemaphore at ffffffffbd70702f #6 [ffff9026d0ea3848] bad_area_nosemaphore at ffffffffbd7071a0 #7 [ffff9026d0ea3858] __do_page_fault at ffffffffbd71a730 #8 [ffff9026d0ea38c0] do_page_fault at ffffffffbd71a925 #9 [ffff9026d0ea38f0] page_fault at ffffffffbd716768 [exception RIP: strcmp+32] RIP: ffffffffbd353d20 RSP: ffff9026d0ea39a0 RFLAGS: 00010202 RAX: 000000000000002f RBX: ffff90240da5a080 RCX: 0000000000000000 RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9026cd27fc11 RBP: ffff9026d0ea39a0 R8: 00000000004b1de2 R9: ffff9026cd27fc10 R10: ffff90253fc01d00 R11: ffffc0428c349fc0 R12: 0000000000000001 R13: ffff9026cd27fc10 R14: 0000000000000001 R15: ffff9027c16f1580 ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018 #10 [ffff9026d0ea39a8] send_log at ffffffffc0c22fd5 [xx] #11 [ffff9026d0ea3ac0] user_file at ffffffffc0c0c571 [xx] #12 [ffff9026d0ea3f00] sys_open at ffffffffc0c56670 [xxt] #13 [ffff9026d0ea3f50] system_call_fastpath at ffffffffbd71f7d5 RIP: 00007f2e860c2a30 RSP: 00007fff6d8755a8 RFLAGS: 00010202 RAX: 0000000000000002 RBX: 00007fff6d875868 RCX: 000000000060bc60 RDX: 1fffffffffff0000 RSI: 0000000000000000 RDI: 00007fff6d876293 RBP: 0000000000001000 R8: 0000000000000000 R9: 0000000000000000 R10: 00007fff6d875020 R11: 0000000000000246 R12: 0000000000402644 R13: 0000000000010000 R14: 0000000000000000 R15: 0000000000000000 ORIG_RAX: 0000000000000002 CS: 0033 SS: 002b crash&gt; dis -l ffffffffbd353d20 /usr/src/debug/kernel-3.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/vmcore/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -380,6 +380,10 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
         <a href="https://workerwork.github.io/page/6/">6</a>
     </li>
     
+    <li >
+        <a href="https://workerwork.github.io/page/7/">7</a>
+    </li>
+    
 
     
     <li class="next">
@@ -406,6 +410,10 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL">EXPORT SYMBOL</a>
@@ -441,10 +449,6 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     
     <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
 </ul>
@@ -486,7 +490,7 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(20)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(21)</a>
     </li>
     
     <li>
@@ -542,6 +546,8 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
+    <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
@@ -577,6 +583,8 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
     
     <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/en-strip/">en-strip</a>
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
@@ -626,6 +634,8 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
     
+    <a href="https://workerwork.github.io/tags/objcopy/">objcopy</a>
+    
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
@@ -663,6 +673,8 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/strip/">strip</a>
     
     <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
     

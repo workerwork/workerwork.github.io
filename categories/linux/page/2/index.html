@@ -80,6 +80,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kvm2/">自建kvm虚拟机</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年7月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 自定义虚拟机 egrep -q &quot;(svm|vmx)&quot; /proc/cpuinfo &amp;&amp; echo &quot;yes&quot; lsmod|grep kvm # centos yum install -y qemu-kvm #KVM主程序，KVM虚拟化模块 yum install -y libvirt #虚拟化服务库 yum install -y bridge-utils ln -s /usr/libexec/qemu-kvm /usr/bin/qemu-kvm # ubuntu apt install qemu qemu-kvm apt install libvirt-bin apt install bridge-utils ln -s /usr/bin/qemu-system-x86_64 /usr/bin/qemu-kvm systemctl start libvirtd systemctl enable libvirtd qemu-img create -f qcow2 vm_NGC.img 20G #创建磁盘镜像 qemu-kvm -name vm_NGC -m 4096 -cpu host -enable-kvm -smp 8 -hda vm_NGC.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kvm2/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/keepalived/">keepalived应用</a>
                                 </h1>
                             </header>
@@ -320,29 +343,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/local-yum/">搭建本地yum仓库</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月28日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 安装工具 yum install -y createrepo  2. 编辑 comps.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;!DOCTYPE comps PUBLIC &quot;-//CentOS//DTD Comps info//EN&quot; &quot;comps.dtd&quot;&gt; &lt;comps&gt; &lt;group&gt; &lt;id&gt;epc&lt;/id&gt; &lt;name&gt;epc&lt;/name&gt; &lt;name xml:lang=&quot;en_GB&quot;&gt;epc&lt;/name&gt; &lt;description&gt;epc installation.&lt;/description&gt; &lt;default&gt;false&lt;/default&gt; &lt;uservisible&gt;false&lt;/uservisible&gt; &lt;packagelist&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-base&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ui&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovs-rest&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-ovsdb-agent&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-signaltrace&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-gwsc&lt;/packagereq&gt; &lt;packagereq type=&quot;mandatory&quot;&gt;baicells-epc-openapi&lt;/packagereq&gt; &lt;/packagelist&gt; &lt;/group&gt; &lt;/comps&gt;  3. 创建仓库 createrepo -g comps.xml . #精确分组 #createrepo . #createrepo --update  4. 拷贝rpm包到仓库 mkdir rpms cp *.rpm rpms/  5.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/local-yum/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -363,7 +363,15 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
         <a href="https://workerwork.github.io/categories/linux/page/2/">2</a>
     </li>
     
+    <li >
+        <a href="https://workerwork.github.io/categories/linux/page/3/">3</a>
+    </li>
+    
 
+    
+    <li class="next">
+        <a href="https://workerwork.github.io/categories/linux/page/3/">下一页</a>
+    </li>
     
 </ol>
 
@@ -385,6 +393,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <section class="widget">
         <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
+    </li>
     
     <li>
         <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL">EXPORT SYMBOL</a>
@@ -420,10 +432,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
 </ul>
@@ -465,7 +473,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(20)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(21)</a>
     </li>
     
     <li>
@@ -521,6 +529,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
+    <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
@@ -556,6 +566,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
     
     <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/en-strip/">en-strip</a>
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
@@ -605,6 +617,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
     
+    <a href="https://workerwork.github.io/tags/objcopy/">objcopy</a>
+    
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
@@ -642,6 +656,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/strip/">strip</a>
     
     <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
     

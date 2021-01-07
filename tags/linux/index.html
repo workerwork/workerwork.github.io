@@ -80,6 +80,33 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/sub-bin/">二进制瘦身</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2021年1月7日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 符号表信息和调试信息 符号表信息（symbols）和调试信息（debug info）是由不同段区分的。
+使用 readelf -S binfile 可以查看ELF文件的所有段。
+调试信息相关的段：
+# readelf -S a.out | grep debug [27] .debug_aranges PROGBITS 0000000000000000 000016d0 [28] .debug_info PROGBITS 0000000000000000 00001700 [29] .debug_abbrev PROGBITS 0000000000000000 00001a0f [30] .debug_line PROGBITS 0000000000000000 00001adb [31] .debug_str PROGBITS 0000000000000000 00001bd2  符号表相关的段：
+# readelf -S a.out | grep tab [32] .symtab SYMTAB 0000000000000000 00001e18 [33] .strtab STRTAB 0000000000000000 00002670 [34] .shstrtab STRTAB 0000000000000000 00002a8f  注： 下文中提及的符号表相关段将不包括 .……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/sub-bin/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/export-symbol/">EXPORT SYMBOL</a>
                                 </h1>
                             </header>
@@ -335,42 +362,6 @@ crash是一个被广泛应用的内核奔溃转储文件分析工具.
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/vpp-cli/">vpp-cli命令行总结</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年9月17日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/vpp">vpp</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 介绍 vpp网络协议栈配备了一组调试命令。访问CLI（具有适当权限）的最简单方法是使用vppctl命令:
-sudo vppctl &lt;cli command&gt;  CLI解析器匹配静态的关键字字符串后，调用动作执行函数。 你可以通过在代码源文件中搜索VLIB_CLI_COMMAND宏的来查找CLI命令的源代码.
-2. 调试和Telnet CLI 使用unix交互式参数或启动配置选项启用调试CLI。 这会导致VPP不以守护进程的情况启动，并在运行它的终端上显示命令行界面.
-使用cli-listen localhost:5002选项启用Telnet CLI，这将导致VPP侦听localhost地址端口5002上的TCP连接。 然后，Telnet客户端可以连接到此端口（例如，telnet localhost 5002）并将收到命令行提示符。
-以下配置将启用这两种机制：
-unix { interactive cli-listen localhost:5002 }  CLI以横幅图形（可以禁用）和命令行提示符提示CLI开始。对于VPP的发布版本，命令行提示符通常为“vpp”， 对于启用了调试功能的开发版本，命令行提示符为“DBGvpp＃”,可以通过unix cli-prompt设置命令行提示符， 并通过unix cli-no-banner来禁止横幅.
-3. CLI特征  &lt;-或-&gt; 左右光标键，在命令行内移动光标。 Ctrl-左/右将向左或向右搜索下一个单词的开头。 Home / end将光标跳转到行的开头和结尾。 可以使用exit命令关闭CLI。 或者，空输入行上的^ D也将关闭会话。关闭调试会话也将关闭VPP  4. 命令行参数与配置文件 VPP网络协议栈可以在命令行或配置文件中提供配置参数。 您可以通过搜索VLIB_CONFIG_FUNCTION宏在源代码中找到命令行参数解析器的相关代码。 调用VLIB_CONFIG_FUNCTION（foo_config，“foo”）将使函数foo_config接收名为“foo”的参数块中给出的所有参数， 例如：“foo {arg1 arg2 arg3 &hellip;}”
-VPP应用程序必须能够找到自己的可执行映像。确保这一点最简单方法是通过给出其绝对路径来调用VPP应用程序;
-例如：/usr/bin/vpp 。
-在启动时，VPP应用程序通过解析自己的ELF段以生成初始化，配置和退出处理程序的列表
-配置文件：
-还可以在启动配置文件中提供命令行参数，配置文件的路径在命令行上提供给VPP应用程序。
-配置文件的格式是一个简单的文本文件，其内容与命令行相同，但是能够使用换行符使内容更加易于阅读。 例如：
-unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } api-trace { on } dpdk { dev 0000:03:00.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/vpp-cli/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -423,6 +414,10 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL">EXPORT SYMBOL</a>
     </li>
     
@@ -456,10 +451,6 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <li>
         <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/vmcore/" title="Linux 内核调试 kdump vmcore">Linux 内核调试 kdump vmcore</a>
     </li>
     
 </ul>
@@ -501,7 +492,7 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(20)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(21)</a>
     </li>
     
     <li>
@@ -557,6 +548,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
+    <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
@@ -592,6 +585,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
     
     <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/en-strip/">en-strip</a>
     
     <a href="https://workerwork.github.io/tags/epc/">epc</a>
     
@@ -641,6 +636,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     
     <a href="https://workerwork.github.io/tags/module/">module</a>
     
+    <a href="https://workerwork.github.io/tags/objcopy/">objcopy</a>
+    
     <a href="https://workerwork.github.io/tags/offload/">offload</a>
     
     <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
@@ -678,6 +675,8 @@ unix { nodaemon /var/log/vpp/vpp.log full-coredump cli-listen localhost:5002 } a
     <a href="https://workerwork.github.io/tags/shm/">shm</a>
     
     <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/strip/">strip</a>
     
     <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
     
