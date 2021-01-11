@@ -6,10 +6,31 @@
     <description>Recent content on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 07 Jan 2021 11:06:51 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 Jan 2021 09:49:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>linux checksum</title>
+      <link>https://workerwork.github.io/posts/checksum/</link>
+      <pubDate>Mon, 11 Jan 2021 09:49:51 +0800</pubDate>
+      
+      <guid>https://workerwork.github.io/posts/checksum/</guid>
+      <description>1. 关键结构 由于目前很多网卡设备是支持对L4层数据包进行校验和的计算和验证的，所以在L4协议软件的实现中，
+会根据网卡的支持情况作不同的处理，为此内核在struct sk_buff结构和struct net_device中增加了校验和相关的参数，如下：
+struct sk_buff
+上面的结构中，和校验和有关的几个字段如下：
+#define CHECKSUM_NONE 0 #define CHECKSUM_UNNECESSARY 1 #define CHECKSUM_COMPLETE 2 #define CHECKSUM_PARTIAL 3 struct sk_buff { union { __wsum	csum; struct { __u16	csum_start; __u16	csum_offset; }; }; __u8 ip_summed:2, }  联合体中哪个成员有效取决于ip_summed的值，ip_summed共两个bit，可取四个标志，而且在发送和接收时的含义还有所不同
+在接收过程中，ip_summed字段包含了设备驱动告诉L4软件当前校验和的状态，各取值含义如下：
+ CHECKSUM_NONE：硬件没有提供校验和，可能是硬件不支持，也可能是硬件校验出错但是并未丢弃数据包，而是让L4软件重新校验 CHECKSUM_UNNECESSARY：硬件已经进行了完整的校验，无需软件再进行检查，L4收到数据包后如果检查ip_summed是这种情况，就可以跳过校验过程 CHECKSUM_COMPLETE：硬件已经校验了L4报头和其payload部分，并且校验和保存在了csum中，L4软件只需要再计算伪报头然后检查校验结果即可  在发送过程中，ip_summed字段包含了L4软件告诉设备驱动程序当前校验和的状态，各取值含义如下：
+ CHECKSUM_NONE：L4软件已经进行了校验，硬件无需做任何事情 CHECKSUM_PARTIAL：L4软件计算了伪报头，并且将值保存在了首部的check字段中，硬件需要计算其余部分的校验和  struct net_device
+net_device结构中的feature字段中定义了如下和校验和相关的字段，这些字段表明了硬件计算校验和的能力
+NETIF_F_NO_CSUM：该设备非常可靠，无需L4执行任何校验，环回设备一般设置该标记 NETIF_F_IP_CSUM：设备可以对基于IPv4的TCP和UDP数据包进行校验 NETIF_F_IPV6_CSUM：设备可以对基于IPv6的TCP和UDP数据包进行校验 NETIF_F_HW_CSUM： 设备可以对任何L4协议的数据包进行校验
+注：这些概念和字段的含义同样适用于TCP校验和处理过程
+2. 输入数据报的校验和计算 udp4_csum_init()
+@skb: 待校验的数据报 @uh：该数据报的UDP首部 @proto：L4协议号，为IPPROTO_UDP或者IPPROTO_UDPLITE static inline int udp4_csum_init(struct sk_buff *skb, struct udphdr *uh, int proto) { const struct iphdr *iph; int err; //这两个字段用于指示对报文的哪些部分进行校验，cov指coverage， //只有UDPLite使用，对于UDP，会对整个报文进行校验 UDP_SKB_CB(skb)-&amp;gt;partial_cov = 0; UDP_SKB_CB(skb)-&amp;gt;cscov = skb-&amp;gt;len; //UDPLITE，忽略 if (proto == IPPROTO_UDPLITE) { err = udplite_checksum_init(skb, uh); if (err) return err; } iph = ip_hdr(skb); //UDP首部校验和字段为0，这种情况说明已经处理过了，设置为CHECKSUM_UNNECESSARY，后续无需再进行处理 if (uh-&amp;gt;check == 0) { skb-&amp;gt;ip_summed = CHECKSUM_UNNECESSARY; } else if (skb-&amp;gt;ip_summed == CHECKSUM_COMPLETE) { //还有伪首部需要校验，所以添加伪首部校验，如果校验成功，设置为CHECKSUM_UNNECESSARY //csum_tcpudp_magic()计算伪首部校验和后进行验证，如果验证ok，返回0，该函数体系结构相关， //为了高效，用汇编语言实现 if (!</description>
+    </item>
     
     <item>
       <title>二进制瘦身</title>

@@ -3,12 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://workerwork.github.io/tags/bin/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
+    <loc>https://workerwork.github.io/categories/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/</loc>
+    <loc>https://workerwork.github.io/tags/checksum/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/linux/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/categories/linux/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/checksum/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/posts/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/</loc>
+    <lastmod>2021-01-11T09:49:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://workerwork.github.io/tags/bin/</loc>
     <lastmod>2021-01-07T11:06:51+08:00</lastmod>
   </url>
   
@@ -18,37 +53,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/linux/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/categories/linux/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/tags/objcopy/</loc>
     <lastmod>2021-01-07T11:06:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/posts/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://workerwork.github.io/tags/strip/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/tags/</loc>
-    <lastmod>2021-01-07T11:06:51+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://workerwork.github.io/</loc>
     <lastmod>2021-01-07T11:06:51+08:00</lastmod>
   </url>
   
@@ -158,12 +168,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/rust/</loc>
+    <loc>https://workerwork.github.io/categories/rust/</loc>
     <lastmod>2020-12-09T14:07:52+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/rust/</loc>
+    <loc>https://workerwork.github.io/tags/rust/</loc>
     <lastmod>2020-12-09T14:07:52+08:00</lastmod>
   </url>
   
@@ -203,12 +213,12 @@
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/tags/crash/</loc>
+    <loc>https://workerwork.github.io/categories/crash/</loc>
     <lastmod>2020-10-28T11:42:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://workerwork.github.io/categories/crash/</loc>
+    <loc>https://workerwork.github.io/tags/crash/</loc>
     <lastmod>2020-10-28T11:42:51+08:00</lastmod>
   </url>
   

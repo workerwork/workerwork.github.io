@@ -80,6 +80,38 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/affinity/">cpu亲和性</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月20日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 什么是cpu亲和性(affinity) CPU的亲和性， 就是进程要在指定的 CPU 上尽量长时间地运行而不被迁移到其他处理器，也称为CPU关联性； 再简单的点的描述就将制定的进程或线程绑定到相应的cpu上； 在多核运行的机器上，每个CPU本身自己会有缓存，缓存着进程使用的信息，而进程可能会被OS调度到其他CPU上， 如此，CPU cache命中率就低了，当绑定CPU后，程序就会一直在指定的cpu跑，不会由操作系统调度到其他CPU上，性能有一定的提高。
+软亲和性(affinity): 就是进程要在指定的CPU上尽量长时间地运行而不被迁移到其他处理器，Linux内核进程调度器天生就具有被称为软CPU亲和性(affinity) 的特性，这意味着进程通常不会在处理器之间频繁迁移。 这种状态正是我们希望的，因为进程迁移的频率小就意味着产生的负载小。
+硬亲和性(affinity): 简单来说就是利用linux内核提供给用户的API，强行将进程或者线程绑定到某一个指定的cpu核运行。
+解释: 在linux内核中，所有的进程都有一个相关的数据结构，称为 task_struct。这个结构非常重要，原因有很多；其中与 亲和性（affinity）相关度最高的是 cpus_allowed 位掩码。 这个位掩码由 n 位组成，与系统中的 n 个逻辑处理器一一对应。 具有 4 个物理 CPU 的系统可以有 4 位。如果这些 CPU 都启用了超线程，那么这个系统就有一个 8 位的位掩码。 如果为给定的进程设置了给定的位，那么这个进程就可以在相关的 CPU 上运行。因此，如果一个进程可以在任何 CPU 上运行，并且能够根据需要在处理器之间进行迁移，那么位掩码就全是 1。 实际上，这就是 Linux 中进程的缺省状态;（这部分内容在这个博客中有提到一点：http://www.cnblogs.com/wenqiang/p/4802619.html）
+cpus_allowed用于控制进程可以在哪里处理器上运行
+sched_set_affinity() （用来修改位掩码）
+sched_get_affinity() （用来查看当前的位掩码）
+2. 进程与cpu的绑定 sched_setaffinity可以将某个进程绑定到一个特定的CPU。你比操作系统更了解自己的程序，为了避免调度器愚蠢的调度你的程序，或是为了在多线程程序中避免缓存失效造成的开销，你可能会希望这样做
+在进行进程与cpu的绑定前，我们先了解编写程序需要准备的知识点
+SCHED_SETAFFINITY(2) Linux Programmer's Manual SCHED_SETAFFINITY(2) NAME sched_setaffinity, sched_getaffinity - set and get a process's CPU affinity mask SYNOPSIS #define _GNU_SOURCE /* See feature_test_macros(7) */ #include &lt;sched.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/affinity/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/kernel-module/">kernel module编程</a>
                                 </h1>
                             </header>
@@ -203,6 +235,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
     </li>
     
@@ -236,10 +272,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
 </ul>
@@ -281,7 +313,7 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(21)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(22)</a>
     </li>
     
     <li>
@@ -342,6 +374,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/checksum/">checksum</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     

@@ -70,6 +70,30 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/5gc-c-build/" title="Build 5GC-C" >Build 5GC-C</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月1日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 安装打包工具 apt-get install -y build-essential apt-get install -y ruby rubygems ruby-dev #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ #gem sources -l gem install fpm  2. 构建目录结构  tree文件
+root@gmzhang-dev:/home/gmzhang/work/dongfeng/deb-build/5gc-c-build# tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ └── amf │ ├── config │ │ ├── amf.conf │ │ └── asn.log.properties │ ├── context │ │ └── SystemVersionDB │ ├── data │ │ └── statistics │ ├── licensefile -&gt; .……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/5gc-c-build/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/ubuntu-docker/" title="创建ubuntu docker镜像" >创建ubuntu docker镜像</a>
                                 </h1>
                             </header>
@@ -254,31 +278,6 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
                             <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器" >使用caddy搭建文件服务器</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年8月29日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/servers">servers</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. caddy介绍 caddy官网：https://caddyserver.com/ 项目源码：https://github.com/caddyserver/caddy
-2. 下载caddy 从官网下载caddy，下载时选择需要的插件
-3. 创建工作路径 mkdir caddy-workspace cd caddy-workspace  4. 创建Caddyfile 192.168.9.105:8888 { gzip root filebrowser log access.log errors errors.log filebrowser / filebrowser/files { database /root/df/caddy/filebrowser/filebrowser.db	} } 192.168.9.105:9999 { gzip browse root yum.repo log access.log errors errors.log } 192.168.9.105:7777 { gzip browse root static log access.log errors errors.log } 192.168.9.105:80 { proxy / http://192.168.103.147:80 } 192.168.9.105:5566 { gzip root test }  5. 运行caddy caddy &amp;  6.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/caddy/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -347,6 +346,10 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
     </li>
     
@@ -380,10 +383,6 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     
     <li>
         <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表">Linux 内核符号表</a>
     </li>
     
 </ul>
@@ -425,7 +424,7 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     </li>
     
     <li>
-        <a href="https://workerwork.github.io/categories/linux/">linux(21)</a>
+        <a href="https://workerwork.github.io/categories/linux/">linux(22)</a>
     </li>
     
     <li>
@@ -486,6 +485,8 @@ vi /etc/login.defs 修改配置文件 PASS_MAX_DAYS 90 #新建用户的密码最
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
     <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/checksum/">checksum</a>
     
     <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
     
