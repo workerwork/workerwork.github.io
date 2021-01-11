@@ -70,6 +70,29 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC" >BUILD 5GC</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2021年1月11日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/shell">shell</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 目录结构 dongfeng@worker:~/work/5G/5gc-c-build$ tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ ├── amf -&gt; amf_1.0.0 │ │ ├── amf_1.0.0 │ │ ├── lo.bin │ │ └── ls.bin │ ├── config │ │ ├── amf.conf │ │ └── asn.log.properties │ ├── log │ │ └── amf.log │ └── xml │ ├── amfInfo.xml │ ├── ausf.xml │ ├── guami.xml │ ├── nrf.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/build-5gc/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum" >linux checksum</a>
                                 </h1>
                             </header>
@@ -318,37 +341,6 @@ static int __net_init xfrm_user_net_init(struct net *net) { struct sock *nlsk; s
                             <p class="readmore"><a href="https://workerwork.github.io/posts/rustdoc/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO" >网卡offload GSO</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年11月30日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                 1. GSO和TSO TSO(TCP Segmentation Offload): 是一种利用网卡来对大数据包进行自动分段，降低CPU负载的技术。 其主要是延迟分段
-GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送到网卡之前判断网卡是否支持TSO，如果网卡支持TSO则让网卡分段，否则协议栈分完段再交给驱动
-如果TSO开启，GSO会自动开启
-驱动程序在注册网卡设备的时候默认开启GSO: NETIF_F_GSO
-驱动程序会根据网卡硬件是否支持来设置TSO: NETIF_F_TSO
-可以通过ethtool -K来开关GSO/TSO
-2. 开启关系 GSO开启， TSO开启: 协议栈推迟分段，并直接传递大数据包到网卡，让网卡自动分段 GSO开启， TSO关闭: 协议栈推迟分段，在最后发送到网卡前才执行分段 GSO关闭， TSO开启: 同GSO开启， TSO开启 GSO关闭， TSO关闭: 不推迟分段，在tcp_sendmsg中直接发送MSS大小的数据包  对紧急数据包或GSO/TSO都不开启的情况，才不会推迟发送， 默认使用当前MSS
-开启GSO后，tcp_send_mss返回mss和单个skb的GSO大小，为mss的整数倍
-3. 包处理流程图 ……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/gso/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -413,6 +405,10 @@ GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -446,10 +442,6 @@ GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -511,6 +503,10 @@ GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -548,6 +544,8 @@ GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     

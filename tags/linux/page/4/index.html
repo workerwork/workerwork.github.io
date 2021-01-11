@@ -80,6 +80,36 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/kernel-dev/">kernel 字符设备驱动</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年4月22日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
+通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
+2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
+int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
+struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
+  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
+ 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
+static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/affinity/">cpu亲和性</a>
                                 </h1>
                             </header>
@@ -235,6 +265,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -268,10 +302,6 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -333,6 +363,10 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -370,6 +404,8 @@ cd /root/centos7_iso/isolinux  vim ks-init.cfg #platform=x86, AMD64, or Intel EM
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     

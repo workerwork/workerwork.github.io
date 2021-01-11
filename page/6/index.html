@@ -70,6 +70,30 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/epc-cicd/" title="EPC的CI/CD" >EPC的CI/CD</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年8月29日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/devops">devops</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 流程介绍 开发人员合并代码到gogs，触发钩子，drone根据git仓库中的.drone.yml进行工作，使用fpm进行rpm打包并更新本地yum仓库
+2. .drone.yml workspace: base: /root/gogs path: epc-c pipeline: build: image: centos7.5:dev environment: - SSH_ARGS=-p 22 -o StrictHostKeyChecking=no - SCP_ARGS=-P 22 -o StrictHostKeyChecking=no - TEST_SERVER=root@192.168.9.105 - RUN_PATH=/root/df/caddy/filebrowser/files/EPC-VERSION commands: - git_rev=$(git rev-parse HEAD| cut -c1-10) - git clone http://192.168.9.105:60080/dongfeng/pack-epc-c.git - cd pack-epc-c - ./pack-epc-c.sh - rpm_name=&quot;baicells-epc-c-$(cat VERSION)-$(cat RELEASE).x86_64.rpm&quot; - rpm_rename=$(echo $rpm_name| awk -F .rpm '{print $1}') - rpm_newname=&quot;$rpm_rename&quot;_&quot;$(date '+%Y%m%d')&quot;_&quot;$git_rev&quot;.rpm - eval $(ssh-agent -s) - ssh-add /root/.ssh/id_rsa - scp $SCP_ARGS $rpm_name &quot;$TEST_SERVER&quot;:&quot;$RUN_PATH&quot;/&quot;$rpm_newname&quot; - ssh &quot;$TEST_SERVER&quot; &gt; /dev/null 2&gt;&amp;1 &lt;&lt; eeooff - cd /root/df/caddy/yum.……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/epc-cicd/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/caddy/" title="使用caddy搭建文件服务器" >使用caddy搭建文件服务器</a>
                                 </h1>
                             </header>
@@ -305,32 +329,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
                             <p class="readmore"><a href="https://workerwork.github.io/posts/auto-epc/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/wcg-install/" title="Wcg Install" >Wcg Install</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2019年1月21日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc">产品doc</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1 前言 1.1 术语    英文缩写 英文全称 中文全称     eGW enterprise gateway 企业网关   OMC operation and maintenance center 操作管理中心    1.2 目的 本文档用来指导安装部署业务网关
-2 安装指导 2.1 安装系统 系统版本要求：centos7.2
-安装步骤： 1. 在服务器上插入U盘/光盘安装盘 2. 服务器启动进入bios，设置从U盘/光盘启动 3. 服务器进入安装引导界面，选择安装centos7.2 4. 磁盘分区： * boot 2G * swap 16G * 余下空间给&rdquo;/&rdquo; 5. 选择gnome典型安装
-2.2 更换内核  进入内核包所在路径 执行yum install kernel-3.10.0-514.el7.centos.x86_64-eGW.rpm替换为eGW专用内核 如果是efi启动执行：grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg 执行reboot重启系统 系统启动成功后，uname -a确认当前系统内核版本是否成功升级到514  2.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/wcg-install/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -399,6 +397,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -432,10 +434,6 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -497,6 +495,10 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -534,6 +536,8 @@ EPC安装包含的RPM包  baicells-epc-ui-3.4.3-1.x86_64_20190220_8799690909.rpm
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     

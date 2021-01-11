@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.57.2" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>BUILD 5GC | WorkSpace</title>
+    <meta property="og:title" content="BUILD 5GC - WorkSpace">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2021-01-11T16:36:51&#43;08:00">
+        
+        
+    <meta property="article:modified_time" content="2021-01-11T16:36:51&#43;08:00">
+        
+    <meta name="Keywords" content="golang,rust,workerwork,python,c,博客,项目管理,软件架构,公众号,小程序">
+    <meta name="description" content="BUILD 5GC">
+        
+    <meta name="author" content="dongfeng">
+    <meta property="og:url" content="https://workerwork.github.io/posts/build-5gc/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+        <link rel="stylesheet" href="/css/prism.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://workerwork.github.io">
+                        WorkSpace
+                    </a>
+                
+                <p class="description">专注于C、Python、Go、Rust、Shell、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://workerwork.github.io">首页</a>
+                    
+                    <a  href="https://workerwork.github.io/books/" title="笔记">笔记</a>
+                    
+                    <a  href="https://workerwork.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://workerwork.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">BUILD 5GC</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2021年1月11日
+                        </date>
+                        
+                        <div class="post-meta">
+                            <span>|</span>
+                            
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/shell">shell</a></span>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span> 阅读</span></span>
+                        </div>
+                        
+                        <div class="post-content">
+                            
+
+<h2 id="1-目录结构">1. 目录结构</h2>
+
+<pre><code>dongfeng@worker:~/work/5G/5gc-c-build$ tree
+.
+├── build.sh
+├── README.md
+└── source
+    ├── 5gc-c.service
+    ├── amf
+    │   └── amf1
+    │       ├── bin
+    │       │   ├── amf -&gt; amf_1.0.0
+    │       │   ├── amf_1.0.0
+    │       │   ├── lo.bin
+    │       │   └── ls.bin
+    │       ├── config
+    │       │   ├── amf.conf
+    │       │   └── asn.log.properties
+    │       ├── log
+    │       │   └── amf.log
+    │       └── xml
+    │           ├── amfInfo.xml
+    │           ├── ausf.xml
+    │           ├── guami.xml
+    │           ├── nrf.xml
+    │           ├── paging-policy.xml
+    │           ├── pcf-am-policy-data.xml
+    │           ├── pcf-ue.xml
+    │           ├── udm-am-subscription-data.xml
+    │           ├── udm-smf-selection.xml
+    │           └── udm-ue.xml
+    ├── ausf
+    │   └── ausf1
+    │       ├── bin
+    │       │   ├── ausf -&gt; ausf_1.0.0
+    │       │   ├── ausf_1.0.0
+    │       │   ├── lo.bin
+    │       │   └── ls.bin
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── ausf.conf
+    │       ├── log
+    │       │   └── ausf.log
+    │       └── xml
+    │           ├── ausf-example.xml
+    │           ├── guami-example.xml
+    │           ├── nrf-example.xml
+    │           ├── pcf-am-policy-data-example.xml
+    │           ├── pcf-ue-example.xml
+    │           ├── udm-am-subscription-data-example.xml
+    │           ├── udm-smf-seleciont-example.xml
+    │           └── udm-ue-example.xml
+    ├── bin-sym
+    │   ├── amf.sym
+    │   ├── ausf.sym
+    │   ├── pcf.sym
+    │   ├── smf.sym
+    │   └── udm.sym
+    ├── init.sh
+    ├── lib
+    │   ├── libev.so.3
+    │   ├── liblog4cplus.so.2
+    │   └── libusrsctp.so.1
+    ├── licensefile
+    │   ├── readme
+    │   └── register
+    ├── pcf
+    │   └── pcf1
+    │       ├── bin
+    │       │   ├── lo.bin
+    │       │   ├── ls.bin
+    │       │   ├── pcf -&gt; pcf_1.0.0
+    │       │   └── pcf_1.0.0
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── pcf.conf
+    │       ├── context
+    │       │   ├── AM_PolicyAsso_Context_DB_
+    │       │   │   └── 282574488338534.ctx
+    │       │   ├── SM_PolicyAsso_Context_
+    │       │   │   └── 282574488338534_1.ctx
+    │       │   ├── SM_PolicyAsso_Context_DB_
+    │       │   │   └── 317101356768825601_1.ctx
+    │       │   ├── SM_PolicyDecision_DB
+    │       │   │   └── 1_default_81.ctx
+    │       │   └── SystemVersionDB
+    │       │       └── 1.ctx
+    │       ├── data
+    │       │   └── statistics
+    │       │       ├── wf0
+    │       │       ├── wf1
+    │       │       ├── wf2
+    │       │       ├── wf3
+    │       │       └── wf4
+    │       ├── log
+    │       │   └── pcf.log
+    │       ├── startup.sh
+    │       └── xml
+    │           ├── af-applicationdata-example.xml
+    │           ├── am-policy-data.xml
+    │           ├── am-ue-policy.xml
+    │           ├── predefined-sm-policy-rules.xml
+    │           ├── sm-policy-data.xml
+    │           └── udr-policy-subscription-example.xml
+    ├── run5gc.sh
+    ├── smf
+    │   └── smf1
+    │       ├── bin
+    │       │   ├── lo.bin
+    │       │   ├── ls.bin
+    │       │   ├── smf -&gt; smf_1.0.0
+    │       │   └── smf_1.0.0
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── smf.conf
+    │       ├── log
+    │       │   └── smf.log
+    │       ├── startup.sh
+    │       └── xml
+    │           ├── dnn.xml
+    │           ├── pfd.xml
+    │           ├── sm-policy-data.xml
+    │           ├── udm.xml
+    │           └── upf.xml
+    ├── udm
+    │   └── udm1
+    │       ├── bin
+    │       │   ├── lo.bin
+    │       │   ├── ls.bin
+    │       │   ├── udm -&gt; udm_1.0.0
+    │       │   └── udm_1.0.0
+    │       ├── config
+    │       │   ├── asn.log.properties
+    │       │   └── udm.conf
+    │       ├── log
+    │       │   └── udm.log
+    │       └── xml
+    │           ├── guami.xml
+    │           ├── pcf-am-policy-data.xml
+    │           ├── pcf-ue.xml
+    │           ├── udm-am-subscription-data.xml
+    │           ├── udm-session-management-subscription-data.xml
+    │           ├── udm-smf-selection.xml
+    │           ├── udm-snssai.xml
+    │           ├── udm-ue-100k.xml
+    │           └── udm-ue-key-100k.xml
+    └── watchdog.sh
+
+42 directories, 101 files
+
+</code></pre>
+
+<h2 id="2-build-sh">2. build.sh</h2>
+
+<pre><code>#!/bin/bash -
+
+install_path=/root/baicells
+
+function usage() {
+    cat &lt;&lt; EOF
+
+----------------------------------------------------
+Baicells 5gc-c Builder.
+
+The script can build Baicells 5gc-c related software.
+
+Warning: you should use root to build. 
+
+Usage: ./build.sh [options] [args]
+
+Options:
+  -h --help      Show this help
+  -r --release   set the release of the deb
+  -v --version   set the version of the deb
+  -c --control   build 5gc-c deb
+  -l --lib       build 5gc-c-lib deb
+
+---------
+Examples:
+--
+
+Print help message.
+# ./build.sh -h
+
+--
+
+Build.
+
+Build specified version of 5gc-c deb:
+# ./build.sh -c -v 2.0.0
+
+Build specified release of 5gc-c deb:
+# ./build.sh -c -r 2
+
+Build specified version and release of 5gc-c deb:
+# ./build.sh -c -v 2.0.0 -r 2
+
+Build specified version of 5gc-c-lib deb:
+# ./build.sh -l -v 2.0.0
+
+Build specified release of 5gc-c-lib deb:
+# ./build.sh -l -r 2
+
+Build specified version and release of 5gc-c-lib deb:
+# ./build.sh -l -v 2.0.0 -r 2
+
+Build specified version and release of 5gc-c and 5gc-c-lib deb:
+# ./build.sh -cl -v 2.0.0 -r 2
+
+note: if version or release not be specified,they will be &quot;1.0.0&quot; or &quot;1&quot; by default.
+--
+
+
+EOF
+exit 0
+}
+
+
+
+function install_deps() {
+    if [[ ! $(which fpm) ]];then
+        apt-get install -y ruby rubygems ruby-dev
+        #gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+        #gem sources -l
+        gem install fpm
+    fi
+}
+
+
+function build_5gc_c() {
+    VERSION=$1
+    RELEASE=$2
+    sed -i &quot;s#\(INSTALL_PATH=\).*#\1$install_path#&quot; &quot;source&quot;/runngc.sh
+    sed -i &quot;s#\(ExecStart=\).*#\1$install_path/init.sh#&quot; &quot;source&quot;/5gc-c.service
+    fpm -f -s dir -t deb -C &quot;source&quot; -n &quot;baicells-5gc-c&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -p . \
+	    --verbose \
+	    --description &quot;BAICELLS-5GC-C&quot; \
+	    --maintainer &quot;dongfeng@baicells.com&quot; \
+	    --vendor &quot;baicells&quot; \
+	    --deb-no-default-config-files \
+	    --config-files $install_path/amf/amf1/config/ \
+	    --config-files $install_path/amf/amf1/xml/ \
+	    --config-files $install_path/amf/amf1/bin/lo.bin \
+	    --config-files $install_path/amf/amf1/bin/ls.bin \
+	    --config-files $install_path/smf/smf1/config/ \
+	    --config-files $install_path/smf/smf1/xml/ \
+	    --config-files $install_path/smf/smf1/bin/lo.bin \
+	    --config-files $install_path/smf/smf1/bin/ls.bin \
+	    --config-files $install_path/ausf/ausf1/config/ \
+	    --config-files $install_path/ausf/ausf1/xml/ \
+	    --config-files $install_path/ausf/ausf1/bin/lo.bin \
+	    --config-files $install_path/ausf/ausf1/bin/ls.bin \
+	    --config-files $install_path/udm/udm1/config/ \
+	    --config-files $install_path/udm/udm1/xml/ \
+	    --config-files $install_path/udm/udm1/bin/lo.bin \
+	    --config-files $install_path/udm/udm1/bin/ls.bin \
+	    --config-files $install_path/pcf/pcf1/config/ \
+	    --config-files $install_path/pcf/pcf1/xml/ \
+	    --config-files $install_path/pcf/pcf1/bin/lo.bin \
+	    --config-files $install_path/pcf/pcf1/bin/ls.bin \
+	    amf=$install_path/ \
+	    smf=$install_path/ \
+	    ausf=$install_path/ \
+	    udm=$install_path/ \
+	    pcf=$install_path/ \
+	    licensefile=$install_path/ \
+	    run5gc.sh=$install_path/ \
+	    init.sh=$install_path/ \
+	    watchdog.sh=$install_path/ \
+	    5gc-c.service=/lib/systemd/system/
+}
+
+function build_5gc_c_lib() {
+    VERSION=$1
+    RELEASE=$2
+    fpm -f -s dir -t deb -n &quot;baicells-5gc-c-lib&quot; -v &quot;$VERSION&quot; --iteration &quot;$RELEASE&quot; -C &quot;source&quot; -p . \
+	    --verbose \
+	    --description &quot;BAICELLS-5GC-C-LIB&quot; \
+	    --maintainer &quot;dongfeng@baicells.com&quot; \
+	    --vendor &quot;baicells&quot; \
+	    --deb-no-default-config-files \
+	    lib=$install_path/	
+}
+
+
+
+OPTION=$(whiptail --title &quot;5GC Builder&quot; --nocancel --menu &quot;Choose your option&quot; 15 60 4 \
+&quot;1&quot; &quot;Build 5gc-c&quot; \
+&quot;2&quot; &quot;Build 5gc-c lib&quot; \
+&quot;3&quot; &quot;Build 5gc-c and lib&quot; \
+&quot;4&quot; &quot;EXIT&quot;  3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+
+case $OPTION in
+    1)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+	{
+	    build_5gc_c $version $release &amp;&gt;/dev/null &amp;
+	    for i in {1..100};do
+                sleep 0.1
+                echo $i
+            done
+	} | whiptail --gauge &quot;Building \&quot;baicells-5gc-c_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+		&amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+		--msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60 
+        ;;
+    2)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c lib version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c lib release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+        {
+	    build_5gc_c_lib $version $release &amp;&gt;/dev/null &amp;
+            for i in {1..100};do
+                sleep 0.1
+                echo $i
+            done
+        } | whiptail --gauge &quot;Building \&quot;baicells-5gc-c-lib_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+                &amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+                --msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60
+        ;;
+    3)
+	version=$(whiptail \
+		--title &quot;Version Input Box&quot; \
+		--inputbox &quot;Input 5gc-c and lib version(#default:1.0.0)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+	release=$(whiptail \
+		--title &quot;Release Input Box&quot; \
+		--inputbox &quot;Input 5gc-c and lib release(#default:1)&quot; 15 60 &quot;&quot; \
+		3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3)
+        version=${version:-&quot;1.0.0&quot;}
+        release=${release:-&quot;1&quot;}
+        {
+	    build_5gc_c $version $release &amp;&gt;/dev/null &amp;
+	    build_5gc_c_lib $version $release &amp;&gt;/dev/null &amp;
+            for i in {1..100};do
+                sleep 0.15
+                echo $i
+            done
+        } | whiptail --gauge &quot;Building \&quot;baicells-5gc-c(-lib)_$version-$release-amd64.deb\&quot;,please wait...&quot; 6 70 0 \
+                &amp;&amp; whiptail --title &quot;Build success note！！！&quot; \
+                --msgbox &quot;Congratulations! the package(s) is(are) builded successful~~~&quot; 10 60
+        ;;
+    4)
+	exit 0
+        ;;
+	
+esac
+
+
+
+
+
+#ARGS=`getopt -o hr:v:cl --long help,release:,version:,control,lib, -- &quot;$@&quot;`
+#if [ $? != 0 ] ; then echo &quot;Terminating...&quot; &gt;&amp;2 ; exit 1 ; fi
+#eval set -- &quot;$ARGS&quot;
+#while true;do
+#    case &quot;$1&quot; in
+#        -r|--release)
+#            release=$2
+#            shift 2
+#            ;;
+#        -v|--version)
+#            version=$2
+#            shift 2
+#            ;;
+#        -c|--control)
+#	    b1=build_5gc_c
+#            shift
+#            ;;
+#        -l|--lib)
+#            b2=build_5gc_c_lib
+#            shift
+#            ;;
+#        -h|--help)
+#            usage
+#            shift
+#            ;;
+#        --)
+#            shift
+#            break
+#            ;;
+#        *)
+#            echo &quot;unknown:{$1}&quot;
+#            exit 1
+#            ;;
+#    esac
+#done
+#
+#version=${version:-&quot;1.0.0&quot;}
+#release=${release:-&quot;1&quot;}
+#
+#for fn in $b1 $b2;do
+#    if [[ -n $fn ]];then
+#        $fn $version $release
+#    fi
+#done
+</code></pre>
+
+<h2 id="3-5gc-c-service">3. 5gc-c.service</h2>
+
+<pre><code>[Unit]
+Description=BAICELLS-5GC-C
+Requires=network.target multi-user.target
+After=network.target multi-user.target
+#Before=vpp.service
+
+[Service]
+Type=forking
+ExecStart=/root/baicells/init.sh
+#ExecStop=
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<h2 id="4-init-sh">4. init.sh</h2>
+
+<pre><code>#!/bin/bash -
+
+INSTALL_PATH=&quot;/root/baicells&quot;
+#network_script=&quot;$INSTALL_PATH/kernel.sh&quot;
+main_process=&quot;$INSTALL_PATH/run5gc.sh&quot;
+watchdog=&quot;$INSTALL_PATH/watchdog.sh&quot;
+
+function main() {
+    #$network_script
+    #systemctl start vpp
+    $main_process stop_start
+    $watchdog &amp;
+};main
+</code></pre>
+
+<h2 id="5-run5gc-sh">5. run5gc.sh</h2>
+
+<pre><code>#!/bin/bash -
+
+INSTALL_PATH=/root/baicells
+action=$1
+module_take=${2:-&quot;amf smf ausf udm&quot;}
+param=$*
+param_num=$#
+
+function version() {
+    for module in $module_take
+    do	    
+        binary_link=$(readlink $INSTALL_PATH/$module/${module}1/bin/$module)
+        echo &quot;Current $module binary is linked to $binary_link.&quot;
+        if [ -x $INSTALL_PATH/$module/${module}1/bin/$module ]; then
+            echo &quot;&quot;;
+        else
+            echo &quot;debug:&quot;$($INSTALL_PATH/$module/${module}1/bin/$module)
+            echo &quot;The $module binary is NOT executable!!!&quot;;
+            return 1;
+        fi
+    done
+}
+
+function init_net() {
+    if [[ -f network.conf ]];then
+        while read line
+        do
+            if [[ &quot;${line:0:1}&quot; != &quot;#&quot; ]]; then
+                [[ -z &quot;$line&quot; ]] &amp;&amp; continue
+                $line 2&gt;&amp;1&gt;/dev/null
+            fi
+        done &lt; network.conf
+    fi
+}
+
+function init_system() {
+    ulimit -c unlimited
+    export LD_LIBRARY_PATH=${INSTALL_PATH}/lib
+}
+
+check_param() {
+    if [ $param_num != 1 ] &amp;&amp; [ $param_num != 2 ]; then
+        echo -e &quot;\033[31mInput error.\033[0m&quot;
+        echo -e &quot;\033[31mUsage: $0 {version|start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+        exit 1
+    else
+        if [ &quot;$action&quot; != &quot;start&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;stop&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;status&quot; ] \
+		&amp;&amp; [ &quot;$action&quot; != &quot;restart&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;stop_start&quot; ] &amp;&amp; [ &quot;$action&quot; != &quot;version&quot; ]; then
+            echo -e &quot;\033[31mError action: $action\033[0m&quot;
+            echo -e &quot;\033[31mUsage: $0 {version|start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+            exit 2
+        fi
+        if  [ -n &quot;$module&quot; ]; then
+            if [ &quot;$module&quot; != &quot;amf&quot; ] &amp;&amp; [ &quot;$module&quot; != &quot;smf&quot; ]; then
+                echo -e &quot;\033[31mError module: $module\033[0m&quot;
+                echo -e &quot;\033[31mUsage: $0 {version|start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+                exit 3
+            fi
+        fi
+    fi
+}
+
+function start_module() {
+    for module in $module_take
+    do
+        cd $INSTALL_PATH/$module/${module}1
+        bin/$module -s -c config/$module.conf -l config/asn.log.properties -t &gt;/dev/null 2&gt;&amp;1 &amp;
+    done
+}
+
+function stop_module() {
+    for module in $module_take
+    do
+    	pkill -9 $module
+    	sleep 1
+    done
+}
+
+function status_module() {
+    for module in $module_take
+    do
+        if [ -n &quot;$(pgrep $module)&quot; ]; then
+	    echo &quot;$module is running...&quot;
+	else
+	    echo &quot;$module is NOT running...&quot;
+        fi
+    done
+}
+
+function init() {
+    init_system
+    init_net
+}
+
+function main() {
+    check_param $param
+    case $action in
+	version)
+            version
+	    echo &quot;&quot;
+	    ;;
+	stop_start)
+	    init
+            stop_module
+            start_module
+	    #status_module
+	    #echo
+            ;;	    
+        start|restart)
+	    systemctl restart 5gc-c
+	    ;;
+        stop)
+	    echo &quot;Stop $module_take...&quot;
+	    #stop_module
+	    systemctl stop 5gc-c
+	    ;;
+	status)
+            status_module
+	    ;;
+	*)
+	    echo -e &quot;\033[31mError action: $action\033[0m&quot;
+	    echo -e &quot;\033[31mUsage: $0 {start|stop|status|restart} [Optional: amf|smf].\033[0m&quot;
+	    exit
+	    ;;
+   esac
+};main
+</code></pre>
+
+<h2 id="6-watchdog-sh">6. watchdog.sh</h2>
+
+<pre><code>#!/usr/bin/env bash
+
+INSTALL_PATH=&quot;/root/baicells&quot;
+module_all=${1:-&quot;amf smf ausf udm&quot;}
+timer=3
+log_num=6
+
+function init_system() {
+    ulimit -c unlimited
+    export LD_LIBRARY_PATH=${INSTALL_PATH}/lib
+}
+
+function ngc_ps() {
+    local restart_ngc=&quot;false&quot;
+    for module in $module_all
+    do
+        cur_path=$INSTALL_PATH/$module/${module}1
+        filename=$cur_path/bin/lo.bin
+	if [ $(stat -c %s $filename) -ne 0 ];then
+            pidof $module &gt;/dev/null
+            if [[ $? == 1 ]];then
+                restart_ngc=&quot;true&quot;
+                break
+            fi
+        fi
+    done
+    if [[ $restart_ngc == &quot;true&quot; ]];then
+	echo &quot;$(date +%Y-%m-%d' '%H:%M:%S) ngc restart&quot;
+        $INSTALL_PATH/run5gc.sh stop_start
+    fi
+}
+
+function ngc_log() {
+    for module in $module_all
+    do 
+        cur_path=$INSTALL_PATH/$module/${module}1
+        ls -lt $cur_path/log/$module.log* 2&gt;/dev/null| \
+        awk -v log_num=$log_num '{if(NR&gt;log_num){print $9}}'|xargs rm -rf
+    done
+}
+
+function core_log() {
+    for module in $module_all
+    do
+        ls -lt /root/coredump/core-${module}* 2&gt;/dev/null |awk -v log_num=$log_num '{if(NR&gt;log_num){print $9}}'|xargs rm -rf
+    done
+}
+
+function main() {
+    init_system
+    while :
+    do
+        ngc_ps
+        #ngc_log
+        core_log
+        sleep $timer
+    done
+};main
+</code></pre>
+
+                        </div>
+						<br>
+						<br>
+						
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/posts/wcg-deps/">WCG-deps-install</a></li>
+        
+        <li><a href="/posts/checksum/">linux checksum</a></li>
+        
+        <li><a href="/posts/sub-bin/">二进制瘦身</a></li>
+        
+        <li><a href="/posts/export-symbol/">EXPORT SYMBOL</a></li>
+        
+        <li><a href="/posts/vpp-kernel/">vpp和linux内核协议栈通信</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://workerwork.github.io/tags/shell">shell</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/linux">linux</a></li>
+                                
+                                <li><a href="https://workerwork.github.io/tags/build-5gc">build-5gc</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                      
+  
+  <div id="vcomments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+
+  <script type="text/javascript">
+    new Valine({
+        el: '#vcomments' ,
+        appId: '2t4DpILldEkd0cGL96gyV1IM-gzGzoHsz',
+        appKey: 'YVysijaVMqjziCECLGL8jnCh',
+        notify: 'false', 
+        verify: 'false', 
+        avatar:'mm', 
+        placeholder: '说点什么吧...',
+        visitor: 'true'
+    });
+  </script>
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://workerwork.github.io">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/sub-bin/" title="二进制瘦身">二进制瘦身</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/export-symbol/" title="EXPORT SYMBOL">EXPORT SYMBOL</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/vpp-kernel/" title="vpp和linux内核协议栈通信">vpp和linux内核协议栈通信</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/xfrm/" title="xfrm框架">xfrm框架</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/oom-killer/" title="oom killer">oom killer</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/gcc/" title="linux gcc编译">linux gcc编译</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/core/" title="linux coredump设置">linux coredump设置</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/5g/">5g(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/crash/">crash(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/devops/">devops(9)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/dpdk/">dpdk(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/hugo/">hugo(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ipc/">ipc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/kernel/">kernel(4)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/linux/">linux(22)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/p4/">p4(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/python/">python(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/rust/">rust(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/servers/">servers(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/site/">site(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/ubuntu/">ubuntu(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/vpp/">vpp(7)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E4%BA%A7%E5%93%81doc/">产品doc(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E5%AE%89%E5%85%A8/">安全(2)</a>
+    </li>
+    
+    <li>
+        <a href="https://workerwork.github.io/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化(2)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://workerwork.github.io/tags/5gc/">5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/apt/">apt</a>
+    
+    <a href="https://workerwork.github.io/tags/auto/">auto</a>
+    
+    <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
+    
+    <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
+    
+    <a href="https://workerwork.github.io/tags/centos/">centos</a>
+    
+    <a href="https://workerwork.github.io/tags/checksum/">checksum</a>
+    
+    <a href="https://workerwork.github.io/tags/ci/cd/">ci/cd</a>
+    
+    <a href="https://workerwork.github.io/tags/cli/">cli</a>
+    
+    <a href="https://workerwork.github.io/tags/core/">core</a>
+    
+    <a href="https://workerwork.github.io/tags/coredump/">coredump</a>
+    
+    <a href="https://workerwork.github.io/tags/cpu/">cpu</a>
+    
+    <a href="https://workerwork.github.io/tags/crash/">crash</a>
+    
+    <a href="https://workerwork.github.io/tags/deb/">deb</a>
+    
+    <a href="https://workerwork.github.io/tags/debootstrap/">debootstrap</a>
+    
+    <a href="https://workerwork.github.io/tags/deb%E6%89%93%E5%8C%85/">deb打包</a>
+    
+    <a href="https://workerwork.github.io/tags/device/">device</a>
+    
+    <a href="https://workerwork.github.io/tags/doc/">doc</a>
+    
+    <a href="https://workerwork.github.io/tags/docker/">docker</a>
+    
+    <a href="https://workerwork.github.io/tags/docker-compose/">docker-compose</a>
+    
+    <a href="https://workerwork.github.io/tags/dockerfile/">dockerfile</a>
+    
+    <a href="https://workerwork.github.io/tags/dpdk/">dpdk</a>
+    
+    <a href="https://workerwork.github.io/tags/drone/">drone</a>
+    
+    <a href="https://workerwork.github.io/tags/en-strip/">en-strip</a>
+    
+    <a href="https://workerwork.github.io/tags/epc/">epc</a>
+    
+    <a href="https://workerwork.github.io/tags/fpm/">fpm</a>
+    
+    <a href="https://workerwork.github.io/tags/frp/">frp</a>
+    
+    <a href="https://workerwork.github.io/tags/game/">game</a>
+    
+    <a href="https://workerwork.github.io/tags/gcc/">gcc</a>
+    
+    <a href="https://workerwork.github.io/tags/git/">git</a>
+    
+    <a href="https://workerwork.github.io/tags/github/">github</a>
+    
+    <a href="https://workerwork.github.io/tags/gitlab/">gitlab</a>
+    
+    <a href="https://workerwork.github.io/tags/gogs/">gogs</a>
+    
+    <a href="https://workerwork.github.io/tags/gso/">gso</a>
+    
+    <a href="https://workerwork.github.io/tags/ha/">ha</a>
+    
+    <a href="https://workerwork.github.io/tags/hugo/">hugo</a>
+    
+    <a href="https://workerwork.github.io/tags/ipc/">ipc</a>
+    
+    <a href="https://workerwork.github.io/tags/ipsec/">ipsec</a>
+    
+    <a href="https://workerwork.github.io/tags/iso/">iso</a>
+    
+    <a href="https://workerwork.github.io/tags/jenkins/">jenkins</a>
+    
+    <a href="https://workerwork.github.io/tags/k8s/">k8s</a>
+    
+    <a href="https://workerwork.github.io/tags/keepalived/">keepalived</a>
+    
+    <a href="https://workerwork.github.io/tags/kernel/">kernel</a>
+    
+    <a href="https://workerwork.github.io/tags/kube/">kube</a>
+    
+    <a href="https://workerwork.github.io/tags/kubernetes/">kubernetes</a>
+    
+    <a href="https://workerwork.github.io/tags/kvm/">kvm</a>
+    
+    <a href="https://workerwork.github.io/tags/linux/">linux</a>
+    
+    <a href="https://workerwork.github.io/tags/module/">module</a>
+    
+    <a href="https://workerwork.github.io/tags/objcopy/">objcopy</a>
+    
+    <a href="https://workerwork.github.io/tags/offload/">offload</a>
+    
+    <a href="https://workerwork.github.io/tags/oom-killer/">oom-killer</a>
+    
+    <a href="https://workerwork.github.io/tags/openssh/">openssh</a>
+    
+    <a href="https://workerwork.github.io/tags/p4/">p4</a>
+    
+    <a href="https://workerwork.github.io/tags/pip/">pip</a>
+    
+    <a href="https://workerwork.github.io/tags/plugin/">plugin</a>
+    
+    <a href="https://workerwork.github.io/tags/pypi/">pypi</a>
+    
+    <a href="https://workerwork.github.io/tags/python/">python</a>
+    
+    <a href="https://workerwork.github.io/tags/redis/">redis</a>
+    
+    <a href="https://workerwork.github.io/tags/remote-desktop/">remote-desktop</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm/">rpm</a>
+    
+    <a href="https://workerwork.github.io/tags/rpm%E6%89%93%E5%8C%85/">rpm打包</a>
+    
+    <a href="https://workerwork.github.io/tags/rust/">rust</a>
+    
+    <a href="https://workerwork.github.io/tags/sdl2/">sdl2</a>
+    
+    <a href="https://workerwork.github.io/tags/security/">security</a>
+    
+    <a href="https://workerwork.github.io/tags/server/">server</a>
+    
+    <a href="https://workerwork.github.io/tags/shell/">shell</a>
+    
+    <a href="https://workerwork.github.io/tags/shm/">shm</a>
+    
+    <a href="https://workerwork.github.io/tags/socket/">socket</a>
+    
+    <a href="https://workerwork.github.io/tags/strip/">strip</a>
+    
+    <a href="https://workerwork.github.io/tags/strongswan/">strongswan</a>
+    
+    <a href="https://workerwork.github.io/tags/symbol/">symbol</a>
+    
+    <a href="https://workerwork.github.io/tags/system-map/">system-map</a>
+    
+    <a href="https://workerwork.github.io/tags/tso/">tso</a>
+    
+    <a href="https://workerwork.github.io/tags/ubuntu/">ubuntu</a>
+    
+    <a href="https://workerwork.github.io/tags/upf/">upf</a>
+    
+    <a href="https://workerwork.github.io/tags/video/">video</a>
+    
+    <a href="https://workerwork.github.io/tags/vm/">vm</a>
+    
+    <a href="https://workerwork.github.io/tags/vmcore/">vmcore</a>
+    
+    <a href="https://workerwork.github.io/tags/vmess/">vmess</a>
+    
+    <a href="https://workerwork.github.io/tags/vpp/">vpp</a>
+    
+    <a href="https://workerwork.github.io/tags/wcg/">wcg</a>
+    
+    <a href="https://workerwork.github.io/tags/workspace/">workspace</a>
+    
+    <a href="https://workerwork.github.io/tags/xfrm/">xfrm</a>
+    
+    <a href="https://workerwork.github.io/tags/yum/">yum</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BB%A3%E7%90%86/">代理</a>
+    
+    <a href="https://workerwork.github.io/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://workerwork.github.io/tags/%E5%90%AF%E5%8A%A8%E7%9B%98/">启动盘</a>
+    
+    <a href="https://workerwork.github.io/tags/%E7%BD%91%E5%8D%A1%E5%91%BD%E5%90%8D/">网卡命名</a>
+    
+    <a href="https://workerwork.github.io/tags/%E8%99%9A%E6%9C%BA/">虚机</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.teambition.com/" title="teambition">teambition</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.bookstack.cn/" title="书栈网">bookstack</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.bookstack.cn/read/sdn-handbook/SUMMARY.md" title="SDN技术栈">SDN技术栈</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.kdocs.cn/" title="在线文档">wps</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.youtube.com/" title="youtube">youtube</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://vimeo.com/" title="vimeo">vimeo</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.wikipedia.org/" title="维基">维基</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thepiratebay.org/index.html" title="海盗湾">海盗湾</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://thekickasstorrents.to/" title="KickassTorrents">KickassTorrents</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.reddit.com/" title="reddit">reddit</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.imdb.com/" title="IMDB">IMDB</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.quora.com/" title="quora">quora</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.c114.com.cn/" title="c114">c114</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://news.cnblogs.com/" title="博客园">博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.csdn.net/" title="csdn">csdn</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://leetcode-cn.com/" title="leetcode">leetcode</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.ted.com/" title="ted">ted</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.sdnlab.com/" title="sdnlab">sdnlab</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://stackoverflow.com/" title="stackoverflow">stackoverflow</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://sourceforge.net/" title="sourceforge">sourceforge</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.v2ex.com/" title="v2ex">v2ex</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.pinterest.com/" title="pinterest">pinterest</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://d.serctl.com/" title="d.serctl">d.serctl</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://g.widora.cn/" title="github代理下载">github代理下载</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://rpmfind.net/" title="rpmfind">rpmfind</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://vault.centos.org/" title="vault.centos.org">vault.centos.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://pkgs.org/" title="pkgs.org">pkgs.org</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://src.fedoraproject.org/" title="fedora源码包">fedora源码包</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://mirrors.aliyun.com/linux-kernel" title="linux-kernel">linux-kernel</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://npm.taobao.org/" title="阿里镜像">阿里镜像</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://syswift.com/" title="linux高性能交流社区">linux高性能交流社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/p4lang/tutorials" title="P4教程">P4教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://fd.io/" title="FD.io">FD.io</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.opennetworking.org/" title="ONF">ONF</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/sunnypoem/p/11368491.html" title="vpp csdn介绍">vpp csdn介绍</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.csdn.net/jqh9804" title="网络博客1">网络博客1</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://zhaozhanxu.com/" title="网络博客2">网络博客2</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://blog.51cto.com/zhangchixiang" title="网络博客3">网络博客3</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.zsythink.net/" title="网络博客4">网络博客4</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://www.netcan666.com/" title="netcan666">netcan666</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cikeblog.com/" title="cike">cike</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://wingwj.github.io/" title="wingwj">wingwj</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://cloud.tencent.com/developer/article/1516125" title="systemd资料">systemd资料</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cisco.com/c/zh_cn/support/index.html" title="cisco产品支持">cisco产品支持</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/hackstoic/golang-open-source-projects" title="go开源项目">go开源项目</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/unknwon/go-study-index" title="go资料索引">go资料索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com/anonymousGiga/learn_rust.git" title="rust视频教程">rust视频教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://kaisery.github.io/trpl-zh-cn/" title="rust中文教程">rust中文教程</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustcc.com/" title="rust中文社区索引">rust中文社区索引</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://rustwiki.org/zh-CN/rust-by-example/index.html" title="rust例子">rust例子</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://doc.rust-lang.org/std/" title="rust标准库">rust标准库</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://danielkeep.github.io/tlborm/book/" title="rust宏">rust宏</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://docs.rs/" title="docs.rs">docs.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://lib.rs/" title="lib.rs">lib.rs</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.redox-os.org/zh/" title="redox系统">redox系统</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitee.com/" title="gitee">gitee</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://github.com" title="github">github</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://gitbook.com" title="gitbook">gitbook</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://hub.docker.com" title="dockerhub">dockerhub</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:60080" title="本地git服务器">本地git服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8080" title="jenkins服务器">jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.2.115:8080" title="测试jenkins服务器">测试jenkins服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8888" title="本地网盘">本地网盘</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://192.168.9.105:8000" title="drone服务器">drone服务器</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://192.168.10.79/" title="RSAS(admin/Nsfocus@123)">RSAS</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://workerwork.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2018 <a href="https://workerwork.github.io">WorkSpace By dongfeng</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript">
+    
+    (function(){
+        $("pre code").parent().addClass("line-numbers")
+    }())
+
+    window.MathJax = {
+        tex2jax: {
+            inlineMath: [ ['$','$'] ],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script type="text/javascript" src="/js/prism.js" async="true"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+</body>
+</html>

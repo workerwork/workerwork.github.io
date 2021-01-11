@@ -6,18 +6,18 @@
     <description>Recent content in shell on WorkSpace</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 28 Apr 2020 09:45:51 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 11 Jan 2021 16:36:51 +0800</lastBuildDate>
     
 	<atom:link href="https://workerwork.github.io/categories/shell/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>WCG-deps-install</title>
-      <link>https://workerwork.github.io/posts/wcg-deps/</link>
-      <pubDate>Tue, 28 Apr 2020 09:45:51 +0800</pubDate>
+      <title>BUILD 5GC</title>
+      <link>https://workerwork.github.io/posts/build-5gc/</link>
+      <pubDate>Mon, 11 Jan 2021 16:36:51 +0800</pubDate>
       
-      <guid>https://workerwork.github.io/posts/wcg-deps/</guid>
-      <description>1. 下载对应的依赖包 # yumdownloader --downloadonly --downloaddir=. xxx # 提取包内容 # rpm2cpio *.rpm | cpio -div  2. install.sh #!/bin/bash - ################################################################################################ # wcg-deps-install.sh # version:1.0 # update:20181120 ################################################################################################ DIR=&amp;quot;/home/wcg/WCG-deps&amp;quot; function wcg_deps() { for dir in curl fcgi gsoap lksctp lrzsz vconfig tftp redis spawn-fcgi keepalived openssh nginx net-tools libevent do cd $DIR/$dir &amp;amp;&amp;amp; rpm -Uvh *.rpm --force --nodeps &amp;amp; done } function segw_deps() { for dir in segw do cd $DIR/$dir &amp;amp;&amp;amp; rpm -Uvh *.</description>
+      <guid>https://workerwork.github.io/posts/build-5gc/</guid>
+      <description>1. 目录结构 dongfeng@worker:~/work/5G/5gc-c-build$ tree . ├── build.sh ├── README.md └── source ├── 5gc-c.service ├── amf │ └── amf1 │ ├── bin │ │ ├── amf -&amp;gt; amf_1.0.0 │ │ ├── amf_1.0.0 │ │ ├── lo.bin │ │ └── ls.bin │ ├── config │ │ ├── amf.conf │ │ └── asn.log.properties │ ├── log │ │ └── amf.log │ └── xml │ ├── amfInfo.xml │ ├── ausf.xml │ ├── guami.xml │ ├── nrf.</description>
     </item>
     
   </channel>

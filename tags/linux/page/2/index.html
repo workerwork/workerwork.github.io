@@ -80,6 +80,40 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/system-map/">Linux 内核符号表</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年11月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 什么是符号(symbols) 什么是Symbol?
+其实就是kernel中的变量(VariableName)或函数名称(Function Name)
+这样可以方便程序员在写程序时可以直接参照这一份Symbol的索引文件，找到所需要的kernel信息，
+这一份Symbol的索引文件又称为kernel symbol table
+2. 内核符号表(Kernel Symbol Table) 内核符号表，就是在内核的内部函数或变量中，可供外部引用的函数和变量的符号表.
+其实就是一个索引文件，它存在的目的就是让外部软件可以知道kernel文件内部实际分配的位置.
+编译内核时，System.map文件用于存放内核符号表信息
+System.map文件位于/或者/boot、/usr/src/linux/下
+3. kallsyms 内核启动时候创建,供oops时定位错误，文件大小总为0，包含当前内核导出的、可供使用的变量或者函数；它只是内核数据的简单表示形式.
+/proc/kallsyms是一个在启动时由Linux kernel实时产生的文件，当系统有任何变更时，它就会马上做出修正
+可以理解为动态的符号表
+4. 符号类型    符号类型 名称 说明     A Absolute 符号的值是绝对值，并且在进一步链接过程中不会被改变   B BSS 符号在未初始化数据区或区（section）中，即在BSS段中   C Common 符号是公共的。公共符号是未初始化的数据。在链接时，多个公共符号可能具有同一名称。如果该符号定义在其他地方，则公共符号被看作是未定义的引用   D Data 符号在已初始化数据区中   G Global 符号是在小对象已初始化数据区中的符号。某些目标文件的格式允许对小数据对象（例如一个全局整型变量）可进行更有效的访问   I Inderect 符号是对另一个符号的间接引用   N Debugging 符号是一个调试符号   R Read only 符号在一个只读数据区中   S Small 符号是小对象未初始化数据区中的符号   T Text 符号是代码区中的符号   U Undefined 符号是外部的，并且其值为0（未定义   - Stabs 符号是a.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/system-map/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/vmcore/">Linux 内核调试 kdump vmcore</a>
                                 </h1>
                             </header>
@@ -312,34 +346,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/eth-name/">网卡命名</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月30日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 背景 服务器通常有多块网卡，有板载集成的，同时也有插在PCIe插槽的.
-Linux系统的命名原来是eth0,eth1这样的形式，但是这个编号往往不一定准确对应网卡接口的物理顺序.
-为解决这类问题，dell开发了biosdevname方案.
-systemd v197版本中将dell的方案作了进一步的一般化拓展.
-linux内核启动过程中，会默认给网卡以ethX方式随机命名，然后再通过systemd去rename成其他名称.
-2. rename流程 step1 依据/usr/lib/udev/rules.d/60-net.rules， 查看是否有ifcfg-xx配置文件（路径在/etc/sysconfig/network-scripts/), 是否有定义了指定MAC地址的配置文件（ifcfg-xx ，xx必须和配置文件的内容DEVICE一致），如果有，则命名改网卡； step2 依据/usr/lib/udev/rules.d/71-biosdevname.rules，如果biosdevname使能了（安装了biosdevname这个包，且内核启动参数显式设置为1）， 且网卡没有在step1中定义，则按照biosdevname命名规则rename网卡；（注意，如果没有安装biosdevname这个包，就没有这个文件） step3, 依据/lib/udev/rules.d/75-net-description.rules，将udev工具会根据device属性将填写网卡的属性命名，可能一个网卡会有多个维度的名称; step4，udev 根据step3中的赋值，按照指定的scheme规则，去给在step1 step2中没有命名的网卡命名; 强调：这个step顺序是在我们没有自定义自己的rules的前提下，如果用户自定义了自己的rules，则用户自定义为优先级最高  3. 命令策略(scheme规则) 1.如果从BIOS中能够取到可用的，板载网卡的索引号，则使用这个索引号命名，例如: eno1，如不能则尝试2 2.如果从BIOS中能够取到可以用的，网卡所在的PCI-E热插拔插槽(注：pci槽位号)的索引号，则使用这个索引号命名，例如: ens1，如不能则尝试3 3.如果能拿到设备所连接的物理位置（PCI总线号+槽位号？）信息，则使用这个信息命名，例如:enp2s0，如不能则尝试4 4.传统的kernel命名方法，例如: eth0，这种命名方法的结果不可预知的，即可能第二块网卡对应eth0，第一块网卡对应eth1 5.使用网卡的MAC地址来命名，这个方法一般不使用 同一个网卡通常同时具有多个维度的名称，systemd在选取的时候，按照有先后次序，使用先命中的 顺序可以简单理解为(eno1-ens1-enp1) root@Bai5gc:/sys/class/net/eth1# udevadm info /sys/class/net/eth1 P: /devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: DEVPATH=/devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: ID_BUS=pci E: ID_MODEL_FROM_DATABASE=Ethernet Connection X552 10 GbE Backplane E: ID_MODEL_ID=0x15ab E: ID_NET_DRIVER=ixgbe E: ID_NET_LINK_FILE=/lib/systemd/network/99-default.link E: ID_NET_NAME_MAC=enxb4a9fca897e7 E: ID_NET_NAME_ONBOARD=eno3 E: ID_NET_NAME_PATH=enp3s0f0 E: ID_PATH=pci-0000:03:00.0 E: ID_PATH_TAG=pci-0000_03_00_0 E: ID_PCI_CLASS_FROM_DATABASE=Network controller E: ID_PCI_SUBCLASS_FROM_DATABASE=Ethernet controller E: ID_VENDOR_FROM_DATABASE=Intel Corporation E: ID_VENDOR_ID=0x8086 E: IFINDEX=3 E: INTERFACE=eth1 E: SUBSYSTEM=net E: SYSTEMD_ALIAS=/sys/subsystem/net/devices/eth1 E: TAGS=:systemd: E: USEC_INITIALIZED=5061037 E: net.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/eth-name/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -396,6 +402,10 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -429,10 +439,6 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -494,6 +500,10 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -531,6 +541,8 @@ linux内核启动过程中，会默认给网卡以ethX方式随机命名，然�
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     

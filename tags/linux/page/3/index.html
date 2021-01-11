@@ -80,6 +80,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/eth-name/">网卡命名</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年6月30日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://workerwork.github.io/categories/linux">linux</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 背景 服务器通常有多块网卡，有板载集成的，同时也有插在PCIe插槽的.
+Linux系统的命名原来是eth0,eth1这样的形式，但是这个编号往往不一定准确对应网卡接口的物理顺序.
+为解决这类问题，dell开发了biosdevname方案.
+systemd v197版本中将dell的方案作了进一步的一般化拓展.
+linux内核启动过程中，会默认给网卡以ethX方式随机命名，然后再通过systemd去rename成其他名称.
+2. rename流程 step1 依据/usr/lib/udev/rules.d/60-net.rules， 查看是否有ifcfg-xx配置文件（路径在/etc/sysconfig/network-scripts/), 是否有定义了指定MAC地址的配置文件（ifcfg-xx ，xx必须和配置文件的内容DEVICE一致），如果有，则命名改网卡； step2 依据/usr/lib/udev/rules.d/71-biosdevname.rules，如果biosdevname使能了（安装了biosdevname这个包，且内核启动参数显式设置为1）， 且网卡没有在step1中定义，则按照biosdevname命名规则rename网卡；（注意，如果没有安装biosdevname这个包，就没有这个文件） step3, 依据/lib/udev/rules.d/75-net-description.rules，将udev工具会根据device属性将填写网卡的属性命名，可能一个网卡会有多个维度的名称; step4，udev 根据step3中的赋值，按照指定的scheme规则，去给在step1 step2中没有命名的网卡命名; 强调：这个step顺序是在我们没有自定义自己的rules的前提下，如果用户自定义了自己的rules，则用户自定义为优先级最高  3. 命令策略(scheme规则) 1.如果从BIOS中能够取到可用的，板载网卡的索引号，则使用这个索引号命名，例如: eno1，如不能则尝试2 2.如果从BIOS中能够取到可以用的，网卡所在的PCI-E热插拔插槽(注：pci槽位号)的索引号，则使用这个索引号命名，例如: ens1，如不能则尝试3 3.如果能拿到设备所连接的物理位置（PCI总线号+槽位号？）信息，则使用这个信息命名，例如:enp2s0，如不能则尝试4 4.传统的kernel命名方法，例如: eth0，这种命名方法的结果不可预知的，即可能第二块网卡对应eth0，第一块网卡对应eth1 5.使用网卡的MAC地址来命名，这个方法一般不使用 同一个网卡通常同时具有多个维度的名称，systemd在选取的时候，按照有先后次序，使用先命中的 顺序可以简单理解为(eno1-ens1-enp1) root@Bai5gc:/sys/class/net/eth1# udevadm info /sys/class/net/eth1 P: /devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: DEVPATH=/devices/pci0000:00/0000:00:02.2/0000:03:00.0/net/eth1 E: ID_BUS=pci E: ID_MODEL_FROM_DATABASE=Ethernet Connection X552 10 GbE Backplane E: ID_MODEL_ID=0x15ab E: ID_NET_DRIVER=ixgbe E: ID_NET_LINK_FILE=/lib/systemd/network/99-default.link E: ID_NET_NAME_MAC=enxb4a9fca897e7 E: ID_NET_NAME_ONBOARD=eno3 E: ID_NET_NAME_PATH=enp3s0f0 E: ID_PATH=pci-0000:03:00.0 E: ID_PATH_TAG=pci-0000_03_00_0 E: ID_PCI_CLASS_FROM_DATABASE=Network controller E: ID_PCI_SUBCLASS_FROM_DATABASE=Ethernet controller E: ID_VENDOR_FROM_DATABASE=Intel Corporation E: ID_VENDOR_ID=0x8086 E: IFINDEX=3 E: INTERFACE=eth1 E: SUBSYSTEM=net E: SYSTEMD_ALIAS=/sys/subsystem/net/devices/eth1 E: TAGS=:systemd: E: USEC_INITIALIZED=5061037 E: net.……
+                                <p class="readmore"><a href="https://workerwork.github.io/posts/eth-name/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/remote-desktop/">ubuntu18.04使用xrdp远程桌面</a>
                                 </h1>
                             </header>
@@ -299,36 +327,6 @@ typedef struct { /* Public nodes. */ /* 节点指针数组，使用下标作为�
                             </div>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/kernel-dev/">kernel 字符设备驱动</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年4月22日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://workerwork.github.io/categories/kernel">kernel</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 字符设备 Linux字符设备是一种按字节来访问的设备，字符驱动则负责驱动字符设备，这样的驱动通常实现open、close、read和write系统调用。例如：串口、Led、按键等
-通过字符设备文件（/dev/xxx），应用程序可以使用相应的字符设备驱动来控制字符设备
-2. 如何创建字符设备  使用命令mknod : mknod /dev/文件名 c 主设备号 次设备号 （查看主设备号：cat /proc/devices） 使用函数创建：mknod()
-int mknod(const char *pathname, mode_t mode, dev_t dev);   3. 文件系统与字符设备驱动程序之间的关系  在Linux系统中，每一个打开的文件，在内核中都会关联一个struct file结构，它是由内核在打开文件时创建，在文件关闭后释放。
-struct file结构中的重要成员 * struct file_operations* f_op;　//文件操作函数集 * loff_t f_pos;　//文件读写指针  每一个存在于文件系统中的文件都会关联一个inode结构，该结构主要用来记录文件物理上的信息。因此，它和代表打开文件的file结构是不同的，一个文件没有被打开时不会关联file结构，但是会关联一个inode结构（存于磁盘，操作文件时在内存中建立相应的映射结构）
-  注：inode用于存储文件的元信息（除了文件名的所有信息），中文译名索引节点
- 从上图可知，系统实质上是把字符设备的注册表看成了文件。其中chrdevs[]在内核的定义如下
-static struct char_device_struct { struct char_device_struct *next; unsigned int major; unsigned int baseminor; int minorct; char name[64]; struct cdev *cdev; /* will die */ } *chrdevs[CHRDEV_MAJOR_HASH_SIZE];   4.……
-                                <p class="readmore"><a href="https://workerwork.github.io/posts/kernel-dev/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
 
                     
 
@@ -385,6 +383,10 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -418,10 +420,6 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -483,6 +481,10 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -520,6 +522,8 @@ static struct char_device_struct { struct char_device_struct *next; unsigned int
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     

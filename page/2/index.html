@@ -70,6 +70,37 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
+                                    <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO" >网卡offload GSO</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2020年11月30日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                 1. GSO和TSO TSO(TCP Segmentation Offload): 是一种利用网卡来对大数据包进行自动分段，降低CPU负载的技术。 其主要是延迟分段
+GSO(Generic Segmentation Offload): GSO是协议栈是否推迟分段，在发送到网卡之前判断网卡是否支持TSO，如果网卡支持TSO则让网卡分段，否则协议栈分完段再交给驱动
+如果TSO开启，GSO会自动开启
+驱动程序在注册网卡设备的时候默认开启GSO: NETIF_F_GSO
+驱动程序会根据网卡硬件是否支持来设置TSO: NETIF_F_TSO
+可以通过ethtool -K来开关GSO/TSO
+2. 开启关系 GSO开启， TSO开启: 协议栈推迟分段，并直接传递大数据包到网卡，让网卡自动分段 GSO开启， TSO关闭: 协议栈推迟分段，在最后发送到网卡前才执行分段 GSO关闭， TSO开启: 同GSO开启， TSO开启 GSO关闭， TSO关闭: 不推迟分段，在tcp_sendmsg中直接发送MSS大小的数据包  对紧急数据包或GSO/TSO都不开启的情况，才不会推迟发送， 默认使用当前MSS
+开启GSO后，tcp_send_mss返回mss和单个skb的GSO大小，为mss的整数倍
+3. 包处理流程图 ……
+                            </div>
+                            <p class="readmore"><a href="https://workerwork.github.io/posts/gso/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
                                     <a href="https://workerwork.github.io/posts/system-map/" title="Linux 内核符号表" >Linux 内核符号表</a>
                                 </h1>
                             </header>
@@ -311,31 +342,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
                             <p class="readmore"><a href="https://workerwork.github.io/posts/dpdk-devbind/">阅读全文</a></p>
                         </article>
                     
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://workerwork.github.io/posts/keepalived/" title="keepalived应用" >keepalived应用</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2020年6月30日
-                            </date>
-                            
-                            <div class="post-meta">
-                                <span>|</span>
-                                
-                                <span class="meta-category"><a href="https://workerwork.github.io/categories/linux">linux</a></span>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                1. 监控脚本 在Master节点和Slave节点 /etc/keepalived目录下添加check_nginx.sh 文件，用于检测Nginx的存活状况
-#!/bin/bash #时间变量，用于记录日志 d=`date --date today +%Y%m%d_%H:%M:%S` #计算nginx进程数量 n=`ps -C nginx --no-heading|wc -l` #如果进程为0，则尝试启动nginx，并且再次检测nginx进程数量， #如果还为0，说明nginx无法启动，此时需要关闭keepalived if [ $n -eq &quot;0&quot; ]; then #如果挂掉了，就启动nginx #注意nginx.conf配置文件的位置 #尝试重新启动nginx /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf sleep 3 #睡眠3秒 n2=`ps -C nginx --no-heading|wc -l` if [ $n2 -eq &quot;0&quot; ]; then #把nginx宕机时间写入日志 echo &quot;$d nginx down,keepalived will stop&quot; &gt;&gt; /usr/local/nginx/logs/check_ng.log #启动失败，将keepalived服务杀死。将vip漂移到其它备份节点 service keepalived stop fi fi  授权: chmod 755 /etc/keepalived/check_nginx.sh
-2. 非抢占模式 在Master 节点 /etc/keepalived目录下，配置keepalived.……
-                            </div>
-                            <p class="readmore"><a href="https://workerwork.github.io/posts/keepalived/">阅读全文</a></p>
-                        </article>
-                    
 
                     
 
@@ -404,6 +410,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
 <ul class="widget-list">
     
     <li>
+        <a href="https://workerwork.github.io/posts/build-5gc/" title="BUILD 5GC">BUILD 5GC</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/posts/checksum/" title="linux checksum">linux checksum</a>
     </li>
     
@@ -437,10 +447,6 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     
     <li>
         <a href="https://workerwork.github.io/posts/rustdoc/" title="rustdoc 范例">rustdoc 范例</a>
-    </li>
-    
-    <li>
-        <a href="https://workerwork.github.io/posts/gso/" title="网卡offload GSO">网卡offload GSO</a>
     </li>
     
 </ul>
@@ -502,6 +508,10 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     </li>
     
     <li>
+        <a href="https://workerwork.github.io/categories/shell/">shell(1)</a>
+    </li>
+    
+    <li>
         <a href="https://workerwork.github.io/categories/site/">site(1)</a>
     </li>
     
@@ -539,6 +549,8 @@ ffmpeg -i dance.mp4 -codec copy -bsf: h264_mp4toannexb -f h264 dance.……
     <a href="https://workerwork.github.io/tags/auto/">auto</a>
     
     <a href="https://workerwork.github.io/tags/bin/">bin</a>
+    
+    <a href="https://workerwork.github.io/tags/build-5gc/">build-5gc</a>
     
     <a href="https://workerwork.github.io/tags/caddy/">caddy</a>
     
